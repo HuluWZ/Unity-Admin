@@ -178,14 +178,14 @@ const FormDialog = ({
                             <br></br>
 
             
-            <FormControl margin='normal'  sx={{ m: 1, minWidth: 200 }}>
+            {/* <FormControl margin='normal'  sx={{ m: 1, minWidth: 200 }}>
                  <InputLabel> Select Topic</InputLabel>
                  <Select value={topicId} id="topicId" onChange={handleParent} label="Select Topic">
                    {allTopics?.map((loc) => (
                     <MenuItem key={loc?.id} value={loc?.id}>{loc?.name}</MenuItem>
                     ))}
                 </Select>
-            </FormControl> 
+            </FormControl>  */}
            
 
               <br></br>

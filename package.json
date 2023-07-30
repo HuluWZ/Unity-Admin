@@ -6,6 +6,7 @@
   "author": "Hulunlante Worku",
   "license": "MIT",
   "description": "Unity Aqua Admin Panel",
+  "proxy":"http://backend.unityaqua.in/",
   "engines": {
     "node": "18.12.1",
     "npm": "8.19.2"
@@ -16,6 +17,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
+
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",

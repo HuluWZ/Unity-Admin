@@ -16,9 +16,11 @@ import DashboardContent from '../pages/layout/DashboardLayout/Dashboard';
 import CustomerList from '../pages/customers';
 
 import CategoriesList from '../pages/categories';
+import ForumList from '../pages/forum';
 
 import ProductList from '../pages/products';
 import ProductsDetail from '../pages/products/ProductDetail';
+
 
 import DiscountList from '../pages/discounts';
 
@@ -64,6 +66,8 @@ const RoutesComponent = () => {
                         <Route index element={<OrderList />} />
                         <Route path=":id" element={<OrderDetail />} />
                     </Route>
+                    <Route path="forum" element={<ForumList />} />
+
                     <Route path="reports" element={<Outlet />}>
                         <Route index element={<ReportList />} />
                         <Route path="order" element={<OrderReport />} />

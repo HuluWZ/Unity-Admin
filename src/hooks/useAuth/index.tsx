@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }: any) => {
             localStorage.setItem('token', response?.result?.authToken);
             localStorage.setItem('user', response?.result?.user);
             navigate('/app/dashboard');
-            showNotification('Welcome ' + ' ' + name , ' info');
+            showNotification('Welcome '+ name , 'info');
         } catch (error: any) {
             dispatch({ type: 'LOGIN_FAILURE', payload: error });
             showNotification("Invalid email or password", "error");
