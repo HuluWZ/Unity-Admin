@@ -18,7 +18,7 @@ export const OrderProvider = ({ children }: any) => {
     const { mutate: createOrderMutation } = useMutation(createOrder, {
         onSuccess: () => {
             queryClient.invalidateQueries('orders');
-            showNotification('Booking created successfully', 'success')
+            showNotification('Video created successfully', 'success')
         },
 
         onError: (error: any) => {
@@ -31,7 +31,7 @@ export const OrderProvider = ({ children }: any) => {
         useMutation((data: any) => updateOrder(data.id, data), {
             onSuccess: () => {
                 queryClient.invalidateQueries('orders');
-                showNotification('Booking Status Changed successfully', 'success')
+                showNotification('Video Status Changed successfully', 'success')
             },
 
             onError: (error: any) => {
@@ -43,7 +43,7 @@ export const OrderProvider = ({ children }: any) => {
         useMutation((id: any) => approveOrder(id), {
             onSuccess: () => {
                 queryClient.invalidateQueries('orders');
-                showNotification('Booking approved successfully', 'success')
+                showNotification('Video approved successfully', 'success')
             },
 
             onError: (error: any) => {
@@ -54,7 +54,7 @@ export const OrderProvider = ({ children }: any) => {
     const { mutate: deleteOrderMutation } = useMutation(deleteOrder, {
         onSuccess: () => {
             queryClient.invalidateQueries('orders');
-            showNotification('Booking deleted successfully', 'success')
+            showNotification('Video deleted successfully', 'success')
         },
 
         onError: (error: any) => {

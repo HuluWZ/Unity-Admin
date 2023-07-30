@@ -151,7 +151,7 @@ const TotalItem = ({ totalItem }: any) => {
                                 color: theme.palette.secondary[200]
                             }}
                         >
-                            Total Activity
+                            Total News
                         </Typography>
                     </Grid>
                 </Grid>

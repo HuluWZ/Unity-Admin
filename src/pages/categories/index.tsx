@@ -18,12 +18,12 @@ const Categories = () => {
 
   if (isLoading) return (
     <PageView
-      title="Activities"
+      title="News"
       backPath="/app/dashboard"
       actions={[
         {
           icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
-          label: "Add Activity",
+          label: "Add News",
           handler: () => setOpen(true),
           otherProps: {
             sx: {
@@ -41,12 +41,12 @@ const Categories = () => {
 
   return (
     <PageView
-      title="Activities"
+      title="News"
       backPath="/app/dashboard"
       actions={[
         {
           icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
-          label: "Add Activity",
+          label: "Add News",
           handler: () => setOpen(true),
           otherProps: {
             sx: {
@@ -80,8 +80,8 @@ const Categories = () => {
           deleteCategoryMutation(selectedCategory.id);
           setOpenConfirm(false);
         }}
-        title="Delete Actiity"
-        description="Are you sure you want to delete this Activity?"
+        title="Delete News"
+        description="Are you sure you want to delete this News?"
         confirmText="Delete"
         cancelText="Cancel"
       />

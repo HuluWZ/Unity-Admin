@@ -1,20 +1,20 @@
 import axios from "axios";
 
 const api = import.meta.env.VITE_API_URL;
-const url = `${api}booking`;
+const url = `${api}video`;
 
 const token = localStorage.getItem("token");
 
 export const getOrders = async () => {
     try {
-        console.log(" Orders Get - Method ", `${url}/get`);
-        const response = await axios.get(`${url}/get`, {
+        console.log(" Videos Get - Method ", `${url}/get`);
+        const response = await axios.get(`${url}/`, {
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
+                authtoken: `${token}`,
             },
         });
-        console.log(" Orders Get - Method ", response.data);
+        console.log(" Videos Get - Method ", response.data);
         return response.data;
     } catch (error) { 
         console.log(error);
@@ -23,10 +23,10 @@ export const getOrders = async () => {
 
 
 export const createOrder = async (data: any) => {
-    const response = await axios.post(`${url}/create`, data, {
+    const response = await axios.post(`${url}/`, data, {
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            authtoken: `${token}`,
         },
     });
 
@@ -35,10 +35,10 @@ export const createOrder = async (data: any) => {
 
 export const updateOrder = async (id: string, data: any) => {
     console.log(" Update Order - ", id, data);
-    const response = await axios.put(`${url}/update/${id}`, data, {
+    const response = await axios.put(`${url}?videoId=${id}`, data, {
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            authtoken: `${token}`,
         },
     });
 
@@ -50,10 +50,10 @@ export const deleteOrder = async (id: string) => {
     try {
         try {
             console.log(`Delete Booking ${url}/delete/${id}`, id)
-            const response = await axios.delete(`${url}/delete/${id}`, {
+            const response = await axios.delete(`${url}?videoId=${id}`, {
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
+                    authtoken: `${token}`,
                 },
             });
             console.log("Delete Order Response ", response.data)
@@ -75,7 +75,7 @@ export const approveOrder = async (id: string) => {
         const response = await axios.put(`${url}/update/${id}`,data,{
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
+                authtoken: `${token}`,
             },
         });
     
@@ -92,7 +92,7 @@ export const orderReport = async () => {
     const response = await axios.get(`${url}/report`, {
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            authtoken: `${token}`,
         },
     });
 
@@ -102,10 +102,10 @@ export const orderReport = async () => {
 export const getOrder = async (id: string) => {
     try {
         console.log(`Get Order ${url}/get/${id} `,id)
-        const response = await axios.get(`${url}/get/${id}`, {
+        const response = await axios.get(`${url}?videoId=${id}`, {
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
+                authtoken: `${token}`,
             },
         });
        

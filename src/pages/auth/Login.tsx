@@ -19,7 +19,6 @@ const Login = () => {
     const { loginAction } = useAuth();
     const validationSchema = Yup.object({
         phoneNumber: Yup.string()
-            .string("Enter a valid Phone Number")
             .required("Phone Number is required"),
         pin: Yup.string()
             .min(4, "Pin should be of minimum 4 characters length")

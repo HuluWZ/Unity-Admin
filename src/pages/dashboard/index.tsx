@@ -27,9 +27,9 @@ const Dashboard = () => {
 
   
   var totalSalesMoneyFormat = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "INR",
-  }).format(report?.TotalSales || 0);
+    // style: "currency",
+    // currency: "INR",
+  }).format(products?.result || 0);
   
   
   if (isLoading) {
@@ -59,18 +59,18 @@ const Dashboard = () => {
           <Grid item xs={12}>
             <Grid container spacing={gridSpacing}>
               <Grid item lg={4} md={6} sm={6} xs={12}>
-                <TotalItem totalItem={categories?.totalActivity || 0} />
+                <TotalItem totalItem={categories?.result?.length || 0} />
               </Grid>
               <Grid item lg={4} md={6} sm={6} xs={12}>
-                <TotalOrder totalOrder={orders?.totalBooking || 0} />
+                <TotalOrder totalOrder={orders?.result?.length || 0} />
               </Grid>
               <Grid item lg={4} md={12} sm={12} xs={12}>
                 <Grid container spacing={1.5}>
                   <Grid item sm={6} xs={12} md={6} lg={12}>
-                    <TotalIncome totalSales={totalSalesMoneyFormat || 0} />
+                    <TotalIncome totalSales={products?.length || 0} />
                   </Grid>
                   <Grid item sm={6} xs={12} md={6} lg={12}>
-                    <TotalCustomer totalCustomer={customers?.totalUsers || 0} />
+                    <TotalCustomer totalCustomer={customers?.result || 0} />
                   </Grid>
                 </Grid>
               </Grid>

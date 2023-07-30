@@ -15,7 +15,7 @@ export const CategoryProvider = ({ children }: any) => {
     const { mutate: createCategoryMutation } = useMutation(createCategory, {
         onSuccess: () => {
             queryClient.invalidateQueries('categories');
-            showNotification('Activity created successfully', 'success')
+            showNotification('News created successfully', 'success')
         },
 
         onError: (error: any) => {
@@ -28,7 +28,7 @@ export const CategoryProvider = ({ children }: any) => {
         useMutation((data: any) => updateCategory(data.id, data), {
             onSuccess: () => {
                 queryClient.invalidateQueries('categories');
-                showNotification('Activity updated successfully', 'success')
+                showNotification('News updated successfully', 'success')
             },
 
             onError: (error: any) => {
@@ -40,7 +40,7 @@ export const CategoryProvider = ({ children }: any) => {
     const { mutate: deleteCategoryMutation } = useMutation(deleteCategory, {
         onSuccess: () => {
             queryClient.invalidateQueries('categories');
-            showNotification('Activity deleted successfully', 'success')
+            showNotification('News deleted successfully', 'success')
         },
 
         onError: (error: any) => {

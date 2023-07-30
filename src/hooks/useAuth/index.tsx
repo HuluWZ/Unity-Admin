@@ -10,16 +10,19 @@ export const AuthProvider = ({ children }: any) => {
     const [state, dispatch] = useReducer(reducer, getInitialState());
     const { showNotification } = useNotification();
     const navigate = useNavigate();
+    
     const loginAction = async (data: any) => {
         dispatch({ type: 'LOGIN_REQUEST' });
         try {
             const response = await login(data);
-            console.log(" Login Response  D ",response)
+            console.log(" Login Response  ",response)
             dispatch({ type: 'LOGIN_SUCCESS', payload: response });
-            localStorage.setItem('token', response.token);
-            // localStorage.setItem('org', response.org);
+            const { name } = response?.result?.user
+            console.log(name,response,response?.result)
+            localStorage.setItem('token', response?.result?.authToken);
+            localStorage.setItem('user', response?.result?.user);
             navigate('/app/dashboard');
-            showNotification('Welcome ' + ' ' + response?.user.fullName , ' info');
+            showNotification('Welcome ' + ' ' + name , ' info');
         } catch (error: any) {
             dispatch({ type: 'LOGIN_FAILURE', payload: error });
             showNotification("Invalid email or password", "error");

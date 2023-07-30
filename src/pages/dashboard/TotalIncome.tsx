@@ -69,7 +69,7 @@ const TotalIncome = ({ totalSales }: any) => {
                             }
                             secondary={
                                 <Typography variant="h6" sx={{ color: '#fff' }}>
-                                    Total Income
+                                    Total Books
                                 </Typography>
                             }
                         />

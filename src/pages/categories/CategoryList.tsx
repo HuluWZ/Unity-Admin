@@ -30,87 +30,58 @@ const CategoriesView = ({
   const theme = useTheme();
 
   const navigate = useNavigate();
-  console.log(" Categories ", categories);
-  const rows: GridRowsProp = categories?.activity?.map((item: any) => {
+  console.log(" Categories  : ", categories?.result);
+  const rows: GridRowsProp = categories?.result?.map((item: any) => {
     return {
-          id: item._id,
-          name: item.name,
+          id: item.id,
+          title: item.title,
           description: item.description,
-          area: item.area,
-          price: item.price,
-          totalCapacity: item.totalCapacity,
-          duration: item.duration,
-          durationType: item.durationType,
-          location: item.location,
-          organizer: item.organizer,
-          rating: item.rating,
-          images: item.images,
+          topic: item?.topic?.name,
+          thumbnail: item?.thumbnail,
+          createdAt: item?.createdAt
         };
   });
 
   const columns: GridColDef[] = [
+        {
+            field: "id",
+            headerName: "ID",
+            width: 50,
+        },
     {
-            field: "name",
-            headerName: "Name",
+            field: "title",
+            headerName: "Title",
             width: 150,
         },
         {
             field: "description",
             headerName: "Description",
-            width: 150,
+            width: 350,
         },
         {
-            field: "area",
-            headerName: "Area",
+            field: "topic",
+            headerName: "Topic",
             width: 150,
-        },
-        {
-            field: "price",
-            headerName: "Price",
-            width: 150,
-        },
-        {
-            field: "totalCapacity",
-            headerName: "Capacity",
-            width: 150,
-        },
-        {
-            field: "duration",
-            headerName: "Duration",
-            width: 150,
-            valueGetter: (params) =>  `${params.row.duration}  ${params.row.durationType || ''}`,
-        },
-        {
-            field: "location",
-            headerName: "Location",
-            width: 150,
-        },
-         {
-            field: "organizer",
-            headerName: "Organizer",
-            width: 150,
-        },
-         {
-            field: "rating",
-            headerName: "Rating",
-            width: 150,
-        },
+    },
     {
-      field: "images",
+      field: "thumbnail",
       headerName: "Image",
       width: 400,
       renderCell: (params: any) => (
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          {params.row.images.map((current: any) => (
           <CardMedia
             component="img"
-            height="100"
-            image={current}
+            height="300"
+            image={params?.row?.thumbnail}
             alt="green iguana"
           />
-          ))}
         </Box>
       ),
+    },
+      {
+            field: "createdAt",
+            headerName: "Published Date",
+            width: 150,
     },
 
     {

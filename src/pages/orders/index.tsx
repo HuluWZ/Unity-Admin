@@ -16,12 +16,12 @@ const Orders = () => {
 
     if (isLoading) return (
         <PageView
-            title="Booking"
+            title="Video"
             backPath="/app/dashboard"
             actions={[
                 {
                     icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
-                    label: "Add Booking",
+                    label: "Add Video",
                     handler: () => {
                         setOpen(true)
                         setSelectedOrder(null)
@@ -42,12 +42,12 @@ const Orders = () => {
 
     if (isError) return (
         <PageView
-            title="Booking"
+            title="Video"
             backPath="/app/dashboard"
             actions={[
                 {
                     icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
-                    label: "Add Booking",
+                    label: "Add Video",
                     handler: () => {
                         setOpen(true)
                         setSelectedOrder(null)
@@ -68,25 +68,25 @@ const Orders = () => {
 
     return (
         <PageView
-            title="Booking"
+            title="Video"
             backPath="/app/dashboard"
-            // actions={[
-            //     {
-            //         icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
-            //         label: "Add Booking",
-            //         handler: () => {
-            //             setOpen(true)
-            //             setSelectedOrder(null)
-            //         },
-            //         otherProps: {
-            //             sx: {
-            //                 ml: "auto",
-            //                 fontSize: "10px",
-            //             },
-            //             variant: "contained",
-            //         },
-            //     },
-            // ]}
+            actions={[
+                 {
+                     icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
+                     label: "Add Video",
+                     handler: () => {
+                         setOpen(true)
+                         setSelectedOrder(null)
+                     },
+                     otherProps: {
+                         sx: {
+                             ml: "auto",
+                             fontSize: "10px",
+                         },
+                         variant: "contained",
+                     },
+                 },
+             ]}
         >
             <OrdersView
                 orders={orders}
@@ -115,8 +115,8 @@ const Orders = () => {
                     deleteOrderMutation(selectedOrder.id)
                     setOpenConfirm(false)
                 }}
-                title="Delete Booking"
-                description="Are you sure you want to delete this booking?"
+                title="Delete Video"
+                description="Are you sure you want to delete this video?"
                 confirmText="Delete"
                 cancelText='Cancel'
             />

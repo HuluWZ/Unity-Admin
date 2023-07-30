@@ -51,7 +51,7 @@ const RecentOrder = ({ orders }: any) => {
                         <Grid item xs={12}>
                             <Grid container alignContent="center" justifyContent="space-between">
                                 <Grid item>
-                                    <Typography variant="h5">Recent Bookings</Typography>
+                                    <Typography variant="h5">Recent  News </Typography>
                                 </Grid>
                             </Grid>
                         </Grid>

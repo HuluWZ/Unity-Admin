@@ -22,7 +22,7 @@ const Products = () => {
      console.log(" ID ",id," Product  ",products , " Is Loading ",isLoading , " Product ",product);
     if (isLoading) return (
         <PageView
-            title="Users"
+            title="Book"
             backPath="/app/dashboard"
             actions={[
                 {
@@ -48,12 +48,12 @@ const Products = () => {
 
     if (error) return (
         <PageView
-            title="Users"
+            title="Books"
             backPath="/app/dashboard"
             actions={[
                 {
                     icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
-                    label: "Add User",
+                    label: "Add Book",
                     handler: () => {
                         setOpen(true)
                         setSelectedProduct(null)
@@ -74,12 +74,12 @@ const Products = () => {
 
     return (
         <PageView
-            title="Users"
+            title="Books"
             backPath="/app/dashboard"
             actions={[
                 {
                     icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
-                    label: "Add User",
+                    label: "Add Book",
                     handler: () => {
                         setOpen(true)
                         setSelectedProduct(null)
@@ -114,8 +114,8 @@ const Products = () => {
                     deleteProductMutation(selectedProduct.id)
                     setOpenConfirm(false)
                 }}
-                title="Delete User"
-                description="Are you sure you want to delete user?"
+                title="Delete Book"
+                description="Are you sure you want to delete book?"
                 confirmText="Delete"
                 cancelText="Cancel"
             />

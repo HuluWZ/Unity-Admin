@@ -11,14 +11,18 @@ import GroupIcon from '@mui/icons-material/Group';
 import DiscountIcon from '@mui/icons-material/Discount';
 import CategoryIcon from '@mui/icons-material/Category';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import PeopleIcon from '@mui/icons-material/People';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 import { NavLink } from 'react-router-dom';
 import { listItemClasses } from "@mui/material/ListItem";
 import List from "@mui/material/List";
 import { Typography, colors } from "@mui/material";
-
-
+import NewspaperIcon from '@mui/icons-material/Newspaper';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
+import ForumIcon from '@mui/icons-material/Forum';
+import PeopleIcon from '@mui/icons-material/People';
+import TopicIcon from '@mui/icons-material/Topic';
+import HealingIcon from '@mui/icons-material/Healing';
 const listAdminItems = [
     {
         name: 'Dashboard',
@@ -26,19 +30,39 @@ const listAdminItems = [
         path: '/app/dashboard',
     },
     {
-        name: 'Activity',
-        icon: <CategoryIcon />,
+        name: 'News',
+        icon: <NewspaperIcon />,
         path: '/app/categories',
     },
     {
-        name: 'Users',
-        icon: <PeopleIcon />,
+        name: 'Books',
+        icon: <MenuBookIcon />,
         path: '/app/products',
     },
     {
-        name: 'Bookings',
-        icon: <AddShoppingCartIcon />,
+        name: 'Videos',
+        icon: <OndemandVideoIcon />,
         path: '/app/orders',
+    },
+     {
+        name: 'Forum',
+        icon: <ForumIcon />,
+        path: '/app/forum',
+    },
+          {
+        name: 'Treatment',
+        icon: <HealingIcon />,
+        path: '/app/treatment',
+    },
+               {
+        name: 'Users',
+        icon: <PeopleIcon />,
+        path: '/app/users',
+    },
+                    {
+        name: 'Topic',
+        icon: <TopicIcon />,
+        path: '/app/topic',
     }
 ];
 

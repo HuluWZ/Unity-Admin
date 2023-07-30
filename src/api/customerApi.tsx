@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const url = import.meta.env.VITE_API_URL;
-const api = `${url}auth/`;
+const api = `${url}user/`;
 
 
 const token = localStorage.getItem("token") || "";
@@ -10,7 +10,7 @@ const token = localStorage.getItem("token") || "";
 export const getCustomers = async () => {
     // console.log(" Get  Data Customer ",`${api}get`)
 
-    const response = await axios.get(`${api}get`, {
+    const response = await axios.get(`${api}`, {
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -22,7 +22,7 @@ export const getCustomers = async () => {
 
 //create category
 export const createCustomer = async (data: any) => {
-    const response = await axios.post(`${api}create`, data, {
+    const response = await axios.post(`${api}/`, data, {
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

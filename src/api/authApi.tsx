@@ -2,11 +2,11 @@ import axios from "axios";
 
 
 const api = import.meta.env.VITE_API_URL;
-const url = `${api}auth`;
+const url = `${api}user`;
 
 export const register = async (data: any) => {
     try {
-        const response = await axios.post(`${url}/create`, data)
+        const response = await axios.post(`${url}/signup`, data)
         return response.data;
     } catch (error) {
         throw error;

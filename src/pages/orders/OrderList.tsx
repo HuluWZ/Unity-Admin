@@ -18,6 +18,7 @@ import {
   Typography,
   Avatar,
   Paper,
+  CardMedia
 } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
@@ -56,46 +57,54 @@ const OrdersView = ({
   };
 
   const columns: GridColDef[] = [
-    
+  {
+            field: "id",
+            headerName: "ID",
+            width: 50,
+        },
     {
-      field: "activity",
-      headerName: "Activity",
-      minWidth: 150,
+            field: "title",
+            headerName: "Title",
+            width: 150,
+        },
+        {
+            field: "description",
+            headerName: "Description",
+            width: 350,
+        },
+        {
+            field: "topic",
+            headerName: "Topic",
+            width: 150,
     },
     {
-      field: "name",
-      headerName: "Name",
-      minWidth: 150
+      field: "thumbnail",
+      headerName: "Thumbnail",
+      width: 300,
+      renderCell: (params: any) => (
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <CardMedia
+            component="img"
+            height="200"
+            image={params?.row?.thumbnail}
+            alt="green iguana"
+          />
+        </Box>
+      ),
+    },    {
+      field: "url",
+      headerName: "Video",
+      width: 200,
+      renderCell: (params: any) => (
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <a href={params?.row?.url} target="_blank">Watch Video</a>
+        </Box>
+      ),
     },
-    {
-      field: "unitPrice",
-      headerName: "Unit Price",
-      minWidth: 150
-    },
-    {
-      field: "time",
-      headerName: "Time",
-      minWidth: 150
-    },
-    {
-      field: "quantity",
-      headerName: "Quantity",
-      minWidth: 150,
-    },
-    {
-      field: "totalPrice",
-      headerName: "Total Price",
-      minWidth: 150,
-    },
-    {
-      field: "date",
-      headerName: "Date",
-      minWidth: 150,
-    },
-    {
-      field: "status",
-      headerName: "Status",
-      minWidth: 120
+      {
+            field: "createdAt",
+            headerName: "Published Date",
+            width: 150,
     },
     {
       field: "actions",
@@ -181,18 +190,15 @@ const OrdersView = ({
     },
   ];
 
-  const rows: GridRowsProp = orders?.booking?.map((item: any) => {
+  const rows: GridRowsProp = orders?.result?.map((item: any) => {
     return {
-      id: item._id,
-      activity:item.activity.substr(-12),
-      name: item.option?.name,
-      unitPrice: item.option?.unitPrice,
-      time: item.option?.time,
-      email: item.email,
-      quantity: item.quantity,
-      date: item.date,
-      status: item.status,
-      totalPrice: item.totalPrice
+      id: item.id,
+          title: item.title,
+          description: item.description,
+          topic: item?.topic?.name,
+          thumbnail: item?.thumbnailUrl,
+          url : item?.url,
+          createdAt: item?.createdAt
     };
   });
 

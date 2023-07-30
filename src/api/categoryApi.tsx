@@ -6,11 +6,11 @@ const token = localStorage.getItem("token") || "";
 
 //impliment crud operations
 export const getCategories = async () => {
-    console.log(" Get All Category - ")
-    const response = await axios.get(`${url}activity/get`, {
+    console.log(" Get All Category - ",url,token)
+    const response = await axios.get(`${url}news/`, {
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            "authtoken": `${token}`,
         },
     });
     console.log(" Category  = " , response.data)
@@ -21,11 +21,11 @@ export const getCategories = async () => {
 export const createCategory = async (data: any) => {
     console.log(" Activity data = ", data)
     let newData = data.images
-    const response = await axios.post(`${url}activity/create`, data, {
+    const response = await axios.post(`${url}news/`, data, {
         headers: {
             // "Content-Type":"application/json"
             "Content-Type": "multipart/form-data",
-            "Authorization": `Bearer ${token}`
+            "authtoken": `${token}`
         },
     });
     console.log(" Activity Upload response = ", response)
@@ -34,10 +34,10 @@ export const createCategory = async (data: any) => {
 
 //get category by id
 export const getCategoryById = async (id: any) => {
-    const response = await axios.get(`${url}activity/get/${id}`, {
+    const response = await axios.get(`${url}news/search/${id}`, {
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            authtoken: `${token}`,
         },
     });
 
@@ -46,10 +46,10 @@ export const getCategoryById = async (id: any) => {
 
 //update category
 export const updateCategory = async (id: any, data: any) => {
-    const response = await axios.put(`${url}activity/update/${id}`, data, {
+    const response = await axios.put(`${url}news/`, {...data,id}, {
         headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
+            authtoken: `${token}`,
         },
     });
 
@@ -58,10 +58,10 @@ export const updateCategory = async (id: any, data: any) => {
 
 
 export const deleteCategory = async (id: any) => {
-    const response = await axios.delete(`${url}activity/delete/${id}`, {
+    const response = await axios.delete(`${url}news/${id}`, {
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            authtoken: `${token}`,
         },
     });
 

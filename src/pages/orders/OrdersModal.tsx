@@ -17,17 +17,30 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import  { useState,useEffect } from 'react';
+import ReactQuill from 'react-quill';
+import { Input } from '@material-ui/core';
 
-const validationSchema = Yup.object().shape({
-  fullName: Yup.string().required("Full name is required"),
-  phoneNumber: Yup.string().required("Phone number is required"),
-  address: Yup.string().required("Address is required"),
-  email: Yup.string().email("Invalid email").required("Email is required"),
-  city: Yup.string().required("City is required"),
-  description: Yup.string().required("Description is required"),
-  orderDate: Yup.string().required("Order date is required"),
-  items: Yup.array().required("Items is required"),
-});
+ 
+const url = import.meta.env.VITE_API_URL;
+const token = localStorage.getItem("token") || "";
+
+
+const modules = {
+    toolbar: [
+        [{ 'header': [1, 2, 3,4,5, false] }],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+        ['link', 'image'],
+        ['clean']
+    ],
+};
+const formats = [
+    'header',
+    'bold', 'italic', 'underline', 'strike', 'blockquote',
+    'list', 'bullet', 'indent',
+    'link', 'image'
+];
 
 type FormDialogProps = {
   order: any;
@@ -48,10 +61,57 @@ const FormDialog = ({
   setSelectedOrder,
 }: FormDialogProps) => {
   const { products } = useProduct();
+ const validationSchema = Yup.object({
+        title: Yup.string().required("Required"),
+        description: Yup.string().required("Required"),
+        topicId: Yup.string().required("Required"),
+        url:Yup.string().required("Required")
+    });
+ const initialValues = {
+        // id: selectedOrder ? selectedOrder.id : "",
+        title: selectedOrder ? selectedOrder.title : "",
+        description: selectedOrder ? selectedOrder.description : "",
+        topicId: selectedOrder ? selectedOrder.topicId : "",
+        thumbnail: selectedOrder ? selectedOrder.thumbnail : "",
+        url:selectedOrder ? selectedOrder.url : "",
+ };
 
-  const [selectedDate, handleDateChange] = React.useState<Date | null>(
-    new Date()
-  );
+
+    const [content, setContent] = useState('');
+    const [topicId, setTopicId] = useState('');
+    const [allTopics,setTopics] = useState([{id:'',name:''}]);
+    const [file, SetFile] = useState<File | null>(null);
+    const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files ? event.target.files[0] : null;
+        SetFile(file)
+    }
+    const handleParent = (event: React.ChangeEvent<{ value?: string | unknown}>) => {
+     setTopicId(event.target.value as string);
+    }
+
+    useEffect(() => {
+        async function fetchTopic() {
+            console.log("Method Called ",url)
+            const response = await fetch(`${url}topic/`, {
+                headers: {
+                "Content-Type": "application/json",
+                "authtoken":`${token}`
+            }});
+            const data = await response.json();
+            console.log(" Get All Topic : ", data?.result)
+            setTopics(data?.result);
+        }
+        fetchTopic();
+       }, []);
+
+
+    
+    const handleEditorChange = (value:string) => {
+       setContent(value);
+    }
+
+
+
 
   return (
     <Dialog
@@ -61,29 +121,11 @@ const FormDialog = ({
       maxWidth="md"
     >
       <DialogTitle id="form-dialog-title">
-        {!selectedOrder ? "Add Order" : "Edit Order"}
+        {!selectedOrder ? "Add Video" : "Edit Video"}
       </DialogTitle>
       <DialogContent>
         <Formik
-          initialValues={{
-            id: selectedOrder ? selectedOrder.id : "",
-            fullName: selectedOrder ? selectedOrder.fullName : "",
-            phoneNumber: selectedOrder ? selectedOrder.phoneNumber : "",
-            address: selectedOrder ? selectedOrder.address : "",
-            email: selectedOrder ? selectedOrder.email : "",
-            city: selectedOrder ? selectedOrder.city : "",
-            description: selectedOrder ? selectedOrder.description : "",
-            orderDate: selectedOrder ? selectedOrder.orderDate : "",
-            paymentMethod: selectedOrder ? selectedOrder.paymentMethod : "",
-            items: selectedOrder
-              ? selectedOrder.items
-              : [
-                {
-                  product: "",
-                  quantity: 0,
-                },
-              ],
-          }}
+          initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={(values, { setSubmitting , resetForm}) => {
             if (selectedOrder) {
@@ -91,6 +133,10 @@ const FormDialog = ({
               resetForm();
               handleClose();
             } else {
+              values.topicId = topicId
+              values.thumbnail = file;
+              values.description = content;
+              console.log(" Value Added : ",values)
               handleAdd(values);
               resetForm();
               handleClose();
@@ -109,219 +155,80 @@ const FormDialog = ({
             setFieldValue,
           }: any) => (
             <form onSubmit={handleSubmit}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    margin="dense"
-                    id="fullName"
-                    label="Full Name"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    value={values.fullName}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={touched.fullName && Boolean(errors.fullName)}
-                    helperText={touched.fullName && errors.fullName}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    margin="dense"
-                    id="phoneNumber"
-                    label="Phone Number"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    value={values.phoneNumber}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={touched.phoneNumber && Boolean(errors.phoneNumber)}
-                    helperText={touched.phoneNumber && errors.phoneNumber}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    margin="dense"
-                    id="address"
-                    label="Address"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    value={values.address}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={touched.address && Boolean(errors.address)}
-                    helperText={touched.address && errors.address}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    margin="dense"
-                    id="paymentMethod"
-                    name="paymentMethod"
-                    label="Payment Method"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    value={values.paymentMethod}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={touched.paymentMethod && Boolean(errors.paymentMethod)}
-                    helperText={touched.paymentMethod && errors.paymentMethod}
-                    select
-                  >
-                    <MenuItem value="Cash">Cash</MenuItem>
-                    <MenuItem value="Credit">Credit</MenuItem>
-                    <MenuItem value="Check">Check</MenuItem>
-                    <MenuItem value="Transfer">Transfer</MenuItem>
-                    <MenuItem value="TeleBirr">TeleBirr</MenuItem>
-                  </TextField>
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    margin="dense"
-                    id="email"
-                    label="Email"
-                    type="email"
-                    fullWidth
-                    variant="standard"
-                    value={values.email}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={touched.email && Boolean(errors.email)}
-                    helperText={touched.email && errors.email}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    margin="dense"
-                    id="city"
-                    label="City"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    value={values.city}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={touched.city && Boolean(errors.city)}
-                    helperText={touched.city && errors.city}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    margin="dense"
-                    id="description"
-                    label="Description"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    value={values.description}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={touched.description && Boolean(errors.description)}
-                    helperText={touched.description && errors.description}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <FieldArray
-                    name="items"
-                    render={(arrayHelpers) => (
-                      <div>
-                        {values.items.map((item: any, index: any) => (
-                          <div key={index}>
-                            <Grid container spacing={2}>
-                              <Grid item xs={6}>
-                                <FormControl variant="standard" fullWidth>
-                                  <InputLabel id="demo-simple-select-label">
-                                    Product
-                                  </InputLabel>
-                                  <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    value={item.product}
-                                    onChange={(e: any) => {
-                                      arrayHelpers.replace(index, {
-                                        ...item,
-                                        product: e.target.value,
-                                      });
-                                    }}
-                                  >
-                                    {products?.product?.map((product: any) => (
-                                      <MenuItem
-                                        key={product._id}
-                                        value={product._id}
-                                      >
-                                        {product.name}
-                                      </MenuItem>
-                                    ))}
-                                  </Select>
-                                </FormControl>
-                                <FormHelperText error>
-                                  {touched.items &&
-                                    touched.items[index] &&
-                                    touched.items[index].product &&
-                                    errors.items &&
-                                    errors.items[index] &&
-                                    errors.items[index].product}
-                                </FormHelperText>
+              <TextField
+                                autoFocus
+                                id="title"
+                                label="Title"
+                                type="text"
+                                fullWidth
+                                variant="standard"
+                                value={values.title}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={Boolean(touched.title && errors.title)}
+                                helperText={touched.title && errors.title}
+                                sx={{
+                                    marginBottom:2
+                                }}
+                            />
+                            <br></br>
+                            <h4>Description</h4>
+                            <ReactQuill theme="snow"  id="content" value={content} onChange={handleEditorChange}  modules={modules} formats={formats} />
+                            <br></br>
+                            <br></br>
 
-                                <TextField
-                                  margin="dense"
-                                  id="quantity"
-                                  label="Quantity"
-                                  type="number"
-                                  fullWidth
-                                  variant="standard"
-                                  value={item.quantity}
-                                  onChange={(e: any) => {
-                                    arrayHelpers.replace(index, {
-                                      ...item,
-                                      quantity: e.target.value,
-                                    });
-                                  }}
-                                />
-                              </Grid>
-                            </Grid>
-                          </div>
-                        ))}
-                        <Button
-                          color="primary"
-                          onClick={() =>
-                            arrayHelpers.push({
-                              product: "",
-                              quantity: 0,
-                            })
-                          }
-                          sx={{
-                            mt: 2,
-                            mb: 2,
-                            "&:hover": {
-                              backgroundColor: "primary.main",
-                              color: "primary.contrastText",
-                            },
-                          }}
-                        >
-                          Add Item +
-                        </Button>
-                      </div>
-                    )}
-                  />
-                </Grid>
-                <Grid item lg={12} xs={6}>
-                  <LocalizationProvider dateAdapter={AdapterMoment}>
-                    <DatePicker
-                      label="Order Date"
-                      value={selectedDate}
-                      onChange={(newValue) => {
-                        handleDateChange(newValue);
-                        setFieldValue("orderDate", newValue);
-                      }}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-                  </LocalizationProvider>
-                </Grid>
-              </Grid>
+            
+            <FormControl margin='normal'  sx={{ m: 1, minWidth: 200 }}>
+                 <InputLabel> Select Topic</InputLabel>
+                 <Select value={topicId} id="topicId" onChange={handleParent} label="Select Topic">
+                   {allTopics?.map((loc) => (
+                    <MenuItem key={loc?.id} value={loc?.id}>{loc?.name}</MenuItem>
+                    ))}
+                </Select>
+            </FormControl> 
+           
+
+              <br></br>
+              <TextField
+                                autoFocus
+                                id="url"
+                                label="Video URL"
+                                type="text"
+                                fullWidth
+                                variant="standard"
+                                value={values.url}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={Boolean(touched.url && errors.url)}
+                                helperText={touched.url && errors.url}
+                                sx={{
+                                    marginBottom:2
+                                }}
+              />
+              {values?.url && (
+                <video controls>
+                  <source src={values?.url} type="video/mp4" />
+  Your browser does not support the video tag.
+</video>
+
+              )}
+                            <br></br>
+              <br></br>
+                           <Button variant="contained" component="label">  Upload Thumbnail
+                                <Input type="file"  style={{ display: 'none' }}  inputProps={{ required:true }} onChange={handleFileSelect}   />
+                            </Button>
+
+                    
+
+                <div >
+      <div>
+                                    {file &&
+                                        (<img key={file?.name} src={URL.createObjectURL(file)} alt={file?.name} width="200" />)}
+      </div>
+      
+    </div>
+                            
+                            <br></br>
               <DialogActions>
                 <ButtonGroup>
                   <Button onClick={handleClose} color="primary">

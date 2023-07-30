@@ -9,7 +9,15 @@ import {
     EditRounded,
     VisibilityRounded,
 } from "@mui/icons-material";
-import { Box, IconButton, Container, Grid, Paper } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Container,
+  Grid,
+  colors,
+  Paper,
+  CardMedia,
+} from "@mui/material";
 import { useTheme } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 
@@ -24,36 +32,54 @@ const ProductsView = ({
     const theme = useTheme();
 
     const columns: GridColDef[] = [
-        {
-            field: "fullName",
-            headerName: "Full Name",
-            width: 150,
+    {
+            field: "id",
+            headerName: "ID",
+            width: 50,
         },
         {
-            field: "email",
-            headerName: "Email",
-            width: 150,
+            field: "title",
+            headerName: "Title",
+            width: 250,
         },
         {
-            field: "phoneNumber",
-            headerName: "Phone Number",
+            field: "topic",
+            headerName: "Topic",
             width: 150,
+        },
+    
+            {
+      field: "thumbnail",
+      headerName: "Thumbnail",
+      width: 300,
+      renderCell: (params: any) => (
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <CardMedia
+            component="img"
+            height="300"
+            image={params?.row?.thumbnail}
+            alt="View Pdf"
+          />
+        </Box>
+      ),
+        },
+    {
+      field: "url",
+      headerName: "File",
+      width: 300,
+      renderCell: (params: any) => (
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <a href={params?.row?.url} target="_blank"> View Pdf </a>
+            
+        </Box>
+      ),
         },
         {
-            field: "city",
-            headerName: "City",
+            field: "createdAt",
+            headerName: "Published Date",
             width: 150,
-        },
-        {
-            field: "address",
-            headerName: "Address",
-            width: 150,
-        },
-        {
-            field: "role",
-            headerName: "Role",
-            width: 150,
-        },
+      },
+
         {
             field: "actions",
             headerName: "Actions",
@@ -83,26 +109,24 @@ const ProductsView = ({
                         >
                             <DeleteForeverRounded />
                         </IconButton>
-                        <IconButton component={Link} to={`${params.row.id}`}>
-                            <VisibilityRounded />
-                        </IconButton>
+                        {/* <IconButton component={Link} to={`${params.row.id}`}> */}
+                            {/* <VisibilityRounded /> */}
+                        {/* </IconButton> */}
                     </Box>
                 );
             },
         },
     ];
 
-    const rows: GridRowsProp = products?.users?.map((product: any) => {
-        // console.log(" User = ", product)
+    const rows: GridRowsProp = products?.result?.map((product: any) => {
+        console.log(" Books = ", products)
         return {
-            id: product._id,
-            fullName: product.fullName,
-            email: product.email,
-            phoneNumber: product.phoneNumber,
-            password: product?.plainPassword,
-            city: product?.city,
-            address: product?.address,
-            role: product?.role,
+          id: product.id,
+          title: product.title,
+          topic: product?.topic?.name,
+          thumbnail: product?.thumbnailUrl,
+          url: product?.url,
+          createdAt: product?.createdAt
         };
     });
 

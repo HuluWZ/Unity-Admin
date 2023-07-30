@@ -8,13 +8,17 @@ import * as Yup from "yup";
 import { ButtonGroup, Button } from "@mui/material";
 import { ThreeDots } from "react-loader-spinner";
 import { useCategory } from "../../hooks/useCategory";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+// import Select, { SelectChangeEvent } from '@mui/material/Select';
 import FormHelperText from "@mui/material/FormHelperText";
 import { Grid } from "@mui/material";
 import * as React from 'react';
+import { useState, useEffect } from 'react';
+import { Select,InputLabel,Input } from '@material-ui/core';
+const url = import.meta.env.VITE_API_URL;
+const token = localStorage.getItem("token") || "";
+
 type FormDialogProps = {
     open: boolean;
     handleClose: () => void;
@@ -34,30 +38,54 @@ const FormDialog = ({
 }: FormDialogProps) => {
     const { categories } = useCategory();
     const initialValues = {
-        id: selectedProduct ? selectedProduct.id : "",
-        fullName: selectedProduct ? selectedProduct.fullName : "",
-        email: selectedProduct ? selectedProduct.email : "",
-        password: selectedProduct ? selectedProduct.password : "",
-        phoneNumber: selectedProduct ? selectedProduct.phoneNumber : "",
-        role: selectedProduct ? selectedProduct.role : "",
-        city: selectedProduct ? selectedProduct.city : "",
-        address: selectedProduct ? selectedProduct.address : ""
+        // id: selectedProduct ? selectedProduct.id : "",
+        title: selectedProduct ? selectedProduct.title : "",
+        topicId: selectedProduct ? selectedProduct.topicId : "",
+        thumbnailUrl: selectedProduct ? selectedProduct.thumbnailUrl : "",
+        file : selectedProduct ? selectedProduct.file:''
     };
 
     const validationSchema = Yup.object({
-        fullName: Yup.string().required("Full Name is required"),
-        email: Yup.string().required(" Email is required"),
-        password: Yup.string(),
-        phoneNumber: Yup.string().required(" Phone number is required"),
-        city: Yup.string(),
-        address: Yup.string(),
-        role: Yup.string()
+        title: Yup.string().required("Required"),
+        topicId: Yup.string().required("Required")
     });
-    const RoleList = ["ADMIN", "USER"]
-    const [Role, setRole] = React.useState('');
-    const handleRoleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRole(event.target.value);
-      };
+ 
+
+    const [topicId, setTopicId] = useState('');
+    const [allTopics,setTopics] = useState([{id:'',name:''}]);
+    const [file, SetFile] = useState<File | null>(null);
+    const [pdf, SetPdf] = useState<File | null >(null);
+    const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files ? event.target.files[0] : null;
+        SetFile(file)
+    }
+        const handlePdfSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files ? event.target.files[0] : null;
+        SetPdf(file)
+    }
+
+    const handleParent = (event: React.ChangeEvent<{ value?: string | unknown}>) => {
+     setTopicId(event.target.value as string);
+    }
+
+    useEffect(() => {
+        async function fetchTopic() {
+            console.log("Method Called ",url)
+            const response = await fetch(`${url}topic/`, {
+                headers: {
+                "Content-Type": "application/json",
+                "authtoken":`${token}`
+            }});
+            const data = await response.json();
+            console.log(" Get All Topic : ", data?.result)
+            setTopics(data?.result);
+        }
+        fetchTopic();
+       }, []);
+
+
+    
+   
 
     return (
         <Dialog
@@ -70,14 +98,13 @@ const FormDialog = ({
             <DialogTitle
                 id="form-dialog-title"
             >
-                {selectedProduct ? "Edit User" : "Add User"}
+                {selectedProduct ? "Edit Book" : "Add Book"}
             </DialogTitle>
             <DialogContent sx={{ marginTop: "1rem" }}>
                 <Formik
                     initialValues={initialValues}
                     validationSchema={validationSchema}
                     onSubmit={(values, { setSubmitting, resetForm }) => {
-                        values.role = Role
                         // console.log(" Data ", values," Selected Product ",selectedProduct);
                         if (selectedProduct) {
                             setSubmitting(true);
@@ -89,6 +116,11 @@ const FormDialog = ({
                             resetForm();
                             handleClose();
                         } else {
+                            values.file = pdf;
+                            values.thumbnailUrl = file
+                            values.topicId = topicId;
+                            console.log(topicId,file,pdf)
+                            console.log(values)
                             setSubmitting(true);
                             handleAdd({
                                 ...values
@@ -111,123 +143,60 @@ const FormDialog = ({
                         setFieldValue,
                     }: any) => (
                         <form onSubmit={handleSubmit}>
-                            <Grid container spacing={2} mt={1}>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        autoFocus
-                                        id="fullName"
-                                        label="Full Name"
-                                        type="text"
-                                        fullWidth
-                                        variant="standard"
-                                        value={values.fullName}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        error={touched.fullName && Boolean(errors.fullName)}
-                                        helperText={touched.fullName && errors.fullName}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        id="email"
-                                        label="Email"
-                                        type="text"
-                                        fullWidth
-                                        variant="standard"
-                                        value={values.email}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        error={touched.email && Boolean(errors.email)}
-                                        helperText={touched.email && errors.email}
-                                        minRows={4}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        id="password"
-                                        label="Password"
-                                        type="string"
-                                        fullWidth
-                                        variant="standard"
-                                        value={values.password}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        error={touched.password && Boolean(errors.password)}
-                                        helperText={touched.password && errors.password}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        id="phoneNumber"
-                                        label="Phone Number"
-                                        type="text"
-                                        fullWidth
-                                        variant="standard"
-                                        value={values.phoneNumber}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        error={touched.phoneNumber && Boolean(errors.phoneNumber)}
-                                        helperText={touched.phoneNumber && errors.phoneNumber}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        id="city"
-                                        label="City"
-                                        type="text"
-                                        fullWidth
-                                        variant="standard"
-                                        value={values.city}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        error={
-                                            touched.city && Boolean(errors.city)
-                                        }
-                                        helperText={
-                                            touched.city && errors.city
-                                        }
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        id="address"
-                                        label="Address"
-                                        type="text"
-                                        fullWidth
-                                        variant="standard"
-                                        value={values.address}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        error={touched.address && Boolean(errors.address)}
-                                        helperText={touched.address && errors.address}
-                                    />
-                                </Grid>
+                            {/* <Grid container spacing={2} mt={1}> */}
+                               
+                            <TextField
+                                autoFocus
+                                id="title"
+                                label="Title"
+                                type="text"
+                                // fullWidth
+                                style={{ width: 400 }} // set the width to 300px
+                                variant="standard"
+                                value={values.title}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={Boolean(touched.title && errors.title)}
+                                helperText={touched.title && errors.title}
+                                sx={{
+                                    marginBottom:2
+                                }}
+                            />
+                            
+                            <br></br>
 
-    
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        autoFocus
-                                        id="outlined-select-currency"
-                                        label="Role"
-                                        name="role"
-                                        select
-                                        variant="standard"
-                                        value={values.role}
-                                        onChange={handleRoleChange}
-                                        onBlur={handleBlur}
-                                        error={Boolean(touched.role && errors.role)}
-                                        helperText={touched.role && errors.role}
-                                        sx={{
-                                           marginBottom:2
-                                       }}>
-                                    {RoleList.map((role) => (
-                                         <MenuItem  key={role} value={role}>
-                                             {role}
-                                         </MenuItem>
-                                    ))}
-                                    </TextField>
-                                </Grid> 
             
+            <FormControl margin='normal'  sx={{ m: 1, minWidth: 200 }}>
+                 <InputLabel> Select Topic</InputLabel>
+                 <Select value={topicId} id="topicId" onChange={handleParent} label="Select Topic">
+                   {allTopics?.map((loc) => (
+                    <MenuItem key={loc?.id} value={loc?.id}>{loc?.name}</MenuItem>
+                    ))}
+                </Select>
+            </FormControl> 
+                                <br></br>
+                                 <br></br>
+                           <Button variant="contained" component="label">  Upload PDF
+                                <Input type="file"  style={{ display: 'none' }}  inputProps={{ required:true }} onChange={handlePdfSelect}   />
+                            </Button>
+
+                            <br></br>
+                            <br></br>
+                           <Button variant="contained" component="label">  Upload Thumbnail
+                                <Input type="file"  style={{ display: 'none' }}  inputProps={{ required:true }} onChange={handleFileSelect}   />
+                            </Button>
+
+       
+
+                <div >
+      <div>
+                                    {file &&
+                                        (<img key={file?.name} src={URL.createObjectURL(file)} alt={file?.name} width="200" />)}
+      </div>
+      
+    </div>
+                            
+                            <br></br>
 
                                 <Grid item xs={12} sm={12}>
                                     <DialogActions>
@@ -249,7 +218,7 @@ const FormDialog = ({
                                         </ButtonGroup>
                                     </DialogActions>
                                 </Grid>
-                            </Grid>
+                            {/* </Grid> */}
                         </form>
                     )}
                 </Formik>

@@ -155,7 +155,7 @@ const TotalOrder = ({ totalOrder }: any) => {
                                 color: theme.palette.secondary[200]
                             }}
                         >
-                            Total Bookings
+                            Total Videos
                         </Typography>
                     </Grid>
                 </Grid>
