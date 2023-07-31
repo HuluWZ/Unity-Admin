@@ -16,7 +16,7 @@ export const getProducts = async () => {
                 authtoken: `${token}`,
             },
         });
-        console.log(" All Books - ",response.data);
+        console.log(" Get All Books - ",response.data);
         return response.data;
     } catch (error) {
         console.log(error);
@@ -42,6 +42,7 @@ export const getProduct = async (id: string) => {
 
 export const createProduct = async (data: any) => {
     try {
+        console.log(" Create Book ")
         const response = await axios.post(`${url}/`, data, {
             headers: {
                 "Content-Type": "application/json",

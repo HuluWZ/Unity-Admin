@@ -105,7 +105,7 @@ const FormDialog = ({
                     initialValues={initialValues}
                     validationSchema={validationSchema}
                     onSubmit={(values, { setSubmitting, resetForm }) => {
-                        // console.log(" Data ", values," Selected Product ",selectedProduct);
+                        console.log(" Data ", values," Selected Product ",selectedProduct);
                         if (selectedProduct) {
                             setSubmitting(true);
                             handleEdit({
@@ -120,7 +120,7 @@ const FormDialog = ({
                             values.thumbnailUrl = file
                             values.topicId = topicId;
                             console.log(topicId,file,pdf)
-                            console.log(values)
+                            console.log(" values :",values)
                             setSubmitting(true);
                             handleAdd({
                                 ...values
@@ -167,7 +167,7 @@ const FormDialog = ({
 
             
             <FormControl margin='normal'  sx={{ m: 1, minWidth: 200 }}>
-                 <InputLabel> Select Topic</InputLabel>
+                 <InputLabel> Select Category</InputLabel>
                  <Select value={topicId} id="topicId" onChange={handleParent} label="Select Topic">
                    {allTopics?.map((loc) => (
                     <MenuItem key={loc?.id} value={loc?.id}>{loc?.name}</MenuItem>
@@ -177,13 +177,13 @@ const FormDialog = ({
                                 <br></br>
                                  <br></br>
                            <Button variant="contained" component="label">  Upload PDF
-                                <Input type="file"  style={{ display: 'none' }}  inputProps={{ required:true }} onChange={handlePdfSelect}   />
+                                <Input type="file"  style={{ display: 'none' }}   onChange={handlePdfSelect}   />
                             </Button>
 
                             <br></br>
                             <br></br>
                            <Button variant="contained" component="label">  Upload Thumbnail
-                                <Input type="file"  style={{ display: 'none' }}  inputProps={{ required:true }} onChange={handleFileSelect}   />
+                                <Input type="file"  style={{ display: 'none' }}   onChange={handleFileSelect}   />
                             </Button>
 
        

@@ -19,7 +19,7 @@ const Products = () => {
     const { id }: any = useParams();
 
 
-     console.log(" ID ",id," Product  ",products , " Is Loading ",isLoading , " Product ",product);
+    //  console.log(" ID ",id," Product  ",products , " Is Loading ",isLoading , " Product ",product);
     if (isLoading) return (
         <PageView
             title="Book"
@@ -27,7 +27,7 @@ const Products = () => {
             actions={[
                 {
                     icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
-                    label: "Add User",
+                    label: "Add Book",
                     handler: () => {
                         setOpen(true)
                         setSelectedProduct(null)
@@ -111,7 +111,7 @@ const Products = () => {
                 open={openConfirm}
                 handleClose={() => setOpenConfirm(false)}
                 handleConfirm={() => {
-                    deleteProductMutation(selectedProduct.id)
+                    deleteProductMutation(selectedProduct?.id)
                     setOpenConfirm(false)
                 }}
                 title="Delete Book"
