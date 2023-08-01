@@ -16,6 +16,9 @@ import DashboardContent from '../pages/layout/DashboardLayout/Dashboard';
 import CustomerList from '../pages/customers';
 
 import CategoriesList from '../pages/categories';
+import CategoryDetail from '../pages/categories/CategoryDetail';
+
+
 import ForumList from '../pages/forum';
 
 import ProductList from '../pages/products';
@@ -29,6 +32,9 @@ import OrderDetail from '../pages/orders/OrderDetail';
 
 import SaleList from '../pages/sales';
 import SalesDetail from '../pages/sales/SalesDetail';
+
+import ForumDetail from '../pages/forum/CategoryDetail';
+
 
 import ReportList from '../pages/report';
 import OrderReport from '../pages/report/OrderReport';
@@ -51,7 +57,10 @@ const RoutesComponent = () => {
                 <Route path="/" element={<Navigate to="/app/dashboard" />} />
                 <Route path="app" element={<DashboardContent />}>
                     <Route path="dashboard" element={<Dashboard />} />
-                    <Route path="categories" element={<CategoriesList />} />
+                    <Route path="categories" element={<Outlet />}>
+                        <Route index element={<CategoriesList />} />
+                        <Route path=":id" element={<CategoryDetail />} />
+                    </Route>
                     <Route path="customers" element={<CustomerList />} />
                     <Route path="sales" element={<Outlet />}>
                         <Route index element={<SaleList />} />
@@ -66,8 +75,10 @@ const RoutesComponent = () => {
                         <Route index element={<OrderList />} />
                         <Route path=":id" element={<OrderDetail />} />
                     </Route>
-                    <Route path="forum" element={<ForumList />} />
-
+                    <Route path="forum" element={<Outlet />}>
+                        <Route index element={<ForumList />} />
+                        <Route path=":id" element={<ForumDetail />} />
+                    </Route>
                     <Route path="reports" element={<Outlet />}>
                         <Route index element={<ReportList />} />
                         <Route path="order" element={<OrderReport />} />

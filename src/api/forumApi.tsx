@@ -27,14 +27,14 @@ export const getForums = async () => {
 
 export const getForum = async (id: string) => {
     try {
-        console.log(" Get Product -  ",id)
+        console.log(" Get Forum -  ",id,token)
         const response = await axios.get(`${url}/get/${id}`, {
             headers: {
                 "Content-Type": "application/json",
-                authtoken: `${token}`,
+                "authtoken": token
             },
         });
-
+        console.log(" Get Forum Response ",response);
         return response.data;
     }
     catch (error) {

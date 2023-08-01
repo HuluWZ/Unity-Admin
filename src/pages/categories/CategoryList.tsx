@@ -19,7 +19,7 @@ import {
   Paper,
   CardMedia,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import { useTheme } from "@mui/system";
 const CategoriesView = ({
   categories,
@@ -87,7 +87,7 @@ const CategoriesView = ({
     {
       field: "actions",
       headerName: "Actions",
-      width: 100,
+      width: 150,
       renderCell: (params: any) => (
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <IconButton
@@ -105,6 +105,9 @@ const CategoriesView = ({
             }}
           >
             <DeleteForeverRounded />
+          </IconButton>
+           <IconButton component={Link} to={`${params.row.id}`}>
+              <VisibilityRounded />
           </IconButton>
         </Box>
       ),

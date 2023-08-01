@@ -34,7 +34,7 @@ export const createCategory = async (data: any) => {
 
 //get category by id
 export const getCategoryById = async (id: any) => {
-    const response = await axios.get(`${url}news/search/${id}`, {
+    const response = await axios.get(`${url}news/${id}`, {
         headers: {
             "Content-Type": "application/json",
             authtoken: `${token}`,

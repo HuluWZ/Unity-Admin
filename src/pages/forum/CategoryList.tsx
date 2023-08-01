@@ -19,7 +19,7 @@ import {
   Paper,
   CardMedia,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import { useTheme } from "@mui/system";
 const CategoriesView = ({
   categories,
@@ -164,7 +164,6 @@ const CategoriesView = ({
           title: item.title,
           topic: item?.forum_topic?.name,
           asker:item?.user?.name,
-          thumbnail: item?.imageUrl1,
           createdAt: item?.createdAt,
           isReported: item?.isBookmarked ? "Yes" : "No",
           answers: item?.forumTopicId
@@ -192,21 +191,6 @@ const CategoriesView = ({
             headerName: "Asker",
             width: 150,
     },
-    {
-      field: "thumbnail",
-      headerName: "Image",
-      width: 400,
-      renderCell: (params: any) => (
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <CardMedia
-            component="img"
-            height="300"
-            image={params?.row?.thumbnail}
-            alt="green iguana"
-          />
-        </Box>
-      ),
-    },
       {
             field: "createdAt",
             headerName: "Published Date",
@@ -227,7 +211,7 @@ const CategoriesView = ({
     {
       field: "actions",
       headerName: "Actions",
-      width: 100,
+      width: 150,
       renderCell: (params: any) => (
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <IconButton
@@ -245,6 +229,9 @@ const CategoriesView = ({
             }}
           >
             <DeleteForeverRounded />
+          </IconButton>
+           <IconButton component={Link} to={`${params.row.id}`}>
+              <VisibilityRounded />
           </IconButton>
         </Box>
       ),
