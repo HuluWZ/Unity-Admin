@@ -25,6 +25,8 @@ const ItemMedia = styled(CardMedia)(({ theme }) => ({
 }));
 
 
+
+
 const CategoryInfo = ({ category }: any) => {
   const theme = useTheme();
   const images = [category?.imageUrl1 ,category?.imageUrl2,category?.imageUrl3];
@@ -37,10 +39,10 @@ const CategoryInfo = ({ category }: any) => {
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={6}>
                         <Item>
-                        <Typography fontWeight="fontWeightBold" m={1}>#   Forum Detail</Typography>
+                        <Typography fontWeight="fontWeightBold" m={1}>#   Thread Detail</Typography>
                             <Typography variant="body1" color={theme.palette.mode === 'dark' ? '#fff' : 'text.primary'}>
                                 <Box fontWeight="fontWeightBold" m={1}>
-                                    Forum Title:
+                                    Thread Title:
                                 </Box>
                             </Typography>
                             <Typography variant="body2" color={theme.palette.mode === 'dark' ? '#fff' : 'text.primary'}>
@@ -67,7 +69,7 @@ const CategoryInfo = ({ category }: any) => {
                             </Typography>
                             <Typography variant="body2" color={theme.palette.mode === 'dark' ? '#fff' : 'text.primary'}>
                                 <Box fontWeight="fontWeightBold" m={1}>
-                                    {category && category?.forumTopicId || "--"}
+                                    {category && category?.forum_topic?.name || "--"}
                                 </Box>
                             </Typography>
                         </Item>
@@ -111,7 +113,7 @@ const CategoryInfo = ({ category }: any) => {
                                     {/* Images: */}
                                 </Box>
                             </Typography>
-                            <Typography  color={theme.palette.mode === 'dark' ? '#fff' : 'text.primary'}>
+                            {/* <Typography  color={theme.palette.mode === 'dark' ? '#fff' : 'text.primary'}> */}
                                 {/* <div >
                         {category && category.item.images.map((imageUrl:any, index:number) => (
                                  <a href={imageUrl} target="_blank">
@@ -119,8 +121,6 @@ const CategoryInfo = ({ category }: any) => {
                                  </a>
                         )) || " No Image "}
                         </div>      */}
-
-                            </Typography>
                         </Item>
                     </Grid>
                     <Grid item xs={6} md={6}>

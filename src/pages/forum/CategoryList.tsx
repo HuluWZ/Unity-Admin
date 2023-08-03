@@ -4,6 +4,7 @@ import {
   GridRowsProp,
   GridColDef,
   GridToolbar,
+  GridCellParams 
 } from "@mui/x-data-grid";
 import {
   DeleteForeverRounded,
@@ -19,8 +20,12 @@ import {
   Paper,
   CardMedia,
 } from "@mui/material";
-import { useNavigate,Link } from "react-router-dom";
+import { useNavigate,Link     } from "react-router-dom";
 import { useTheme } from "@mui/system";
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+
+
+
 const CategoriesView = ({
   categories,
   setSelectedCategory,
@@ -29,7 +34,6 @@ const CategoriesView = ({
 }: any) => {
   const theme = useTheme();
 
-  const navigate = useNavigate();
   var categoriess = {
     "message": "OK",
     "RESPONSE": "SUCCESS",
@@ -156,7 +160,8 @@ const CategoriesView = ({
             "isBookmarked": false
         }
     ]
-}
+  }
+ 
   console.log(" Categories  : ", categoriess?.result);
   const rows: GridRowsProp = categoriess?.result?.map((item: any) => {
     return {
@@ -164,9 +169,10 @@ const CategoriesView = ({
           title: item.title,
           topic: item?.forum_topic?.name,
           asker:item?.user?.name,
-          createdAt: item?.createdAt,
+          createdAt: `${new Date(item?.createdAt)}`.slice(0,25),
           isReported: item?.isBookmarked ? "Yes" : "No",
-          answers: item?.forumTopicId
+          answers: item?.forumTopicId,
+
         };
   });
 
@@ -175,10 +181,14 @@ const CategoriesView = ({
             field: "id",
             headerName: "ID",
             width: 50,
+        },{
+            field: "createdAt",
+            headerName: "Date",
+            width: 180,
         },
     {
             field: "title",
-            headerName: "Title",
+            headerName: "Thread Name",
             width: 150,
     },
         {
@@ -189,11 +199,6 @@ const CategoriesView = ({
       {
             field: "asker",
             headerName: "Asker",
-            width: 150,
-    },
-      {
-            field: "createdAt",
-            headerName: "Published Date",
             width: 150,
     },
 {
@@ -217,10 +222,10 @@ const CategoriesView = ({
           <IconButton
             onClick={() => {
               setSelectedCategory(params.row);
-              setOpen(true);
+              // setOpenConfirm(true);
             }}
           >
-            <EditRounded />
+            <CheckCircleOutlineIcon />
           </IconButton>
           <IconButton
             onClick={() => {
@@ -230,14 +235,22 @@ const CategoriesView = ({
           >
             <DeleteForeverRounded />
           </IconButton>
-           <IconButton component={Link} to={`${params.row.id}`}>
+           {/* <IconButton component={Link} to={`${params.row.id}`}>
               <VisibilityRounded />
-          </IconButton>
+          </IconButton> */}
         </Box>
       ),
     },
   ];
 
+  const navigate = useNavigate();
+  const handleCellClick = (params:GridCellParams) => {
+    const { row,id,field } = params;
+    if (field != "actions") {
+      console.log(params)
+      navigate(`${id}`);
+    }
+  };
   return (
     <Container maxWidth="lg">
       <Paper sx={{ background: theme.palette.background.paper }} variant="outlined">
@@ -246,8 +259,8 @@ const CategoriesView = ({
           columns={columns}
           pagination
           rowsPerPageOptions={[5, 10, 20]}
-          checkboxSelection
           autoHeight
+          onCellClick={handleCellClick}
           initialState={{
             pagination: {
               pageSize: 5,
@@ -255,7 +268,7 @@ const CategoriesView = ({
           }}
           components={{
             Toolbar: GridToolbar,
-          }}
+          }} 
           sx={{
             boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.05)",
           }}

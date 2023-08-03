@@ -17,10 +17,22 @@ import {
   colors, 
   Paper, 
   CardMedia, 
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Snackbar,
+
 } from "@mui/material"; 
 import { useTheme } from "@mui/material"; 
 import AddCategory from "./AddCategory"; 
 import ViewAllCategories from "./ViewAllCategory"; 
+
 const api = import.meta.env.VITE_API_URL; 
 const url = `${api}topic`; 
  
@@ -48,116 +60,18 @@ const ProductsView = ({
       }).catch((error) => console.log('Error creating category:', error)); 
   }; 
     // console.log("   products", products) 
-    const theme = useTheme(); 
- 
-    const columns: GridColDef[] = [ 
-    { 
-            field: "id", 
-            headerName: "ID", 
-            width: 50, 
-        }, 
-        { 
-            field: "title", 
-            headerName: "Title", 
-            width: 250, 
-        }, 
-        { 
-            field: "topic", 
-            headerName: "Category", 
-            width: 150, 
-        }, 
-     
-            { 
-      field: "thumbnail", 
-      headerName: "Thumbnail", 
-      width: 300, 
-      renderCell: (params: any) => ( 
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}> 
-          <CardMedia 
-            component="img" 
-            height="300" 
-            image={params?.row?.thumbnail} 
-            alt="View Pdf" 
-          /> 
-        </Box> 
-      ), 
-        }, 
-    { 
-      field: "url", 
-      headerName: "File", 
-      width: 300, 
-      renderCell: (params: any) => ( 
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}> 
-              <a href={params?.row?.url} target="_blank"> View Pdf </a> 
-             
-        </Box> 
-      ), 
-        }, 
-        { 
-            field: "createdAt", 
-            headerName: "Published Date", 
-            width: 150, 
-      }, 
- 
-        { 
-            field: "actions", 
-            headerName: "Actions", 
-            width: 150, 
-            renderCell: (params: any) => { 
-                return ( 
-                    <Box 
-                        sx={{ 
-                            display: "flex", 
-                            justifyContent: "space-evenly", 
-                            alignItems: "center", 
-                        }} 
-                    > 
-                        <IconButton 
-                            onClick={() => { 
-                                setSelectedProduct(params.row); 
-                                setOpen(true); 
-                            }} 
-                        > 
-                            <EditRounded /> 
-                        </IconButton> 
-                        <IconButton 
-                            onClick={() => { 
-                                setSelectedProduct(params.row); 
-                                setOpenConfirm(true); 
-                            }} 
-                        > 
-                            <DeleteForeverRounded /> 
-                        </IconButton> 
-                        {/* <IconButton component={Link} to={`${params.row.id}`}> */} 
-                            {/* <VisibilityRounded /> */} 
-                        {/* </IconButton> */} 
-                    </Box> 
-                ); 
-            }, 
-        }, 
-    ]; 
- 
-    const rows: GridRowsProp = products?.result?.map((product: any) => { 
-        console.log(" Books = ", products) 
-        return { 
-          id: product.id, 
-          title:product.title, 
-          topic: product?.topic?.name, 
-          thumbnail: product?.thumbnailUrl, 
-          url: product?.url, 
-          createdAt: product?.createdAt 
-        }; 
-    }); 
+    const theme = useTheme();  
+    
  
     return ( 
-        <div> 
+    <div> 
             <div> 
-      <AddCategory onAddCategory={handleAddCategory} /> 
-      <ViewAllCategories /> 
-    </div> 
+               <AddCategory onAddCategory={handleAddCategory} /> 
+               <ViewAllCategories /> 
+            </div> 
  
          
-        <Container maxWidth="lg"> 
+        {/* <Container maxWidth="lg"> 
             <h3>Books and Magazines</h3> 
             <Paper sx={{ background: theme.palette.background.paper }} variant="outlined"> 
  
@@ -181,9 +95,35 @@ const ProductsView = ({
                     }} 
                 /> 
             </Paper> 
-            </Container> 
-        </div> 
-    ); 
+            </Container>  */}
+            {/* <div> */}
+        <Grid container spacing={2}>
+
+        {products && products?.result?.map((item: any) => (
+        <Grid item xs={12} sm={6} md={4} lg={3} key={item?.id}>
+          <Card sx={{ maxWidth: 300 }}>
+            <CardMedia component="img" height="250" image={item?.thumbnailUrl} alt={item?.title} />
+          <CardContent>
+            <Typography gutterBottom variant="h6" component="div">
+              {item?.title}
+            </Typography>
+           <Button variant="outlined" onClick={() => { 
+                                setSelectedProduct(item); 
+                                setOpen(true); 
+                            }} >Edit</Button>
+           <Button variant="outlined" onClick={() => { 
+                                setSelectedProduct(item); 
+                                setOpenConfirm(true); 
+                            }}>Delete</Button>
+          </CardContent>
+          </Card>
+        </Grid>
+
+                    
+                ))}
+                </Grid>
+            </div>
+)
 }; 
  
 export default ProductsView;

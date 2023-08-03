@@ -69,7 +69,7 @@ const CategoryDetail = () => {
             <PageView title={data?.result?.title || 'Un'} backPath="/forum">
                 <Container maxWidth="lg">
                     <StyledTabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                        <StyledTab label="Forum Details" />
+                        <StyledTab label="Thread Details" />
                     </StyledTabs>
                     {value === 0 && <CategoryInfo category={data?.result} />}
                 </Container>

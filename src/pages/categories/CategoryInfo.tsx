@@ -24,8 +24,32 @@ const ItemMedia = styled(CardMedia)(({ theme }) => ({
 
 }));
 
+const formatDateToHumanReadable = (date:Date)=> {
+  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const monthsOfYear = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+  const dayOfWeekName = daysOfWeek[date.getDay()];
+  const monthName = monthsOfYear[date.getMonth()];
+  const day = date.getDate();
+  const year = date.getFullYear();
+  let hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+
+  let amOrPm = 'am';
+  if (hours >= 12) {
+    amOrPm = 'pm';
+    hours %= 12;
+  }
+  if (hours === 0) {
+    hours = 12;
+  }
+
+  return `${dayOfWeekName} ${monthName} ${day} ${year} ${hours}:${minutes}${amOrPm}`;
+}
+
 
 const CategoryInfo = ({ category }: any) => {
+    const dateForm  = formatDateToHumanReadable(new Date(category?.createdAt));
   const theme = useTheme();
     console.log(" Selected  News : ", category);
     const news = category?.description?.split(".")
@@ -48,7 +72,7 @@ const CategoryInfo = ({ category }: any) => {
                                       <img src={category?.thumbnail} width="300" height="300" alt="News Image"></img>
                                 </a>
                             </div>
-                            <Typography>{category?.createdAt?.split("T")[0]}  - {category?.createdAt?.split("T")[1]}</Typography>
+                            <Typography>{ dateForm}</Typography>
                             <Typography variant="body1" color={theme.palette.mode === 'dark' ? '#fff' : 'text.primary'}>
                                 <Box fontWeight="fontWeightBold" m={1}>
                                 </Box>

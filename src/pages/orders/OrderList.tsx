@@ -50,42 +50,47 @@ const OrdersView = ({
   const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    console.log(" Current Target ",event.currentTarget);
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+const rows: GridRowsProp = orders?.result?.map((item: any) => {
+    return {
+          id: item?.id,
+          title: item?.title,
+          description: item?.description,
+          thumbnail: item?.thumbnailUrl,
+          url : item?.url,
+          createdAt: `${new Date(item?.createdAt)}`.slice(0,25)
+    };
+  });
   const columns: GridColDef[] = [
-  {
+    {
             field: "id",
             headerName: "ID",
             width: 50,
-        },
+    },
     {
             field: "title",
             headerName: "Title",
             width: 150,
-        },
-        {
+    },
+    {
             field: "description",
             headerName: "Description",
             width: 350,
-        },
-        {
-            field: "topic",
-            headerName: "Topic",
-            width: 150,
     },
-    {
+     {
       field: "thumbnail",
       headerName: "Thumbnail",
-      width: 300,
       renderCell: (params: any) => (
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <CardMedia
             component="img"
-            height="200"
+            height="150"
+            width="200"
             image={params?.row?.thumbnail}
             alt="green iguana"
           />
@@ -104,7 +109,7 @@ const OrdersView = ({
       {
             field: "createdAt",
             headerName: "Published Date",
-            width: 150,
+            width: 180,
     },
     {
       field: "actions",
@@ -141,32 +146,16 @@ const OrdersView = ({
                 },
               }}
             >
-              <MenuItem>
-                <Link to={`${params.row.id}`}>
-                  <VisibilityRounded sx={{ color: "primary.main" }} />
-                </Link>
-              </MenuItem>
-              {/* <MenuItem
+              
+              <MenuItem
                 onClick={() => {
                   setOpen(true);
                   setSelectedOrder(params.row);
                 }}
               >
                 <EditRounded sx={{ color: "secondary.main" }} />
-              </MenuItem> */}
-              {/* <MenuItem
-                onClick={() => {
-
-                  const data ={id:params.row.id,status:"Paid"}
-                  // setOpen(true);
-                  // setSelectedOrder(params.row);
-                  console.log(" Paid bookin -",data);
-                  updateOrderMutation(data);
-                }}
-                >
-                <CurrencyRupeeRoundedIcon sx={{ color: "secondary.main" }} />
-              </MenuItem> */}
-
+              </MenuItem>
+          
               <MenuItem
                 onClick={() => {
                   approveOrderMutation(params.row.id);
@@ -190,17 +179,7 @@ const OrdersView = ({
     },
   ];
 
-  const rows: GridRowsProp = orders?.result?.map((item: any) => {
-    return {
-      id: item.id,
-          title: item.title,
-          description: item.description,
-          topic: item?.topic?.name,
-          thumbnail: item?.thumbnailUrl,
-          url : item?.url,
-          createdAt: item?.createdAt
-    };
-  });
+  
 
   return (
     <Container maxWidth="lg">
@@ -220,7 +199,6 @@ const OrdersView = ({
             },
 
           }}
-          checkboxSelection
         />
       </Paper>
     </Container>

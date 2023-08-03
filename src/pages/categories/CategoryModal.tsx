@@ -23,13 +23,24 @@ const url = import.meta.env.VITE_API_URL;
 const token = localStorage.getItem("token") || "";
 
 const modules = {
-    toolbar: [
-        [{ 'header': [1, 2, 3,4,5, false] }],
-        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-        [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
-        ['link', 'image'],
-        ['clean']
-    ],
+    toolbar:[
+  ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+  ['blockquote', 'code-block'],
+
+//   [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+  [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+  [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+  [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+  [{ 'direction': 'rtl' }],                         // text direction
+
+  [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+  [{ 'color': ['red','green','white','black'] }, { 'background': ['white', 'black'] }],          // dropdown with defaults from theme
+  [{ 'font': [] }],
+  [{ 'align': [] }],
+
+  ['clean']                                         // remove formatting button
+],
 };
 const formats = [
     'header',
@@ -165,21 +176,14 @@ const FormDialog = ({
                             />
                             <br></br>
                             <h4>Description</h4>
-                            <ReactQuill theme="snow"  id="content" value={content} onChange={handleEditorChange}  modules={modules} formats={formats} />
+                            {selectedCategory ?
+                                (<ReactQuill theme="snow" id="content" value={values.description} onChange={handleChange} modules={modules} formats={formats} />) :
+                                (<ReactQuill theme="snow" id="content" value={content} onChange={handleEditorChange} modules={modules} formats={formats} />
+)}
                             <br></br>
                             <br></br>
 
             
-            <FormControl margin='normal'  sx={{ m: 1, minWidth: 200 }}>
-                 <InputLabel> Select Topic</InputLabel>
-                 <Select value={topicId} id="topicId" onChange={handleParent} label="Select Topic">
-                   {allTopics?.map((loc) => (
-                    <MenuItem key={loc?.id} value={loc?.id}>{loc?.name}</MenuItem>
-                    ))}
-                </Select>
-            </FormControl> 
-           
-
                             <br></br>
                            <Button variant="contained" component="label">  Upload Thumbnail
                                 <Input type="file"  style={{ display: 'none' }}  inputProps={{ required:true }} onChange={handleFileSelect}   />

@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { getOrders, createOrder, updateOrder, deleteOrder, approveOrder ,orderReport} from "../../api/ordersApi";
+import { getOrders, createOrder, updateOrder, deleteOrder, approveOrder } from "../../api/ordersApi";
 import { useNotification } from '../useNotification';
 
 
@@ -11,7 +11,6 @@ export const OrderProvider = ({ children }: any) => {
     const { showNotification } = useNotification()
 
     const { data: orders, isLoading, isError } = useQuery('orders', getOrders);
-    const { data: report, isLoading: reportLoading, isError: reportError } = useQuery('reportOrder', orderReport);
 
     console.log(" Orders L =  ", orders);
 
@@ -66,20 +65,13 @@ export const OrderProvider = ({ children }: any) => {
         orders,
         isLoading,
         isError,
-        report,
-        reportLoading,
-        reportError,
         createOrderMutation,
         updateOrderMutation,
         deleteOrderMutation,
         approveOrderMutation
     };
 
-    return (
-        <OrderContext.Provider value={value}>
-            {children}
-        </OrderContext.Provider>
-    );
+    return <OrderContext.Provider value={value}>{children}</OrderContext.Provider>;
 };
 
 export const useOrder = () => useContext(OrderContext);

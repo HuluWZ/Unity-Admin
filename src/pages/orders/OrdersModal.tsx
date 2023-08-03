@@ -64,7 +64,6 @@ const FormDialog = ({
  const validationSchema = Yup.object({
         title: Yup.string().required("Required"),
         description: Yup.string().required("Required"),
-        topicId: Yup.string().required("Required"),
         url:Yup.string().required("Required")
     });
  const initialValues = {
@@ -111,7 +110,7 @@ const FormDialog = ({
     }
 
 
-
+console.log(" Selected Order ",selectedOrder)
 
   return (
     <Dialog
@@ -121,19 +120,19 @@ const FormDialog = ({
       maxWidth="md"
     >
       <DialogTitle id="form-dialog-title">
-        {!selectedOrder ? "Add Video" : "Edit Video"}
+        {selectedOrder ?  "Edit Video":"Add Video" }
       </DialogTitle>
       <DialogContent>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={(values, { setSubmitting , resetForm}) => {
+          onSubmit={(values, { setSubmitting, resetForm }) => {
+            console.log(" Selected  Video : ",selectedOrder)
             if (selectedOrder) {
               handleEdit(values);
               resetForm();
               handleClose();
             } else {
-              values.topicId = topicId
               values.thumbnail = file;
               values.description = content;
               console.log(" Value Added : ",values)
@@ -172,21 +171,17 @@ const FormDialog = ({
                                 }}
                             />
                             <br></br>
-                            <h4>Description</h4>
-                            <ReactQuill theme="snow"  id="content" value={content} onChange={handleEditorChange}  modules={modules} formats={formats} />
+              <h4>Description</h4>
+              {!selectedOrder ?
+                (<ReactQuill theme="snow" id="content" value={content} onChange={handleEditorChange} modules={modules} formats={formats} />) :
+                (<ReactQuill theme="snow" id="content" value={values.description} onChange={handleChange} modules={modules} formats={formats} />
+                ) 
+}
                             <br></br>
                             <br></br>
 
             
-            {/* <FormControl margin='normal'  sx={{ m: 1, minWidth: 200 }}>
-                 <InputLabel> Select Topic</InputLabel>
-                 <Select value={topicId} id="topicId" onChange={handleParent} label="Select Topic">
-                   {allTopics?.map((loc) => (
-                    <MenuItem key={loc?.id} value={loc?.id}>{loc?.name}</MenuItem>
-                    ))}
-                </Select>
-            </FormControl>  */}
-           
+            
 
               <br></br>
               <TextField

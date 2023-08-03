@@ -36,13 +36,17 @@ const CategoriesView = ({
           id: item.id,
           title: item.title,
           description: item.description,
-          topic: item?.topic?.name,
           thumbnail: item?.thumbnail,
-          createdAt: item?.createdAt
+          createdAt: `${new Date(item?.createdAt)}`.slice(0,25)
         };
   });
 
   const columns: GridColDef[] = [
+  {
+            field: "createdAt",
+            headerName: "Date",
+            width: 200,
+    },
         {
             field: "id",
             headerName: "ID",
@@ -50,7 +54,7 @@ const CategoriesView = ({
         },
     {
             field: "title",
-            headerName: "Title",
+            headerName: "Heading",
             width: 150,
         },
         {
@@ -58,32 +62,22 @@ const CategoriesView = ({
             headerName: "Description",
             width: 350,
         },
-        {
-            field: "topic",
-            headerName: "Topic",
-            width: 150,
-    },
     {
       field: "thumbnail",
       headerName: "Image",
-      width: 400,
+      width: 150,
       renderCell: (params: any) => (
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <CardMedia
             component="img"
-            height="300"
+            height="80"
+            width="150"
             image={params?.row?.thumbnail}
             alt="green iguana"
           />
         </Box>
       ),
     },
-      {
-            field: "createdAt",
-            headerName: "Published Date",
-            width: 150,
-    },
-
     {
       field: "actions",
       headerName: "Actions",
@@ -122,7 +116,6 @@ const CategoriesView = ({
           columns={columns}
           pagination
           rowsPerPageOptions={[5, 10, 20]}
-          checkboxSelection
           autoHeight
           initialState={{
             pagination: {

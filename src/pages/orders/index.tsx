@@ -13,7 +13,7 @@ const Orders = () => {
     const [selectedOrder, setSelectedOrder] = React.useState<any>(null);
     const [open, setOpen] = React.useState(false);
     const [openConfirm, setOpenConfirm] = React.useState(false);
-
+    console.log(" Selected Order ",selectedOrder)
     if (isLoading) return (
         <PageView
             title="Video"
