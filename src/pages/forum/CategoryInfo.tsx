@@ -121,6 +121,8 @@ const CategoryInfo = ({ category }: any) => {
                                  </a>
                         )) || " No Image "}
                         </div>      */}
+                        <input type="text" width={50}/>
+                        <button >Replay as Admin</button>
                         </Item>
                     </Grid>
                     <Grid item xs={6} md={6}>

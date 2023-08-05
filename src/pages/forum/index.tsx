@@ -8,14 +8,14 @@ import { AddCircleRounded } from "@mui/icons-material";
 import ConfirmModal from "../../components/ConfirmModal";
 
 
-const Categories = () => {
+const Forums = () => {
   const { forums, isLoading, error, deleteForumMutation, createForumMutation, updateForumMutation } = useForum();
-  const [selectedCategory, setSelectedCategory] = useState<any>(null);
+  const [ selectedForum, setSelectedForum] = useState<any>(null);
   const [open, setOpen] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
 
 
-
+  console.log(" Get All Forums ",forums)
   if (isLoading) return (
     <PageView
       title="Forums"
@@ -62,13 +62,13 @@ const Categories = () => {
         open={open}
         handleClose={() => {
           setOpen(false)
-          setSelectedCategory(null)
+          setSelectedForum(null)
         }
         }
         handleAdd={createForumMutation}
-        selectedCategory={selectedCategory}
+        selectedForum={selectedForum}
         handleEdit={updateForumMutation}
-        setSelectedCategory={setSelectedCategory}
+        setSelectedForum={setSelectedForum}
 
 
       />
@@ -77,7 +77,7 @@ const Categories = () => {
         open={openConfirm}
         handleClose={() => setOpenConfirm(false)}
         handleConfirm={() => {
-          deleteForumMutation(selectedCategory?.id);
+          deleteForumMutation(selectedForum?.id);
           setOpenConfirm(false);
         }}
         title="Delete Forum"
@@ -88,8 +88,8 @@ const Categories = () => {
 
 
       <CategoriesView
-        categories={forums}
-        setSelectedCategory={setSelectedCategory}
+        forums={forums}
+        setSelectedForum={setSelectedForum}
         setOpen={setOpen}
         setOpenConfirm={setOpenConfirm}
       />
@@ -101,4 +101,4 @@ const Categories = () => {
 
 
 
-export default Categories;
+export default Forums;

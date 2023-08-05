@@ -9,22 +9,37 @@ import ConfirmModal from "../../components/ConfirmModal";
 import { Alert } from "@mui/material";
 import { useParams } from "react-router-dom";
 import ProductsDetail from "./ProductDetail";
-
+import CategoryFormDialog from "./CategoryModal";
 
 const Products = () => {
-    const { products, isLoading, error, deleteProductMutation, createProductMutation, updateProductMutation, product } = useProduct();
+    const { products, isLoading, error, deleteProductMutation, createProductMutation,createProductCategoryMutation ,updateProductMutation, product } = useProduct();
     const [selectedProduct, setSelectedProduct] = useState<any>(null);
     const [open, setOpen] = useState(false);
+    const [openCategory, setOpenCategory] = useState(false);
     const [openConfirm, setOpenConfirm] = useState(false);
+    const [openCategoryConfirm, setOpenCategoryConfirm] = useState(false);
+
     const { id }: any = useParams();
 
-
-    //  console.log(" ID ",id," Product  ",products , " Is Loading ",isLoading , " Product ",product);
     if (isLoading) return (
         <PageView
             title="Book"
             backPath="/app/dashboard"
             actions={[
+                {
+                    icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
+                    label: "Add Category",
+                    handler: () => {
+                        setOpenCategory(true)
+                    },
+                    otherProps: {
+                        sx: {
+                            ml: "auto",
+                            fontSize: "10px",
+                        },
+                        variant: "contained",
+                    },
+                },
                 {
                     icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
                     label: "Add Book",
@@ -40,6 +55,7 @@ const Products = () => {
                         variant: "contained",
                     },
                 },
+                
             ]}
         >
             <LoadingComponent />
@@ -51,6 +67,20 @@ const Products = () => {
             title="Books"
             backPath="/app/dashboard"
             actions={[
+               {
+                    icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
+                    label: "Add Category",
+                    handler: () => {
+                        setOpenCategory(true)
+                    },
+                    otherProps: {
+                        sx: {
+                            ml: "auto",
+                            fontSize: "10px",
+                        },
+                        variant: "contained",
+                    },
+                },
                 {
                     icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
                     label: "Add Book",
@@ -66,6 +96,7 @@ const Products = () => {
                         variant: "contained",
                     },
                 },
+                
             ]}
         >
             <Alert severity="error">{error}</Alert>
@@ -77,6 +108,20 @@ const Products = () => {
             title="Books"
             backPath="/app/dashboard"
             actions={[
+            {
+                    icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
+                    label: "Add Category",
+                    handler: () => {
+                        setOpenCategory(true)
+                    },
+                    otherProps: {
+                        sx: {
+                            ml: "auto",
+                            fontSize: "10px",
+                        },
+                        variant: "contained",
+                    },
+                },
                 {
                     icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
                     label: "Add Book",
@@ -92,6 +137,7 @@ const Products = () => {
                         variant: "contained",
                     },
                 },
+                
             ]}
         >
 
@@ -105,8 +151,17 @@ const Products = () => {
                 handleEdit={updateProductMutation}
                 selectedProduct={selectedProduct}
                 setSelectedProduct={setSelectedProduct}
-            />
+            /> 
 
+            <CategoryFormDialog 
+                open={openCategory}
+                handleClose={() => {
+                    setOpenCategory(false)
+                }}
+                handleAdd={createProductCategoryMutation}
+            /> 
+
+ 
             <ConfirmModal
                 open={openConfirm}
                 handleClose={() => setOpenConfirm(false)}

@@ -42,8 +42,8 @@ type FormDialogProps = {
     handleClose: () => void;
     handleAdd: (values: any) => void;
     handleEdit: (values: any) => void;
-    selectedCategory?: any;
-    setSelectedCategory?: any;
+    selectedForum?: any;
+    setSelectedForum?: any;
 };
 interface Option {
       [key: string]: string | string[] | Option[] | undefined;
@@ -54,15 +54,13 @@ const FormDialog = ({
     handleClose,
     handleAdd,
     handleEdit,
-    selectedCategory,
-    setSelectedCategory,
+    selectedForum,
+    setSelectedForum,
 }: FormDialogProps) => {
     const initialValues = {
-        // id: selectedCategory ? selectedCategory.id : "",
-        title: selectedCategory ? selectedCategory.title : "",
-        description: selectedCategory ? selectedCategory.description : "",
-        topicId: selectedCategory ? selectedCategory.topicId : "",
-        thumbnail: selectedCategory ? selectedCategory.thumbnail : "",
+        title: selectedForum ? selectedForum?.title : "",
+        description: selectedForum ? selectedForum?.description : "",
+        topicId: selectedForum ? selectedForum?.topicId : "",
     };
 
     const validationSchema = Yup.object({
@@ -86,8 +84,8 @@ const FormDialog = ({
 
     useEffect(() => {
         async function fetchTopic() {
-            console.log("Method Called ",url)
-            const response = await fetch(`${url}topic/`, {
+            console.log(" Get All Topic ",url)
+            const response = await fetch(`${url}forum/topic`, {
                 headers: {
                 "Content-Type": "application/json",
                 "authtoken":`${token}`
@@ -115,19 +113,18 @@ const FormDialog = ({
         >
             <DialogTitle id="form-dialog-title" sx={{
             }}>
-                {selectedCategory ? "Edit News" : "Add News"}
+                {selectedForum ? "Edit Forum" : "Add Forum"}
             </DialogTitle>
             <DialogContent sx={{ marginTop: "2rem" }}>
                 <Formik
                     initialValues={initialValues}
                     validationSchema={validationSchema}
                     onSubmit={(values, { setSubmitting, resetForm }) => {
-                        if (selectedCategory) {
+                        if (selectedForum) {
                             handleEdit(values);
-                            setSelectedCategory(null);
+                            setSelectedForum(null);
                         } else {
                             values.topicId = topicId
-                            values.thumbnail = file;
                             values.description = content;
                             console.log(" Value Added : ",values)
                             handleAdd(values);
@@ -171,7 +168,7 @@ const FormDialog = ({
 
             
             <FormControl margin='normal'  sx={{ m: 1, minWidth: 200 }}>
-                 <InputLabel> Select Topic</InputLabel>
+                 <InputLabel> Select Category</InputLabel>
                  <Select value={topicId} id="topicId" onChange={handleParent} label="Select Topic">
                    {allTopics?.map((loc) => (
                     <MenuItem key={loc?.id} value={loc?.id}>{loc?.name}</MenuItem>
@@ -181,19 +178,7 @@ const FormDialog = ({
            
 
                             <br></br>
-                           <Button variant="contained" component="label">  Upload Thumbnail
-                                <Input type="file"  style={{ display: 'none' }}  inputProps={{ required:true }} onChange={handleFileSelect}   />
-                            </Button>
-
-       
-
-                <div >
-      <div>
-                                    {file &&
-                                        (<img key={file?.name} src={URL.createObjectURL(file)} alt={file?.name} width="200" />)}
-      </div>
-      
-    </div>
+                           
                             
                             <br></br>
                             <DialogActions>
@@ -212,7 +197,7 @@ const FormDialog = ({
                                                 height={20}
                                                 width={20}
                                             />
-                                        ) : selectedCategory ? (
+                                        ) : selectedForum ? (
                                             "Edit"
                                         ) : (
                                             "Add"

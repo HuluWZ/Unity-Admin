@@ -21,6 +21,8 @@ import {
   CardContent,
   Typography,
   Button,
+  MenuItem,
+  FormControl,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -30,11 +32,26 @@ import {
 
 } from "@mui/material"; 
 import { useTheme } from "@mui/material"; 
+import React, { useState, useEffect } from 'react';
 import AddCategory from "./AddCategory"; 
 import ViewAllCategories from "./ViewAllCategory"; 
+import axios from 'axios';
+import { number } from "yup";
+import { makeStyles } from '@material-ui/core/styles';
 
 const api = import.meta.env.VITE_API_URL; 
 const url = `${api}topic`; 
+const useStyles = makeStyles((theme) => ({
+  container: {
+    marginTop: theme.spacing(4),
+  },
+  card: {
+    minHeight: 50,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+}));
  
 const ProductsView = ({ 
     products, 
@@ -43,63 +60,79 @@ const ProductsView = ({
     setOpenConfirm, 
 }: any) => { 
  
-    const handleAddCategory = (categoryName:string) => { 
-    // Send the new category to the backend API for creation 
-    // Replace 'YOUR_BACKEND_API_ENDPOINT' with the actual API endpoint 
-    fetch(url, { 
-      method: 'POST', 
-      headers: { 
-        'Content-Type': 'application/json', 
-      }, 
-      body: JSON.stringify({ name: categoryName }), 
-    }) 
-      .then((response) => response.json()) 
-        .then((data) => {
-        //   products?.result.push(data?.result)
-        console.log('Category created:', data?.result)  
-      }).catch((error) => console.log('Error creating category:', error)); 
-  }; 
-    // console.log("   products", products) 
+
+  const [categoryName, setCategoryName] = useState('');
+  const [categories, setCategories] = useState([{ id: '', name: ''}]);
+  const [message, setMessage] = useState('');
+    // useEffect(() => {
+    // fetchCategories();
+    // }, []);
+  useEffect(() => {
+    async function fetchTopic() {
+      console.log("Method Called ", url)
+      const response = await fetch(`${url}/`, {
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+      const data = await response.json();
+      console.log(" Get All Topic : ", data?.result)
+      setCategories(data?.result);
+    }
+    fetchTopic();
+  }, []);
+  const [selectedBookId, setSelectedBookId] = useState('0');
+  const [filterBook,setFilterBook] = useState([])
+
+    console.log("   products ", products) 
     const theme = useTheme();  
-    
+    const classes = useStyles(); // Assign the classes object to a variable
+    const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+      const { value } = event.target;
+      setSelectedBookId(value);
+      console.log(" value ", value,value=='0')
+      if (value == '0') {
+        console.log("All")
+        setFilterBook(products?.result);
+      } else {
+        const datas = products?.result?.filter((item: any) => item?.topicId == value)
+        console.log(" Other ",value,datas)
+        setFilterBook(datas)
+      }
+  };
+
  
     return ( 
-    <div> 
-            <div> 
-               <AddCategory onAddCategory={handleAddCategory} /> 
-               <ViewAllCategories /> 
-            </div> 
- 
-         
-        {/* <Container maxWidth="lg"> 
-            <h3>Books and Magazines</h3> 
-            <Paper sx={{ background: theme.palette.background.paper }} variant="outlined"> 
- 
-                <DataGrid 
-                    rows={rows} 
-                    columns={columns} 
-                    pagination 
-                    rowsPerPageOptions={[5, 10, 20]} 
-                    checkboxSelection 
-                    autoHeight 
-                    initialState={{ 
-                        pagination: { 
-                            pageSize: 10, 
-                        }, 
-                    }} 
-                    components={{ 
-                        Toolbar: GridToolbar, 
-                    }} 
-                    sx={{ 
-                        boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.05)", 
-                    }} 
-                /> 
-            </Paper> 
-            </Container>  */}
-            {/* <div> */}
-        <Grid container spacing={2}>
+      <div> 
+      <Container maxWidth="md" >
+      
+      <Typography variant="subtitle1" component="div" id="message">
+      </Typography>
+            <br></br>
+      <Grid container spacing={2} >
+        {categories.map((category, index) => (
+          <Grid item xs={10} sm={7} md={3} key={index}>
+            <Card className={classes.card}>
+              <CardContent>{category?.name}</CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+        </Container>
+        <br>
+        </br>
+        <div>
+          <select value={selectedBookId} onChange={handleSelectChange}>
+            <option value="0">All</option>
+            {categories && categories?.map((item) => (
+              <option value={item?.id}>{item?.name}</option>
+            ))}
+        </select>
+        </div>
+        <br></br>
 
-        {products && products?.result?.map((item: any) => (
+        <Grid container spacing={2}>
+        { selectedBookId == "0" ? ( products?.result.map((item: any) => (
         <Grid item xs={12} sm={6} md={4} lg={3} key={item?.id}>
           <Card sx={{ maxWidth: 300 }}>
             <CardMedia component="img" height="250" image={item?.thumbnailUrl} alt={item?.title} />
@@ -107,22 +140,49 @@ const ProductsView = ({
             <Typography gutterBottom variant="h6" component="div">
               {item?.title}
             </Typography>
-           <Button variant="outlined" onClick={() => { 
-                                setSelectedProduct(item); 
+                <Button variant="outlined"
+                  onClick={() => { setSelectedProduct(item); 
                                 setOpen(true); 
                             }} >Edit</Button>
-           <Button variant="outlined" onClick={() => { 
+                <Button variant="outlined"
+                  onClick={() => { 
                                 setSelectedProduct(item); 
                                 setOpenConfirm(true); 
                             }}>Delete</Button>
           </CardContent>
           </Card>
-        </Grid>
+          </Grid>
+          
 
                     
-                ))}
-                </Grid>
-            </div>
+                ))) : (filterBook?.map((item: any) => (
+        <Grid item xs={12} sm={6} md={4} lg={3} key={item?.id}>
+          <Card sx={{ maxWidth: 300 }}>
+            <CardMedia component="img" height="250" image={item?.thumbnailUrl} alt={item?.title} />
+          <CardContent>
+            <Typography gutterBottom variant="h6" component="div">
+              {item?.title}
+            </Typography>
+                <Button variant="outlined"
+                  onClick={() => { setSelectedProduct(item); 
+                                setOpen(true); 
+                            }} >Edit</Button>
+                <Button variant="outlined"
+                  onClick={() => { 
+                                setSelectedProduct(item); 
+                                setOpenConfirm(true); 
+                            }}>Delete</Button>
+          </CardContent>
+          </Card>
+          </Grid>
+          
+
+                    
+        )))}
+          
+        </Grid>
+        
+          </div>
 )
 }; 
  

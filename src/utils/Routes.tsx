@@ -20,6 +20,7 @@ import CategoryDetail from '../pages/categories/CategoryDetail';
 
 
 import ForumList from '../pages/forum';
+import ForumDetail from '../pages/forum/CategoryDetail';
 
 import ProductList from '../pages/products';
 import ProductsDetail from '../pages/products/ProductDetail';
@@ -33,7 +34,6 @@ import OrderDetail from '../pages/orders/OrderDetail';
 import SaleList from '../pages/sales';
 import SalesDetail from '../pages/sales/SalesDetail';
 
-import ForumDetail from '../pages/forum/CategoryDetail';
 
 
 import ReportList from '../pages/report';

@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { getProducts, getProduct, createProduct, updateProduct, deleteProduct, getStock } from "../../api/productApi";
+import { getProducts, getProduct, createProduct, createProductCategory,updateProduct, deleteProduct, getStock } from "../../api/productApi";
 import { useNotification } from '../useNotification';
 import { useParams } from 'react-router-dom';
 
@@ -21,7 +21,7 @@ export const ProductProvider = ({ children }: any) => {
     const { mutate: createProductMutation } = useMutation(createProduct, {
         onSuccess: () => {
             queryClient.invalidateQueries('products');
-            showNotification('User created successfully', 'success')
+            showNotification('Book created successfully', 'success')
         },
 
         onError: (error: any) => {
@@ -29,12 +29,24 @@ export const ProductProvider = ({ children }: any) => {
         }
 
     });
+    const { mutate: createProductCategoryMutation } = useMutation(createProductCategory, {
+        onSuccess: () => {
+            console.log(" Success ",createProductCategory,createProductCategoryMutation)
+            queryClient.invalidateQueries('products');
+            showNotification('Category created successfully', 'success')
+        },
 
+        onError: (error: any) => {
+            console.log(" Error From Create ",error)
+            showNotification(" Category already exist", 'error')
+        }
+
+    });
     const { mutate: updateProductMutation } =
         useMutation((data: any) => updateProduct(data.id, data), {
             onSuccess: () => {
                 queryClient.invalidateQueries('products');
-                showNotification('User updated successfully', 'success')
+                showNotification('Book updated successfully', 'success')
             },
 
             onError: (error: any) => {
@@ -46,7 +58,7 @@ export const ProductProvider = ({ children }: any) => {
     const { mutate: deleteProductMutation } = useMutation(deleteProduct, {
         onSuccess: () => {
             queryClient.invalidateQueries('products');
-            showNotification('User deleted successfully', 'success')
+            showNotification('Book deleted successfully', 'success')
         },
 
         onError: (error: any) => {
@@ -66,6 +78,7 @@ export const ProductProvider = ({ children }: any) => {
         createProductMutation,
         updateProductMutation,
         deleteProductMutation,
+        createProductCategoryMutation
     };
 
     return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;

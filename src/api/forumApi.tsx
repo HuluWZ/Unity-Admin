@@ -2,33 +2,33 @@ import axios from "axios";
 
 // Base URL for the request
 const api = import.meta.env.VITE_API_URL;
-const url = `${api}forum`;
+const url = `${api}`;
 
 //Heders for the request
 const token = localStorage.getItem("token");
 
 
-// console.log(" URL =  ", url,token)
+console.log(" URL =  ", `${url}/forum`,token)
 export const getForums = async () => {
-  try {
+//   try {
     console.log(" Get All Forums ",url);
-        const response = await axios.get(`${url}`, {
+        const response = await axios.get(`${url}forum`, {
             headers: {
                 "Content-Type": "application/json",
                 authtoken: `${token}`,
             },
         });
         console.log(" All Forums  Response  - ",response.data);
-        return response.data;
-    } catch (error) {
-        console.log(error);
-    }
+        return response?.data;
+    // } catch (error) {
+    //     console.log(error);
+    // }
 }
 
 export const getForum = async (id: string) => {
-    try {
+    // try {
         console.log(" Get Forum -  ",id,token)
-        const response = await axios.get(`${url}/get/${id}`, {
+        const response = await axios.get(`${url}forum/get/${id}`, {
             headers: {
                 "Content-Type": "application/json",
                 "authtoken": token
@@ -36,15 +36,15 @@ export const getForum = async (id: string) => {
         });
         console.log(" Get Forum Response ",response);
         return response.data;
-    }
-    catch (error) {
-        console.log(error);
-    }
+    // }
+    // catch (error) {
+    //     console.log(error);
+    // }
 }
 
 export const createForum = async (data: any) => {
-    try {
-        const response = await axios.post(`${url}/`, data, {
+    // try {
+        const response = await axios.post(`${url}forum`, data, {
             headers: {
                 "Content-Type": "application/json",
                 authtoken: `${token}`,
@@ -52,15 +52,15 @@ export const createForum = async (data: any) => {
         });
         console.log(" Create Product -  ",response?.data,data)
         return response.data;
-    }
-    catch (error) {
-        console.log(error);
-    }
+    // }
+    // catch (error) {
+    //     console.log(error);
+    // }
 }
 
 export const updateForum = async (id: string, data: any) => {
-    try {
-        const response = await axios.put(`${url}?forumId=${id}`, data, {
+    // try {
+        const response = await axios.put(`${url}forum?forumId=${id}`, data, {
             headers: {
                 "Content-Type": "application/json",
                 authtoken: `${token}`,
@@ -70,38 +70,26 @@ export const updateForum = async (id: string, data: any) => {
 
         return response.data;
 
-    } catch (error) {
-        console.log(error)
-        console.error(error);
-    }
+    // } catch (error) {
+    //     console.log(error)
+    // }
 }
 
 
 export const deleteForum = async (id: string) => {
-    try {
-        console.log(`${url}/delete/${id}`, id)
-        const response = await axios.delete(`${url}?newsId=${id}`, {
+    // try {
+        console.log(`${url}?forumId=${id}`, id)
+        const response = await axios.delete(`${url}forum?forumId=${id}`, {
             headers: {
                 "Content-Type": "application/json",
-                authtoken: `${token}`,
+                 authtoken: `${token}`,
             },
         });
         console.log("Delete Product Response ", response.data)
         return response.data;
-    } catch (error) {
-        console.log(error);
-    }
+    // } catch (error) {
+    //     console.log(error);
+    // }
 }
 
-
-export const getStock = async () => {
-    const response = await axios.get(`${url}/stock`, {
-        headers: {
-            "Content-Type": "application/json",
-            authtoken: `${token}`,
-        },
-    });
-
-    return response.data;
-}
 

@@ -57,6 +57,18 @@ export const createProduct = async (data: any) => {
     }
 }
 
+
+export const createProductCategory = async (data: any) => {
+        console.log(" Create Category ",data)
+        const response = await axios.post(`${api}topic`, data, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        console.log(" Create Category Result -  ",response?.data,data)
+        return response.data;
+   
+}
 export const updateProduct = async (id: string, data: any) => {
     try {
 

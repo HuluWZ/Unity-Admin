@@ -27,8 +27,8 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 
 const CategoriesView = ({
-  categories,
-  setSelectedCategory,
+  forums,
+  setSelectedForum,
   setOpen,
   setOpenConfirm,
 }: any) => {
@@ -39,6 +39,46 @@ const CategoriesView = ({
     "RESPONSE": "SUCCESS",
     "statusCode": 200,
     "result": [
+        {
+            "id": 0,
+            "uuid": "baa67ba1-c35a-4f04-b3f2-21349e8c179f",
+            "title": "Online Learning",
+            "description": " Good evening ladies and gentlemen. Welcome to the night forum of today. First of all, I would like to thank to all of the audience in front of me. Thank you very much for attending the forum for today. Our issue for tonight is “Online Learning”. First of",
+            "imageUrl1": null,
+            "imageUrl2": null,
+            "imageUrl3": null,
+            "imageUrl4": null,
+            "imageUrl5": null,
+            "status": "1",
+            "createdAt": "2023-08-04T13:56:51.000Z",
+            "updatedAt": "2023-08-04T13:56:51.000Z",
+            "forumTopicId": 6,
+            "userId": 1,
+            "forum_topic": {
+                "id": 6,
+                "uuid": "db967d84-0874-4339-9c37-c76a1af3f3aa",
+                "name": "Politics",
+                "createdAt": "2023-07-21T19:16:24.000Z",
+                "updatedAt": "2023-07-21T19:16:24.000Z"
+            },
+            "user": {
+                "id": 1,
+                "uuid": "d1d399cb-02ea-4b92-852b-2c40a0da5a48",
+                "name": "Yafet R.",
+                "phoneNumber": "0923376048",
+                "pin": 4321,
+                "qualification": "Alyah",
+                "state": "A.A",
+                "district": "Nefas Slik Lafto",
+                "area": "Addis Ababa",
+                "labName": "Lab One",
+                "role": "admin",
+                "status": "1",
+                "createdAt": "2023-05-23T20:07:24.000Z",
+                "updatedAt": "2023-06-28T15:19:56.000Z"
+            },
+            "isBookmarked": false
+        },
         {
             "id": 4,
             "uuid": "db16ed09-16cd-4f8c-b774-7a4dc52a164e",
@@ -160,13 +200,12 @@ const CategoriesView = ({
             "isBookmarked": false
         }
     ]
-  }
- 
-  console.log(" Categories  : ", categoriess?.result);
+}
+  console.log(" Categories  : ", forums);
   const rows: GridRowsProp = categoriess?.result?.map((item: any) => {
     return {
-          id: item.id,
-          title: item.title,
+          id: item?.id,
+          title: item?.title,
           topic: item?.forum_topic?.name,
           asker:item?.user?.name,
           createdAt: `${new Date(item?.createdAt)}`.slice(0,25),
@@ -221,7 +260,7 @@ const CategoriesView = ({
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <IconButton
             onClick={() => {
-              setSelectedCategory(params.row);
+              setSelectedForum(params.row);
               // setOpenConfirm(true);
             }}
           >
@@ -229,7 +268,7 @@ const CategoriesView = ({
           </IconButton>
           <IconButton
             onClick={() => {
-              setSelectedCategory(params.row);
+              setSelectedForum(params.row);
               setOpenConfirm(true);
             }}
           >

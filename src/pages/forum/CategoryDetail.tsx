@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTheme } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { useCategory } from "../../hooks/useCategory";
+import { useForum } from "../../hooks/useForum";
 import LoadingComponent from "../../components/LoadingComponent";
 import { getForum } from "../../api/forumApi";
 import { useQuery } from "react-query";
@@ -55,7 +55,7 @@ const CategoryDetail = () => {
         setValue(newValue);
     };
 
-    // console.log(" Value ",value," Data ",data)
+    console.log(" Value ",value," Data ",data)
 
     if (isLoading) return (
         <PageView title="Loading . . .">
