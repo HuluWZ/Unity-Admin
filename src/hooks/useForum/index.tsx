@@ -1,12 +1,10 @@
 import { createContext, useContext } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { getForums, getForum, createForum, updateForum, deleteForum } from "../../api/forumApi";
+import { getForums, createForum, updateForum, deleteForum } from "../../api/forumApi";
 import { useNotification } from '../useNotification';
 import { useParams } from 'react-router-dom';
 
 export const ForumContext = createContext({} as any);
-
-
 
 export const ForumProvider = ({ children }: any) => {
 

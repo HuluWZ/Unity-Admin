@@ -32,9 +32,11 @@ export const AuthProvider = ({ children }: any) => {
     const logoutAction = async () => {
         dispatch({ type: 'LOGOUT_REQUEST' });
         try {
-            const response = await logout();
-            dispatch({ type: 'LOGOUT_SUCCESS', payload: response });
+            // const response = await logout();
+            dispatch({ type: 'LOGOUT_SUCCESS', payload: '' });
             localStorage.removeItem('token');
+            localStorage.removeItem('user');
+
             // localStorage.removeItem('org');
             navigate('/auth/login');
             showNotification('Logged out successfully', 'info');

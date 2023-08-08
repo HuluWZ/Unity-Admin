@@ -11,8 +11,8 @@ import ConfirmModal from "../../components/ConfirmModal";
 const Forums = () => {
   const { forums, isLoading, error, deleteForumMutation, createForumMutation, updateForumMutation } = useForum();
   const [ selectedForum, setSelectedForum] = useState<any>(null);
-  const [open, setOpen] = useState(false);
-  const [openConfirm, setOpenConfirm] = useState(false);
+  const [ open, setOpen] = useState(false);
+  const [ openConfirm, setOpenConfirm] = useState(false);
 
 
   console.log(" Get All Forums ",forums)
