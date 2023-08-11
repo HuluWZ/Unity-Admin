@@ -43,7 +43,8 @@ const CategoryInfo = ({ category }: any) => {
     const [replyIndex, setReplyIndex] = useState<number | null>(null);
     const [replyTextAdmin, setReplyTextAdmin] = useState('');
     const [replyText, setReplyText] = useState('');
-
+    const [userDetail, setUserDetail] = useState({reply:[],forum:[],answer:[],like:[]});
+  console.log(" Category ")
   const handleReplyClick = (index: number) => {
     setReplyIndex(index);
   };
@@ -69,7 +70,16 @@ const CategoryInfo = ({ category }: any) => {
       console.error('Error sending reply:', error);
     }
     };
-      
+    const handleUserDetailsClick = async (userId: string) => {
+    try {
+        const response = await axios.get(`${url}forum/detail/${userId}`);
+        console.log(" Response ", response.data.result," User Id ",userId);
+      setUserDetail(response?.data?.result);
+     } catch (error) {
+      console.error('Error fetching user details:', error);
+    }
+  };
+
   const handleReplySubmit = async (forumId: string) => {
       try {
           const dat = { forumAnswerId:forumId, content: replyText }
@@ -160,7 +170,7 @@ const CategoryInfo = ({ category }: any) => {
         <Card key={index} variant="outlined" style={{ margin: '15px', padding: '15px' }} >
           <Grid container spacing={2}>
             <Grid item xs={1}>
-              <Avatar></Avatar>
+              <Avatar onClick={() => handleUserDetailsClick(answer?.user?.id)}></Avatar>
               <Typography variant="caption">{answer?.user?.name}</Typography>
             </Grid>
             <Grid item xs={9}>
@@ -211,7 +221,7 @@ const CategoryInfo = ({ category }: any) => {
         <Card key={index} variant="outlined" style={{ margin: '10px', padding: '5px' }} >
           <Grid container spacing={2}>
             <Grid item xs={1}>
-              <Avatar></Avatar>
+              <Avatar onClick={() => handleUserDetailsClick(reply?.user?.id)}></Avatar>
               <Typography variant="caption">{reply?.user?.name}</Typography>
             </Grid>
             <Grid item xs={9}>
@@ -249,6 +259,65 @@ const CategoryInfo = ({ category }: any) => {
                         </Item>
                     </Grid>
                 </Grid>   
+                <Grid item xs={12} md={12}>
+                    { userDetail &&
+                    <Item>
+                        <Typography fontWeight="fontWeightBold" m={1}>#   User  Details</Typography>
+                            <Typography variant="body1" color={theme.palette.mode === 'dark' ? '#fff' : 'text.primary'}>
+                                <Box fontWeight="fontWeightBold" m={1}>
+                                   # {userDetail?.forum?.length || 0} Questions: 
+                                </Box>
+                            </Typography>
+                            <Typography variant="body2" color={theme.palette.mode === 'dark' ? '#fff' : 'text.primary'}>
+                                <Box fontWeight="fontWeightBold" m={1}>
+                                    {userDetail?.forum?.map((forum: any) => (
+                                        <>
+                                        <Typography  m={1}>#<b>Title</b>  - {forum?.title}   #<b>Topic</b> - {forum?.forum_topic?.name}</Typography>
+                                        <Typography>  #<b>Date</b> {forum?.createdAt?.split("T")[0]}  {forum?.createdAt?.split("T")[1]}</Typography>
+                                        </>
+                                    ))}
+                                </Box>
+                            </Typography>
+                            <Typography variant="body1" color={theme.palette.mode === 'dark' ? '#fff' : 'text.primary'}>
+                                <Box fontWeight="fontWeightBold" m={1}>
+                                   # {userDetail?.answer?.length || 0} Answers: 
+                                </Box>
+                            </Typography>
+                            <Typography variant="body2" color={theme.palette.mode === 'dark' ? '#fff' : 'text.primary'}>
+                                <Box fontWeight="fontWeightBold" m={1}>
+                                    {userDetail?.answer?.map((forum: any) => (
+                                        <>
+                                                <Typography  m={1}>#<b>Answer</b>  - {forum?.content}   ON #<b>Forum</b> - {forum?.forum?.title}</Typography>
+                                        <Typography>  #<b>Date</b> {forum?.createdAt?.split("T")[0]}  {forum?.createdAt?.split("T")[1]}</Typography>
+                                        </>
+
+                                    ))}
+                                </Box>
+                            </Typography>
+                            <Typography variant="body1" color={theme.palette.mode === 'dark' ? '#fff' : 'text.primary'}>
+                                <Box fontWeight="fontWeightBold" m={1}>
+                                   # {userDetail?.like?.length || 0} Likes: 
+                                </Box>
+                            </Typography>
+                            <Typography variant="body1" color={theme.palette.mode === 'dark' ? '#fff' : 'text.primary'}>
+                                <Box fontWeight="fontWeightBold" m={1}>
+                                   # {userDetail?.reply?.length || 0} Reply: 
+                                </Box>
+                            </Typography>
+                            <Typography variant="body2" color={theme.palette.mode === 'dark' ? '#fff' : 'text.primary'}>
+                                <Box fontWeight="fontWeightBold" m={1}>
+                                    {userDetail?.reply?.map((forum: any) => (
+                                        <>
+                                        <Typography m={1}>#<b>Reply</b>  - {forum?.content}   #<b>Answer</b> - {forum?.forum_answer?.content}</Typography>
+                                        <Typography>  #<b>Date</b> {forum?.createdAt?.split("T")[0]}  {forum?.createdAt?.split("T")[1]}</Typography>
+                                        </>
+                                    ))}
+                                </Box>
+                            </Typography>
+                        </Item>
+                    }
+                </Grid>
+                <br></br>
                     <Grid item xs={12} md={12}>
                         <Item>
                             <Typography fontWeight="fontWeightBold" m={1}>#   Asker  Details</Typography>
@@ -294,7 +363,7 @@ const CategoryInfo = ({ category }: any) => {
                                 </Box>
                             </Typography>
                         </Item>
-                    </Grid>
+                    b</Grid>
                 </Grid>
             </Grid>
         // </Grid>

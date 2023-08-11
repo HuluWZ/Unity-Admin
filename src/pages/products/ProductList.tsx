@@ -29,7 +29,7 @@ import {
   DialogActions,
   TextField,
   Snackbar,
-
+DialogContentText
 } from "@mui/material"; 
 import { useTheme } from "@mui/material"; 
 import React, { useState, useEffect } from 'react';
@@ -38,6 +38,7 @@ import ViewAllCategories from "./ViewAllCategory";
 import axios from 'axios';
 import { number } from "yup";
 import { makeStyles } from '@material-ui/core/styles';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const api = import.meta.env.VITE_API_URL; 
 const url = `${api}topic`; 
@@ -60,13 +61,14 @@ const ProductsView = ({
     setOpenConfirm, 
 }: any) => { 
  
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState({id:0,name:''});
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const [categoryName, setCategoryName] = useState('');
   const [categories, setCategories] = useState([{ id: '', name: ''}]);
   const [message, setMessage] = useState('');
-    // useEffect(() => {
-    // fetchCategories();
-    // }, []);
   useEffect(() => {
     async function fetchTopic() {
       console.log("Method Called ", url)
@@ -83,6 +85,43 @@ const ProductsView = ({
   }, []);
   const [selectedBookId, setSelectedBookId] = useState('0');
   const [filterBook,setFilterBook] = useState([])
+
+  const handleDeleteClick = (category: any) => {
+    setSelectedCategory(category);
+    setOpenDeleteDialog(true);
+    console.log(" Delete Selected Category  Done ")
+  };
+
+    const handleConfirmDelete = async () => {
+      try {
+      console.log(" Welcome to API ",selectedCategory,url);
+      // Replace with your actual API endpoint and logic
+      const response = await fetch(`${url}/${selectedCategory?.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log(" Delete Response ",response)
+      if (response.ok) {
+        setSnackbarMessage('Category deleted successfully');
+        setSnackbarOpen(true);
+      } else {
+        setSnackbarMessage('Failed to delete category');
+        setSnackbarOpen(true);
+      }
+    } catch (error) {
+      setSnackbarMessage('An error occurred');
+      setSnackbarOpen(true);
+    }
+
+    setOpenDeleteDialog(false);
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
     console.log("   products ", products) 
     const theme = useTheme();  
@@ -114,11 +153,37 @@ const ProductsView = ({
           <Grid item xs={10} sm={7} md={3} key={index}>
             <Card className={classes.card}>
               <CardContent>{category?.name}</CardContent>
+              {/* <Button onClick={() => handleDeleteClick(category)}>Delete</Button> */}
+                 <IconButton onClick={() => handleDeleteClick(category)}>
+    <DeleteIcon color="error" />
+  </IconButton>
+
             </Card>
           </Grid>
         ))}
+        <Dialog open={openDeleteDialog} onClose={() => setOpenDeleteDialog(false)}>
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this category?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDeleteDialog(false)}>Cancel</Button>
+          <Button onClick={handleConfirmDelete} color="error">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+      />
+
       </Grid>
-        </Container>
+      </Container>
         <br>
         </br>
         <div>
