@@ -21,70 +21,46 @@ const SalesView = ({
     setOpenConfirm,
 }: any) => {
     const theme = useTheme();
+    console.log(" All Sales :=: ", sales);
     const columns: GridColDef[] = [
+    
+            {
+            field: "id",
+            headerName: "Id",
+            width: 50,
+        },
         {
-            field: "name",
-            headerName: "Name",
+            field: "treatment",
+            headerName: "Treatment",
             width: 150,
         },
         {
-            field: "customer",
-            headerName: "Customer",
+            field: "category",
+            headerName: "Category",
             width: 150,
         },
         {
-            field: "description",
-            headerName: "Description",
+            field: "problem",
+            headerName: "Problem",
             width: 150,
         },
         {
-            field: "salesDate",
-            headerName: "Sales Date",
+            field: "date",
+            headerName: "Date ",
             width: 150,
             renderCell: (params: any) => {
                 return <>{new Date(params.value).toLocaleDateString()}</>;
             },
         },
         {
-            field: "items",
-            headerName: "Items & Quantity",
-            minWidth: 300,
-            renderCell: (params: any) => {
-                return (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                        }}
-                    >
-                        {params.value.map((item: any) => {
-                            return (
-                                <Box
-                                    key={item._id}
-                                    sx={{
-                                        display: "block",
-                                        justifyContent: "space-between",
-                                    }}
-                                >
-                                    <Box
-                                        sx={{
-                                            display: "flex",
-                                            flexDirection: "row",
-                                            justifyContent: "space-between",
-                                            alignItems: "center",
-                                        }}
-                                    >
-                                        <Chip label={item.quantity} />
-                                        <Typography variant="body2" ml={1}>
-                                            {item.product.name}
-                                        </Typography>
-                                    </Box>
-                                </Box>
-                            );
-                        })}
-                    </Box>
-                );
-            },
+            field: "user",
+            headerName: "Added By",
+            minWidth: 100
+        },
+        {
+            field: "status",
+            headerName: "Status",
+            minWidth: 100
         },
         {
             field: "actions",
@@ -127,14 +103,15 @@ const SalesView = ({
         },
     ];
 
-    const rows: GridRowsProp = sales.sales.map((item: any) => {
+    const rows: GridRowsProp = sales?.result.map((item: any) => {
         return {
-            id: item._id,
-            name: item.name,
-            customer: item.customer.fullName,
-            description: item.description,
-            salesDate: item.salesDate,
-            items: item.items,
+            id: item?.id,
+            treatment: item?.treatment?.name,
+            category: item?.treatment?.problem?.sector?.name,
+            problem: item?.treatment?.problem?.name,
+            date: item?.createdAt,
+            user: item?.nameOne + " ",
+            status : item?.treatment?.status == 1? "Approved":"Pending"
         };
     });
 
@@ -147,7 +124,6 @@ const SalesView = ({
                     autoHeight
                     pagination
                     rowsPerPageOptions={[5, 10, 20]}
-                    checkboxSelection
                     initialState={{
                         pagination: {
                             pageSize: 10,

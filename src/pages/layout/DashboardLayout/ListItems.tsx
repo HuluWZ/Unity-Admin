@@ -52,7 +52,7 @@ const listAdminItems = [
           {
         name: 'Treatment',
         icon: <HealingIcon />,
-        path: '/app/treatment',
+        path: '/app/sales',
     },
                {
         name: 'Users',

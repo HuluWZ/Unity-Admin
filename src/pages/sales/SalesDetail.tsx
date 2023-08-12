@@ -14,6 +14,15 @@ import TimelineConnector from "@mui/lab/TimelineConnector";
 import TimelineContent from "@mui/lab/TimelineContent";
 import TimelineDot from "@mui/lab/TimelineDot";
 import TimelineOppositeContent from "@mui/lab/TimelineOppositeContent";
+import { useMediaQuery,Avatar } from '@mui/material';
+import {  Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import {useState} from  "react"
+import axios from "axios";
+
+const api = import.meta.env.VITE_API_URL;
+const url = `${api}treatment`;
+
+const token = localStorage.getItem("token");
 
 const SalesDetail = () => {
   const { id }: any = useParams();
@@ -25,8 +34,84 @@ const SalesDetail = () => {
     }
   );
 
+   const [openDialog, setOpenDialog] = useState(false);
+  const [selectedItemId, setSelectedItemId] = useState(null);
+  const [actionResult, setActionResult] = useState('');
+    const handleApprove = async () => {
+    // You would send a PUT request here to approve treatment
+    console.log(id,token)
+      const data = await axios.put(`${url}/farmer/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "authtoken":`${token}`
+        }
+      })
+    await simulateRequest();
+    if (data?.data?.result) {
+      setActionResult('Treatment Approved successfully');
+    } else {
+      setActionResult('Failed To Approve Treatment');
+    }
+    setOpenDialog(false);
+  };
+
+  const handleReject = async () => {
+    const data = await axios.delete(`${url}/farmer/${id}`, {
+        headers: {
+        "Content-Type": "application/json",
+        "authtoken":`${token}`
+
+        }
+      })
+    await simulateRequest();
+    if (data?.data?.result) {
+      setActionResult('Treatment Rejected successfully');
+    } else {
+      setActionResult("Failed To Reject Treatment");
+    }
+    setOpenDialog(false);
+  };
+
+  const simulateRequest = async () => {
+    // Simulate a delay to mimic API request
+    return new Promise(resolve => {
+      setTimeout(resolve, 1000);
+    });
+  };
+
+  const handleOpenDialog = (itemId:any) => {
+    setSelectedItemId(itemId);
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setSelectedItemId(null);
+    setOpenDialog(false);
+    setActionResult('');
+  };
+  const data = [
+    {
+      name: sales?.result?.nameOne,
+      phone: sales?.result?.phoneOne,
+      tank: sales?.result?.tankOne
+    },    {
+      name: sales?.result?.nameTwo,
+      phone: sales?.result?.phoneTwo,
+      tank: sales?.result?.tankTwo
+    },
+    {
+      name: sales?.result?.nameThree,
+      phone: sales?.result?.phoneThree,
+      tank: sales?.result?.tankThree
+    }
+  ]
+  const images = [
+    sales?.result?.treatment?.imageUrl1,
+    sales?.result?.treatment?.imageUrl2,
+    sales?.result?.treatment?.imageUrl3]
+  console.log(" Get Specific Sales : ",sales)
   if (isLoading) {
-    <PageView title="Sales Detail">
+    <PageView title="Treatment Detail">
       <LoadingComponent />
     </PageView>;
   }
@@ -38,66 +123,97 @@ const SalesDetail = () => {
       </PageView>
     );
   }
+
+ 
+
   return (
-    <PageView title="Sales Detail" backPath="/sales">
+    <PageView title="Treatment Detail" backPath="/sales">
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Grid container spacing={4}>
+           <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        aria-labelledby="confirmation-dialog-title"
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle id="confirmation-dialog-title">Confirm Action</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to perform this action?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleApprove} color="primary">
+            Approve
+          </Button>
+          <Button onClick={handleReject} color="secondary">
+            Reject
+          </Button>
+        </DialogActions>
+      </Dialog>
           <Grid item xs={6}>
             <Paper
               sx={{
-                p: 2,
+                p: 1,
                 display: "flex",
                 flexDirection: "column",
-                height: 240,
+                height: 790,
               }}
               variant="outlined"
             >
               <Typography variant="h4" gutterBottom component="div">
-                Sales Detail
+                Treatment Detail
               </Typography>
               <Divider />
               <Grid container spacing={3}>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={12}>
                   <Typography variant="subtitle1" gutterBottom component="div">
-                    Sales ID
+                    Treatment Name
                   </Typography>
-                  <Typography variant="body2" gutterBottom component="div">
-                    {sales && sales[0]?._id.substring(0, 5)}
+                  <Typography variant="body2"  component="div">
+                    {sales && sales?.result?.treatment?.name}
                   </Typography>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={12}>
                   <Typography variant="subtitle1" gutterBottom component="div">
-                    Sales Date
+                    Treatment Description
                   </Typography>
-                  <Typography variant="body2" gutterBottom component="div">
-                    {moment(sales?.salesDate).format("DD do MMM YYYY")}
+                  <Typography variant="body2"  component="div">
+                    {sales && sales?.result?.treatment?.description}
                   </Typography>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={12}
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <Typography variant="h2" gutterBottom component="div">
-                    Sales Total
+                <Grid  item xs={12}  sm={12}>
+                  <Typography variant="subtitle1" gutterBottom component="div">
+                    Problem
                   </Typography>
                   <Typography variant="body2" gutterBottom component="div">
-                    {sales &&
-                      sales[0]?.items
-                        ?.map(
-                          (item: any) =>
-                            item.product.sellingPrice * item.quantity
-                        )
-                        .reduce((a: any, b: any) => a + b, 0)
-                        .toLocaleString("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                        })}
+                    {sales && sales?.result?.treatment?.problem?.name}
+                  </Typography>
+                </Grid>
+                <Grid  item xs={12}  sm={12}>
+                  <Typography variant="subtitle1" gutterBottom component="div">
+                    Sector
+                  </Typography>
+                  <Typography variant="body2" gutterBottom component="div">
+                    {sales && sales?.result?.treatment?.problem?.sector?.name}
+                  </Typography>
+                </Grid>
+                <Grid  item xs={12}  sm={12}>
+                  <Typography variant="body1" >
+                    Images:
+                  </Typography>
+                  <Typography>
+                    <div>
+                      {sales && images.map((imageUrl:any, index:number) => (
+                               <a href={imageUrl} target="_blank">
+                                 <img src={imageUrl} alt={`Image ${index + 1}`} width="200" height="150" />
+                               </a>
+                      )) || " No Image "}
+                    </div>      
                   </Typography>
                 </Grid>
               </Grid>
@@ -109,109 +225,57 @@ const SalesDetail = () => {
                 p: 2,
                 display: "flex",
                 flexDirection: "column",
-                height: 240,
+                height: 200,
               }}
               variant="outlined"
             >
-              <Grid container spacing={3}>
+              <Grid container spacing={2}>
                 <Grid
                   item
-                  xs={12}
-                  sm={12}
+                  xs={8}
+                  sm={3}
                   sx={{
                     display: "flex",
                     flexDirection: "column",
                     flexWrap: "wrap",
                   }}
                 >
-                  <Typography variant="h4" gutterBottom component="div">
-                    Customer Detail
+                  <Typography variant="h6" gutterBottom component="div">
+                   Reference Detail
                   </Typography>
                   <Divider />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Typography variant="subtitle1" gutterBottom component="div">
-                    Customer Name
-                  </Typography>
-                  <Typography variant="body2" gutterBottom component="div">
-                    {sales && sales[0]?.customer?.fullName}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Typography variant="subtitle1" gutterBottom component="div">
-                    Customer Phone
-                  </Typography>
-                  <Typography variant="body2" gutterBottom component="div">
-                    {sales && sales[0]?.customer?.phoneNumber}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Typography variant="subtitle1" gutterBottom component="div">
-                    Customer Address
-                  </Typography>
+               {sales && data.map((user: any, index: number) => (
+                        <Grid item key={index} xs={-90}>
+             <Avatar alt={`Avatar ${index + 1}`} src={`https://via.placeholder.com/40`} />
+            <Typography variant="body1">{user?.name}</Typography>
+            <Typography variant="body1"> <a href={`tel:${user?.phone}`}>{user?.phone}</a></Typography> 
+            <Typography variant="body1">{user?.tank}</Typography><br></br>
+              </Grid>
 
-                  <Typography variant="body2" gutterBottom component="div">
-                    {sales && sales[0]?.customer?.address}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Typography variant="subtitle1" gutterBottom component="div">
-                    Customer Email
-                  </Typography>
-                  <Typography variant="body2" gutterBottom component="div">
-                    {sales && sales[0]?.customer?.email}
-                  </Typography>
-                </Grid>
+            ))}
+              <Button variant="contained" color="primary" style={{ marginLeft: 'auto', marginRight: '5px' }} onClick={() => handleOpenDialog(id)}>
+              Approve
+            </Button>
+                <Button variant="contained" color="secondary"
+                  onClick={() => handleOpenDialog(id)}>
+              Reject
+            </Button>
+
               </Grid>
             </Paper>
           </Grid>
-          <Grid item xs={12}>
-            <Paper
-              sx={{
-                p: 2,
-                display: "flex",
-                flexDirection: "column",
-                height: "auto",
-              }}
-              variant="outlined"
-            >
-              <Typography variant="h4" gutterBottom component="div">
-                Sales Items
-              </Typography>
-              <Timeline>
-                {sales &&
-                  sales[0]?.items?.map((item: any) => (
-                    <TimelineItem key={item._id}>
-                      <TimelineOppositeContent sx={{ m: "auto 0" }}>
-                        <Typography variant="body2" color="text.secondary">
-                          {moment(item.createdAt).format("DD do MMM YYYY")}
-                        </Typography>
-                      </TimelineOppositeContent>
-                      <TimelineSeparator>
-                        <TimelineDot
-                          color={item.product.quantity > 0 ? "success" : "info"}
-                        />
-                        <TimelineConnector />
-                      </TimelineSeparator>
-                      <TimelineContent>
-                        <Paper sx={{ p: 2 }} variant="outlined">
-                          <Typography variant="h6" component="span">
-                            {item.product.name}
-                          </Typography>
-                          <Typography>Quantity: {item.quantity}</Typography>
-                          <Typography>
-                            Price: {item.product.sellingPrice}
-                          </Typography>
-                          <Typography>
-                            Amount: {item.product.sellingPrice * item.quantity}
-                          </Typography>
-                        </Paper>
-                      </TimelineContent>
-                    </TimelineItem>
-                  ))}
-              </Timeline>
-            </Paper>
-          </Grid>
+
+        {actionResult && (
+        <Grid item xs={12}>
+          <Paper elevation={3} style={{ padding: '10px', borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center', background: actionResult.includes('approved') ? '#8BC34A' : '#F44336' }}>
+            <Typography variant="body1" style={{ color: 'white' }}>
+              {actionResult}
+            </Typography>
+          </Paper>
+        </Grid>
+      )}
+
         </Grid>
       </Container>
     </PageView>

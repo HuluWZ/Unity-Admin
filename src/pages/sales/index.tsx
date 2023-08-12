@@ -16,12 +16,12 @@ const Sales = () => {
     
     if (isLoading) return (
         <PageView
-            title="Sales"
+            title="Treatment"
             backPath="/app/dashboard"
             actions={[
                 {
                     icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
-                    label: "Add Sales",
+                    label: "Add Treatment",
                     handler: () => {
                         setOpen(true)
                         setSelectedSales(null)
@@ -42,12 +42,12 @@ const Sales = () => {
 
     if (error) return (
         <PageView
-            title="Sales"
+            title="Treatment"
             backPath="/app/dashboard"
             actions={[
                 {
                     icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
-                    label: "Add Sales",
+                    label: "Add Treatment",
                     handler: () => {
                         setOpen(true)
                         setSelectedSales(null)
@@ -68,12 +68,12 @@ const Sales = () => {
 
     return (
         <PageView
-            title="Sales"
+            title="Treatment"
             backPath="/app/dashboard"
             actions={[
                 {
                     icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
-                    label: "Add Sales",
+                    label: "Add Treatment",
                     handler: () => {
                         setOpen(true)
                         setSelectedSales(null)
@@ -95,8 +95,8 @@ const Sales = () => {
                     deleteSaleMutation(selectedSales.id)
                     setOpenConfirm(false)
                 }}
-                title="Delete Sales"
-                description="Are you sure you want to delete this sales?"
+                title="Delete Treatment"
+                description="Are you sure you want to delete this treatment?"
                 confirmText="Delete"
                 cancelText="Cancel"
             />
@@ -117,6 +117,7 @@ const Sales = () => {
                 setSelectedSales={setSelectedSales}
                 setOpenConfirm={setOpenConfirm}
             />
+            
         </PageView>
     )
 }

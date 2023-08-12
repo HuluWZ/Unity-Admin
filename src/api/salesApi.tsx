@@ -1,22 +1,18 @@
 import axios from "axios";
 
 const api = import.meta.env.VITE_API_URL;
-const url = `${api}sales`;
+const url = `${api}treatment`;
 
 const token = localStorage.getItem("token");
 
 export const getSales = async () => {
-    const response = await axios.get(`${url}/get`, {
+    console.log(" Get All sales ",`${url}/farmer/all`)
+    const response = await axios.get(`${url}/farmer/all`, {
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
         },
     });
-
-    if (response.status !== 200) {
-        throw new Error(response.data.message);
-    }
-
+   console.log(" Response Get Sales ", response?.data);
     return response.data;
 };
 
@@ -24,46 +20,43 @@ export const createSale = async (data: any) => {
     const response = await axios.post(`${url}/create`, data, {
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            authtoken: `${token}`,
         },
     });
     return response.data;
 }
 
 export const updateSale = async (id: string, data: any) => {
-    const response = await axios.put(`${url}/update/${id}`, data, {
+    const response = await axios.put(`${url}/farmer/${id}`, data, {
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            authtoken: `${token}`,
         },
     });
     return response.data;
 }
 
 export const deleteSale = async (id: string) => {
-    const response = await axios.delete(`${url}/delete/${id}`, {
+    console.log(" Delete Farmer ",id)
+    const response = await axios.delete(`${url}/farmer/${id}`, {
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            authtoken: `${token}`,
         },
     });
-    if (response.status !== 200) {
-        throw new Error(response.data.message);
-    }
+    console.log(" Response ",response?.data)
     return response.data;
 }
 
 
 export const getAllReport = async () => {
-    const response = await axios.get(`${url}/report`, {
+    const response = await axios.get(`${url}/`, {
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            authtoken: `${token}`,
         },
     });
-    if (response.status !== 200) {
-        throw new Error(response.data.message);
-    }
+   
     return response.data;
 }
 
@@ -73,7 +66,7 @@ export const getReportByWeek = async () => {
         const response = await axios.get(`${url}/week`, {
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
+                authtoken: `${token}`,
             },
         });
         return response.data;
@@ -86,14 +79,14 @@ export const getReportByWeek = async () => {
 
 export const getSalesDetails = async (id: string) => {
     try {
-        const response = await axios.get(`${url}/get/${id}`, {
+        const response = await axios.get(`${url}/farmer/${id}`, {
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
+                authtoken: `${token}`,
             },
         });
 
-        return response.data;
+        return response?.data;
     } catch (error) {
         console.error(error)
     }

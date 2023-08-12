@@ -20,7 +20,7 @@ export const SalesProvider = ({ children }: any) => {
     const { mutate: createSaleMutation } = useMutation(createSale, {
         onSuccess: () => {
             queryClient.invalidateQueries('sales');
-            showNotification('Sale created successfully', 'success')
+            showNotification('Treatment Added successfully', 'success')
         },
 
         onError: (error: any) => {
@@ -33,7 +33,7 @@ export const SalesProvider = ({ children }: any) => {
         useMutation((data: any) => updateSale(data.id, data), {
             onSuccess: () => {
                 queryClient.invalidateQueries('sales');
-                showNotification('Sale updated successfully', 'success')
+                showNotification('Treatment Approved successfully', 'success')
             },
 
             onError: (error: any) => {
@@ -45,7 +45,7 @@ export const SalesProvider = ({ children }: any) => {
     const { mutate: deleteSaleMutation } = useMutation(deleteSale, {
         onSuccess: () => {
             queryClient.invalidateQueries('sales');
-            showNotification('Sale deleted successfully', 'success')
+            showNotification('Treatment deleted successfully', 'success')
         },
 
         onError: (error: any) => {
