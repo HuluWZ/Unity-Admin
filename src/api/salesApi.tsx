@@ -17,12 +17,24 @@ export const getSales = async () => {
 };
 
 export const createSale = async (data: any) => {
-    const response = await axios.post(`${url}/create`, data, {
+    const formData = new FormData();
+    const { images } = data;
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    formData.append("problemId", data.problemId);
+    images.map((image: any, index: number) => {
+        const val = index + 1;
+        console.log('Index ', val, image);
+        formData.append(`imageUrl${val}`,image)
+     })
+    console.log(" Create Treatment API ", formData);
+    const response = await axios.post(`${url}/`, formData, {
         headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
             authtoken: `${token}`,
         },
     });
+    console.log(" Response = ",response);
     return response.data;
 }
 

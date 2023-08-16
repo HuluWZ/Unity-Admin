@@ -9,11 +9,19 @@ import {
     EditRounded,
     VisibilityRounded,
 } from "@mui/icons-material";
-import { Box, IconButton, Container, Grid, Typography, Chip,Button, Paper,Dialog, DialogTitle, DialogContent, DialogActions, TextField   } from "@mui/material";
+import {
+    Box, IconButton, Container, Grid, Typography,
+    Chip, Button, Paper, Dialog, DialogTitle,
+    DialogContent, DialogActions, TextField
+} from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 import { 
   colors, 
   Card,
-  CardContent,
+    CardContent,
+  CardMedia,
   Snackbar,
 DialogContentText
 } from "@mui/material"; 
@@ -22,6 +30,7 @@ import { Link } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import { useState, useEffect } from 'react'
 import axios from 'axios';
+import { SelectChangeEvent } from '@mui/material/Select';
 
 const api = import.meta.env.VITE_API_URL; 
 const url = `${api}treatment`; 
@@ -35,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     minHeight: 50,
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
+      alignItems: 'center',
     },
   card2: {
     minHeight: 80,
@@ -43,10 +52,43 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    },
+ card3: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
   },
+
+  cardMedia: {
+    paddingTop: '-25.25%', // 16:9 aspect ratio (for 9:16 use paddingBottom)
+    maxWidth: '50%', // Limit image width
+    margin: 'auto',
+  },
+  cardContent: {
+    flexGrow: 1,
+  },
+  sectorTypography: {
+    fontSize: '0.9rem', // Smaller font size for sector
+    color: 'green',
+  },
+  deleteButton: {
+    marginLeft: 'auto', 
+    color: theme.palette.error.main,
+  },
+
+
 }));
+interface ObjectWithAttributes {
+  id: number | string;
+  name: string;
+  description: string;
+  images: [string],
+  imageUrl1: string
+  imageUrl2: string
+  imageUrl3: string
+}
 
-
+//  id: '', name: '',description:'',images:[''],imageUrl1:'',imageUrl2:'',imageUrl3:'' 
 const SalesView = ({
     sales,
     setSelectedSales,
@@ -54,33 +96,52 @@ const SalesView = ({
     setOpenConfirm,
 }: any) => {
     const classes = useStyles(); // Assign the classes object to a variable
-    const [categories, setCategories] = useState([{ id: '', name: '' }]);
+    const [categories, setCategories] = useState([{ id: '', name: '' ,image:''}]);
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedProblem, setSelectedProblem] = useState('');
     const [problems, setProblem] = useState([{ id: '', name: '' }]);
-    const [solutions, setSolution] = useState([{ id: '', name: '',description:'',images:[''],imageUrl1:'',imageUrl2:'',imageUrl3:'' }]);
+    const [solutions, setSolution] = useState<ObjectWithAttributes[]>([]);
     const [message, setMessage] = useState('');
     const [selectedIndex, setIndex] = useState(0)
     const [problemIndex, setProblemIndex] = useState(0)
-    const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newSectorName, setNewSectorName] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+      const [isModalOpen2, setIsModalOpen2] = useState(false);
+    const [newSectorName, setNewSectorName] = useState('');
+    const [newProblemName, setNewProblemName] = useState('');
+    const [allproblems, setAllProblem] = useState([{ id: '', name: '', sector:{name:''} }]);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarColor, setSnackbarColor] = useState('success'); // 'success' or 'error'
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [snackbarColor, setSnackbarColor] = useState('success'); // 'success' or 'error'
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
+
+  const handleImageChange = (event:React.ChangeEvent<HTMLInputElement>) => {
+    const file = event?.target?.files && event.target.files[0]; // Get the first selected file
+    setSelectedImage( file);
+  };
     useEffect(() => {
         async function fetchTopic() {
-            console.log("Method Called ", url)
             const response = await fetch(`${url}/sector`, {
                 headers: {
                     "Content-Type": "application/json",
                 }
             });
             const data = await response.json();
-            console.log(" Get All Sector : ", data?.result)
             setCategories(data?.result);
         }
         fetchTopic();
+    }, []);
+    useEffect(() => {
+        async function fetchProblems() {
+            const response = await fetch(`${url}/problem`, {
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+            const data = await response.json();
+            setAllProblem(data?.result);
+        }
+        fetchProblems();
     }, []);
     const handleSectorClick = async (id: any,name:string,index:number) => {
         const response = await fetch(`${url}/problem/sector/${id}`, {
@@ -90,69 +151,151 @@ const SalesView = ({
         });
         setSelectedCategory(name);
         setIndex(index);
-        console.log(" Sector ",name," Id: ",id)
+        // console.log(" Sector ",name," Id: ",id)
         const data = await response.json();
-        console.log(" Get Selected Problem : ", data?.result,name)
+        // console.log(" Get Selected Problem : ", data?.result,name)
         setProblem(data?.result);
     }
 
-    const handleProblemClick = async (id: any,name:string,index:number) => {
-        const response = await fetch(`${url}/${id}`, {
+  const handleProblemClick = async (id: any, name: string, index: number) => {
+      console.log(" Get Farmer ",id)
+        const response = await fetch(`${url}/farmer/problem/${id}`, {
             headers: {
                 "Content-Type": "application/json",
             }
         });
         setSelectedProblem(name);
         setProblemIndex(index);
-        console.log(" Selected Problem ",name," Id: ",id)
         const data = await response.json();
-        console.log(" Get Selected Solution : ", data?.result)
-        setSolution(data?.result);
+        console.log(" Get Selected Solution : ", data?.result,id)
+      setSolution(data?.result);
+      console.log(" Test ",solutions)
     }
     // Handle Modal 
     const handleModalOpen = () => {
       setIsModalOpen(true);
     };
 
+  const handleModalOpen2 = () => {
+      setIsModalOpen2(true);
+    };
     const handleModalClose = () => {
       setIsModalOpen(false);
       setNewSectorName(''); // Clear the input field
+  };
+  const handleModalClose2 = () => {
+      setIsModalOpen2(false);
+      setNewSectorName(''); // Clear the input field
     };
+    
     const handleNewSectorNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setNewSectorName(event.target.value);
+        setNewSectorName(event.target.value);
     };
+    const handleNewProblemNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNewProblemName(event.target.value);
+    };
+    const [selectedSector, setSelectedSector] = useState<number | ''>('');
+
+    const handleSectorChange = (event: SelectChangeEvent<number>) => {
+          const value = event.target.value;
+        setSelectedSector(value === '' ? '' : Number(value));
+    };
+
+
     const handleSnackbarClose = () => {
     setSnackbarOpen(false);
+  };
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedProblemId, setSelectedProblemId] = useState(null);
+
+  const handleDeleteClick = (problemId: any) => {
+    setSelectedProblemId(problemId);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    // TODO: Make delete request using selectedProblemId
+    console.log(" Selected Problem = ",selectedProblemId);
+    const response = await axios.delete(`${url}/problem/${selectedProblemId}`, {
+            headers: {
+                "Content-Type": "application/json",
+            }
+    });
+    console.log(" Selected Problem = ",response);
+    setDeleteDialogOpen(false);
+    setSelectedProblemId(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setSelectedProblemId(null);
   };
 
 
     const handleAddSector = async() => {
-      const data = {name:newSectorName};
+      const data = {name:newSectorName,image:selectedImage};
         // Make your API POST request here with newSectorName
         console.log(" new Sector Data ", data);
         const response = await axios.post(`${url}/sector`, data, {
             headers: {
-                "Content-Type": "application/json",
-                // authtoken: `${token}`
+                "Content-Type": "multipart/form-data",
+                authtoken: `${token}`
             }
         });
-                setIsModalOpen(false);
+        
+        setIsModalOpen2(false);
 
-        if (response?.data?.result) {
-         console.log(" Sucess ")   
-         setSnackbarColor('success');
-         setSnackbarMessage('Sector added successfully');
+        // if (response?.data?.result) {
+        //  console.log(" Sucess ")   
+        //  setSnackbarColor('success');
+        //  setSnackbarMessage('Sector added successfully');
 
-        } else {
-            console.log(" Error ")   
-           setSnackbarColor('error');
-          setSnackbarMessage('Failed to add sector');
+        // } else {
+        //     console.log(" Error ")   
+        //    setSnackbarColor('error');
+        //   setSnackbarMessage('Failed to add sector');
 
-        }
+        // }
         // setSnackbarOpen(false);
 
-
         console.log(" Response Create Sector ",response)
+    };
+     const handleAddProblem = async() => {
+      const data = {name:newProblemName,sectorId:selectedSector};
+        // Make your API POST request here with newSectorName
+        console.log(" new Problem Data ", data);
+        const response = await axios.post(`${url}/problem`, data, {
+            headers: {
+                "Content-Type": "application/json",
+                authtoken: `${token}`
+            }
+        });
+         setIsModalOpen(false);
+         setSelectedSector('')
+         setNewProblemName('')
+
+        // if (response?.data?.result) {
+        //  console.log(" Sucess ")   
+        //  setSnackbarColor('success');
+        //  setSnackbarMessage('Problem added successfully');
+
+        // } else {
+        //     console.log(" Error ")   
+        //    setSnackbarColor('error');
+        //   setSnackbarMessage('Failed to add problem');
+
+        // }
+        // setSnackbarOpen(false);
+
+        console.log(" Response Create Problem ",response)
+    };
+    const handleDeleteProblem = async() => {
+        console.log(" New Problem Delete ID ");
+        const response = await axios.delete(`${url}/problem/{id}`);
+         setIsModalOpen(false);
+         
+
+        console.log(" Response Delete Problem ",response)
   };
 
 
@@ -246,19 +389,19 @@ const SalesView = ({
             problem: item?.treatment?.problem?.name,
             date: item?.createdAt,
             user: item?.nameOne + " ",
-            status : item?.treatment?.status == 1? "Approved":"Pending"
+            status : item?.status == 1? "Pending":"Approved"
         };
     });
 
     const rowSolution: GridRowsProp = solutions?.map((item: any) => {
-        return {
+      return {
             id: item?.id,
-            treatment: item?.name,
-            category: item?.problem?.sector?.name,
-            problem: item?.problem?.name,
+            treatment: item?.treatment?.name,
+            category: item?.treatment?.problem?.sector?.name,
+            problem: item?.treatment?.problem?.name,
             date: item?.createdAt,
             user: item?.nameOne + " ",
-            status : item?.treatment?.status == 1? "Approved":"Pending"
+            status : item?.status == 1? "Pending":"Approved"
         };
     });
     return (
@@ -286,16 +429,17 @@ const SalesView = ({
                 <br></br><br></br>
 
     <div>
-                    <Grid container spacing={3}>
-                                        <Button variant="contained" color="primary"
-                    onClick={handleModalOpen}
-                    style={{ marginLeft: 780 }}>
+                    <Grid container spacing={1}>
+                    <Button variant="contained" color="primary"
+                    onClick={handleModalOpen2}
+                    style={{ marginLeft: 880 }}>
                     Add Sector
                         </Button>
                         <br></br>
                         <br></br>
-      </Grid>
-      <Dialog open={isModalOpen} onClose={handleModalClose}>
+                    </Grid>
+                    <br></br>
+      <Dialog open={isModalOpen2} onClose={handleModalClose2}>
         <DialogTitle>Add New Sector</DialogTitle>
         <DialogContent>
             <TextField
@@ -303,13 +447,18 @@ const SalesView = ({
             value={newSectorName}
             onChange={handleNewSectorNameChange}
             fullWidth
-          />
+                />
+          <input
+        type="file"
+        accept="image/*"
+        onChange={handleImageChange}
+      />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleModalClose} color="primary">Cancel</Button>
+          <Button onClick={handleModalClose2} color="primary">Cancel</Button>
           <Button onClick={handleAddSector} color="primary">Add</Button>
         </DialogActions>
-                    </Dialog>
+        </Dialog>
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}
@@ -326,16 +475,23 @@ const SalesView = ({
         <Grid container spacing={3} >
          {categories.map((sector, index) => (
             <Grid item xs={10} sm={7} md={3} key={index}>
-            <Card className={classes.card}>
+                 <Card className={classes.card}>
+                     <CardMedia className={classes.cardMedia}
+                        component="img"
+                        height="100"
+                        image={sector?.image}
+                        alt={sector.name}
+                      />
+                     <CardContent  >
+
                      <Typography variant="h6"
                          onClick={() => handleSectorClick(sector?.id, sector?.name,index)}
                          style={{ fontWeight: selectedIndex == index ? 'bold' : 'normal' }}
                        >
                          {sector?.name}
-                     </Typography>
-                 {/* <IconButton >
-                 </IconButton> */}
-
+                    </Typography>
+     
+                  </CardContent>       
             </Card>
            </Grid>
          ))}
@@ -343,34 +499,105 @@ const SalesView = ({
                       <hr /> {/* This is the horizontal line */}
                 <br>
                 </br>
+                <Grid container spacing={1}>
+                    <Button variant="contained" color="primary"
+                    onClick={handleModalOpen}
+                    style={{ marginLeft: 880,width:200 }}>
+                    Add Problem
+                        </Button>
+                        <br></br>
+                    </Grid>
+                    
+                <Dialog open={isModalOpen} onClose={handleModalClose}>
+        <DialogTitle>Add New Problem </DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Problem Name"
+            value={newProblemName}
+            onChange={handleNewProblemNameChange}
+            fullWidth
+            />
+          <InputLabel>Select Sector</InputLabel>
+        <Select
+          value={selectedSector}
+          onChange={handleSectorChange}>
+          <MenuItem value="">None</MenuItem>
+          {categories.map(sector => (
+            <MenuItem key={sector.id} value={sector.id}>{sector.name}</MenuItem>
+          ))}
+        </Select>
+
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleModalClose} color="primary">Cancel</Button>
+          <Button onClick={handleAddProblem} color="primary">Add</Button>
+        </DialogActions>
+                </Dialog>
+                <br></br>
 
       <Grid container spacing={3} >
-        {/* <Typography># Problems on Sector <b>{selectedCategory}</b></Typography> */}
-        { problems[0]?.id &&
-        problems?.length > 0 ?
-         ( problems?.map((problem, index) => (
+        { selectedCategory ?
+         problems?.map((problem, index) => (
            <Grid item xs={10} sm={7} md={3} key={index}>
              <Card className={classes.card2}>
-                     <Typography variant="h6"
+                    <Typography variant="h6"
                          onClick={() => handleProblemClick(problem?.id, problem?.name,index)}
-                        style={{ fontWeight: problemIndex == index ? 'bold' : 'normal' }}
-
-                     >{problem?.name}</Typography>
+                 style={{ fontWeight: problemIndex == index ? 'bold' : 'normal' }}>
+                 {problem?.name}
+               </Typography>
+               <IconButton
+                  className={classes.deleteButton}
+                  onClick={() => handleDeleteClick(problem.id)}
+              >
+                <DeleteIcon />
+              </IconButton>
              </Card>
            </Grid>
           ))
-         )
+         
           :
-        (<>
-         <Typography>No Problem found on Sector {selectedProblem}</Typography>
-         </>
-                                )
-        }
+        (
+         allproblems?.map((problem, index) => (
+           <Grid item xs={10} sm={7} md={3} key={index}>
+             <Card className={classes.card2}>
+                    <CardContent className={classes.cardContent}>
+                     <Typography variant="h6"
+                         onClick={() => handleProblemClick(problem?.id, problem?.name,index)}
+                         style={{ fontWeight: problemIndex == index ? 'bold' : 'normal' }}>
+                             {problem?.name}
+                      </Typography>
+                      <Typography className={classes.sectorTypography}>{problem.sector.name}</Typography>
+                      <IconButton
+                         className={classes.deleteButton}
+                              onClick={() => handleDeleteClick(problem.id)}
+                           >
+                <DeleteIcon />
+              </IconButton>
+              </CardContent>
+             </Card>
+           </Grid>
+          ))
+        )}
+      <Dialog open={deleteDialogOpen}>
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          Are you sure you want to delete this problem?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteConfirm} color="secondary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
                 </Grid>
                 <hr />
                 <br>
                 </br>
-            {solutions[0].id &&
+            {solutions?.length > 0 &&
             <Paper sx={{ background: theme.palette.background.paper }} variant="outlined">
                 <DataGrid
                     rows={rowSolution}

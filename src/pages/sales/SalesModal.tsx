@@ -11,26 +11,23 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
-import { Grid } from "@mui/material";
+import { Grid,Typography } from "@mui/material";
 import { useProduct } from "../../hooks/useProduct";
 import { useCustomer } from "../../hooks/useCustomer";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { useState, useEffect } from 'react';
+// import { SelectChangeEvent } from '@mui/material/Select';
 
 const ValidationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
-    customer: Yup.string().required("Customer is required"),
     description: Yup.string().required("Description is required"),
-    items: Yup.array().of(
-        Yup.object().shape({
-            product: Yup.string().required("Product is required"),
-            quantity: Yup.number().required("Quantity is required"),
-        })
-    ),
-    salesDate: Yup.date().required("Sales Date is required"),
 });
+const api = import.meta.env.VITE_API_URL; 
+const url = `${api}treatment`; 
+const token = localStorage.getItem("token") || "";
 
 type FormDialogProps = {
     open: boolean;
@@ -59,7 +56,38 @@ const FormDialog = ({
         isLoading: isLoadingCustomer,
         error: errorCustomer,
     } = useCustomer();
+    const [allproblems, setAllProblem] = useState([{ id: '', name: '', sector: { name: '' } }]);
+    const [selectedSector, setSelectedSector] = useState<number | ''>('');
 
+    const handleSectorChange = (event: SelectChangeEvent<number>) => {
+          const value = event.target.value;
+        setSelectedSector(value === '' ? '' : Number(value));
+    };
+    const [selectedImages, setSelectedImages] = useState<File[]>([]);
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files) {
+        const filesArray = Array.from(e.target.files);
+        setSelectedImages(filesArray);
+      }
+  };
+
+
+
+   useEffect(() => {
+        async function fetchProblems() {
+            console.log("Method Called ", url)
+            const response = await fetch(`${url}/problem`, {
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+            const data = await response.json();
+            console.log(" Get All Sector : ", data?.result)
+            setAllProblem(data?.result);
+        }
+        fetchProblems();
+    }, []);
     return (
         <div>
             <Dialog
@@ -71,31 +99,27 @@ const FormDialog = ({
                     initialValues={{
                         id: selectedSales?.id || "",
                         name: selectedSales?.name || "",
-                        customer: selectedSales?.customer || "",
                         description: selectedSales?.description || "",
-                        items: selectedSales?.items || [
-                            {
-                                product: "",
-                                quantity: 0,
-                            },
-                        ],
-                        salesDate: selectedSales?.salesDate || new Date(),
+                        images: selectedSales?.images || "",
+                        problemId: selectedSales?.problemId || ""
+
                     }}
                     validationSchema={ValidationSchema}
                     onSubmit={(values, { setSubmitting , resetForm}) => {
                         setSubmitting(true);
                         if (selectedSales) {
                             handleUpdate(values);
-                            resetForm();
-                            setSubmitting(false);
-                            // handleClose();
                         } else {
-                            setSubmitting(true);
+                            values.images = selectedImages
+                            values.problemId = selectedSector;
+                            console.log(" Values ", values);
                             handleAdd(values);
-                            resetForm();
-                            setSubmitting(false);
-                            // handleClose();
                         }
+                        handleClose();
+                        resetForm();
+                        setSelectedSector('');
+                        setSelectedImages([])
+                        setSubmitting(false);
 
                     }}
                 >
@@ -111,7 +135,7 @@ const FormDialog = ({
                     }: any) => (
                         <form onSubmit={handleSubmit}>
                             <DialogTitle id="form-dialog-title">
-                                {selectedSales ? "Update Sales" : "Add Sales"}
+                                {selectedSales ? "Update Treatment" : "Add Treatment"}
                             </DialogTitle>
                             <DialogContent>
                                 <Grid container spacing={2}>
@@ -132,33 +156,7 @@ const FormDialog = ({
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <FormControl
-                                            fullWidth
-                                            variant="standard"
-                                            error={Boolean(touched.customer && errors.customer)}
-                                        >
-                                            <InputLabel id="demo-simple-select-label">
-                                                Customer
-                                            </InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={values.customer}
-                                                label="Customer"
-                                                onChange={(e: SelectChangeEvent) =>
-                                                    setFieldValue("customer", e.target.value)
-                                                }
-                                            >
-                                                {customers.customer.map((customer: any) => (
-                                                    <MenuItem key={customer._id} value={customer._id}>
-                                                        {customer.fullName}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                            <FormHelperText>
-                                                {touched.customer && errors.customer}
-                                            </FormHelperText>
-                                        </FormControl>
+                                        
                                     </Grid>
                                     <Grid item xs={12}>
                                         <TextField
@@ -176,141 +174,28 @@ const FormDialog = ({
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <LocalizationProvider dateAdapter={AdapterMoment}>
-                                            <DatePicker
-                                                label="Sales Date"
-                                                value={values.salesDate}
-                                                onChange={(newValue) => {
-                                                    setFieldValue("salesDate", newValue);
-                                                }}
-                                                renderInput={(params) => (
-                                                    <TextField
-                                                        {...params}
-                                                        error={Boolean(
-                                                            touched.salesDate && errors.salesDate
-                                                        )}
-                                                        helperText={
-                                                            touched.salesDate && errors.salesDate
-                                                        }
-                                                    />
-                                                )}
-                                            />
-                                        </LocalizationProvider>
+                                                  <InputLabel>Select Sector</InputLabel>
+        <Select
+          value={selectedSector}
+          onChange={handleSectorChange}>
+          <MenuItem value="">None</MenuItem>
+          {allproblems?.map(sector => (
+            <MenuItem key={sector.id} value={sector.id}>{sector.name}</MenuItem>
+          ))}
+        </Select>
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <FieldArray
-                                            name="items"
-                                            render={(arrayHelpers) => (
-                                                <div>
-                                                    {
-                                                        values.items.map((item: any, index: number) => (
-                                                            <div key={index}>
-                                                                <Grid container spacing={2}>
-                                                                    <Grid item xs={12} sm={6}>
-                                                                        <FormControl
-                                                                            fullWidth
-                                                                            variant="standard"
-                                                                            error={Boolean(
-                                                                                touched.items &&
-                                                                                touched.items[index] &&
-                                                                                touched.items[index].product &&
-                                                                                errors.items &&
-                                                                                errors.items[index] &&
-                                                                                errors.items[index].product
-                                                                            )}
-                                                                        >
-                                                                            <InputLabel id="demo-simple-select-label">
-                                                                                Product
-                                                                            </InputLabel>
-                                                                            <Select
-                                                                                labelId="demo-simple-select-label"
-                                                                                id="demo-simple-select"
-                                                                                value={item.product}
-                                                                                label="Product"
-                                                                                onChange={(e: SelectChangeEvent) =>
-                                                                                    setFieldValue(
-                                                                                        `items.${index}.product`,
-                                                                                        e.target.value
-                                                                                    )
-                                                                                }
-                                                                            >
-                                                                                {products.product.map((product: any) => (
-                                                                                    <MenuItem
-                                                                                        key={product._id}
-                                                                                        value={product._id}
-                                                                                    >
-                                                                                        {product.name}
-                                                                                    </MenuItem>
-                                                                                ))}
-                                                                            </Select>
-                                                                            <FormHelperText>
-                                                                                {touched.items &&
-                                                                                    touched.items[index] &&
-                                                                                    touched.items[index].product &&
-                                                                                    errors.items &&
-                                                                                    errors.items[index] &&
-                                                                                    errors.items[index].product}
-                                                                            </FormHelperText>
-                                                                        </FormControl>
-                                                                    </Grid>
-                                                                    <Grid item xs={12} sm={6}>
-                                                                        <TextField
-                                                                            margin="dense"
-                                                                            id="quantity"
-                                                                            label="Quantity"
-                                                                            type="number"
-                                                                            fullWidth
-                                                                            variant="standard"
-                                                                            value={item.quantity}
-                                                                            onChange={(e: any) =>
-                                                                                setFieldValue(
-                                                                                    `items.${index}.quantity`,
-                                                                                    e.target.value
-                                                                                )
-                                                                            }
-                                                                            onBlur={handleBlur}
-                                                                            error={Boolean(
-                                                                                touched.items &&
-                                                                                touched.items[index] &&
-                                                                                touched.items[index].quantity &&
-                                                                                errors.items &&
-                                                                                errors.items[index] &&
-                                                                                errors.items[index].quantity
-                                                                            )}
-                                                                            helperText={
-                                                                                touched.items &&
-                                                                                touched.items[index] &&
-                                                                                touched.items[index].quantity &&
-                                                                                errors.items &&
-                                                                                errors.items[index] &&
-                                                                                errors.items[index].quantity
-                                                                            }
-                                                                        />
-                                                                    </Grid>
-                                                                </Grid>
-                                                                <ButtonGroup>
+                                    <Typography variant="h6">Upload Images</Typography>
+      <input
+        type="file"
+        accept="image/*"
+        multiple
+        onChange={handleImageChange}
+      />
 
-                                                                    <Button
-                                                                        variant="outlined"
-                                                                        onClick={() => arrayHelpers.remove(index)}
-                                                                    >
-                                                                        -
-                                                                    </Button>
-                                                                    <Button
-                                                                        variant="contained"
-                                                                        onClick={() =>
-                                                                            arrayHelpers.insert(index, "")
-                                                                        }
-                                                                    >
-                                                                        +
-                                                                    </Button>
-                                                                </ButtonGroup>
-                                                            </div>
-                                                        ))
-                                                    }
-                                                </div>
-                                            )}
-                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        
                                     </Grid>
                                 </Grid>
                                 <DialogActions>
