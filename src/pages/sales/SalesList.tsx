@@ -206,7 +206,14 @@ const SalesView = ({
     setSnackbarOpen(false);
   };
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteDialogOpen2, setDeleteDialogOpen2] = useState(false);
   const [selectedProblemId, setSelectedProblemId] = useState(null);
+  const [selectedSectorId, setSelectedSectorId] = useState(null);
+
+  const handleDeleteSectorClick = (problemId: any) => {
+    setSelectedSectorId(problemId);
+    setDeleteDialogOpen2(true);
+  };
 
   const handleDeleteClick = (problemId: any) => {
     setSelectedProblemId(problemId);
@@ -225,10 +232,25 @@ const SalesView = ({
     setDeleteDialogOpen(false);
     setSelectedProblemId(null);
   };
-
+  const handleDeleteSectorConfirm = async () => {
+    // TODO: Make delete request using selectedProblemId
+    console.log(" Selected Sector Delete = ",selectedSectorId);
+    const response = await axios.delete(`${url}/sector/${selectedSectorId}`, {
+            headers: {
+                "Content-Type": "application/json",
+            }
+    });
+    console.log(" Selected Sector Delete = ",response);
+    setDeleteDialogOpen2(false);
+    setSelectedSectorId(null);
+  };
   const handleDeleteCancel = () => {
     setDeleteDialogOpen(false);
     setSelectedProblemId(null);
+  };
+  const handleDeleteCancel2 = () => {
+    setDeleteDialogOpen2(false);
+    setSelectedSectorId(null);
   };
 
 
@@ -244,20 +266,6 @@ const SalesView = ({
         });
         
         setIsModalOpen2(false);
-
-        // if (response?.data?.result) {
-        //  console.log(" Sucess ")   
-        //  setSnackbarColor('success');
-        //  setSnackbarMessage('Sector added successfully');
-
-        // } else {
-        //     console.log(" Error ")   
-        //    setSnackbarColor('error');
-        //   setSnackbarMessage('Failed to add sector');
-
-        // }
-        // setSnackbarOpen(false);
-
         console.log(" Response Create Sector ",response)
     };
      const handleAddProblem = async() => {
@@ -449,10 +457,10 @@ const SalesView = ({
             fullWidth
                 />
           <input
-        type="file"
-        accept="image/*"
-        onChange={handleImageChange}
-      />
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleModalClose2} color="primary">Cancel</Button>
@@ -484,19 +492,40 @@ const SalesView = ({
                       />
                      <CardContent  >
 
-                     <Typography variant="h6"
-                         onClick={() => handleSectorClick(sector?.id, sector?.name,index)}
-                         style={{ fontWeight: selectedIndex == index ? 'bold' : 'normal' }}
-                       >
-                         {sector?.name}
-                    </Typography>
+                 <Typography
+                   variant="h6"
+                   onClick={() => handleSectorClick(sector?.id, sector?.name,index)}
+                   style={{ fontWeight: selectedIndex == index ? 'bold' : 'normal' }}
+                   >
+                   {sector?.name}
+                 </Typography>
+                 <IconButton
+                  className={classes.deleteButton}
+                  onClick={() => handleDeleteSectorClick(sector.id)}
+              >
+                <DeleteIcon />
+              </IconButton>
      
-                  </CardContent>       
+              </CardContent>       
             </Card>
            </Grid>
          ))}
+          <Dialog open={deleteDialogOpen2}>
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          Are you sure you want to delete this sector?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel2} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteSectorConfirm} color="secondary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
         </Grid>
-                      <hr /> {/* This is the horizontal line */}
+          <hr />
                 <br>
                 </br>
                 <Grid container spacing={1}>
@@ -508,7 +537,7 @@ const SalesView = ({
                         <br></br>
                     </Grid>
                     
-                <Dialog open={isModalOpen} onClose={handleModalClose}>
+          <Dialog open={isModalOpen} onClose={handleModalClose}>
         <DialogTitle>Add New Problem </DialogTitle>
         <DialogContent>
           <TextField
