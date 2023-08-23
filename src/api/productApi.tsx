@@ -42,14 +42,20 @@ export const getProduct = async (id: string) => {
 
 export const createProduct = async (data: any) => {
     try {
-        console.log(" Create Book ")
-        const response = await axios.post(`${url}/`, data, {
+    var formData = new FormData()
+        formData.append("title", data.title)
+        formData.append("topicId", data.topicId)
+        formData.append("image", data.thumbnailUrl)
+        formData.append("pdf", data.file);
+
+        console.log(" Create Book ",data)
+        const response = await axios.post(`${url}/`, formData, {
             headers: {
-                "Content-Type": "application/json",
-                authtoken: `${token}`,
+                "Content-Type": "multipart/form-data",
+                 authtoken: `${token}`,
             },
         });
-        console.log(" Create Product -  ",response?.data,data)
+        console.log(" Create Product -  ",response)
         return response.data;
     }
     catch (error) {

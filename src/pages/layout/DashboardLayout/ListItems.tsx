@@ -32,7 +32,7 @@ const listAdminItems = [
     {
         name: 'News',
         icon: <NewspaperIcon />,
-        path: '/app/categories',
+        path: '/app/news',
     },
     {
         name: 'Books',

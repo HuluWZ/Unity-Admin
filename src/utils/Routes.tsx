@@ -57,7 +57,7 @@ const RoutesComponent = () => {
                 <Route path="/" element={<Navigate to="/app/dashboard" />} />
                 <Route path="app" element={<DashboardContent />}>
                     <Route path="dashboard" element={<Dashboard />} />
-                    <Route path="categories" element={<Outlet />}>
+                    <Route path="news" element={<Outlet />}>
                         <Route index element={<CategoriesList />} />
                         <Route path=":id" element={<CategoryDetail />} />
                     </Route>

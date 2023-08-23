@@ -23,14 +23,18 @@ export const getOrders = async () => {
 
 
 export const createOrder = async (data: any) => {
-    const response = await axios.post(`${url}/`, data, {
+    var formData = new FormData();
+    formData.append("title", data.title)
+    formData.append("description", data.description)
+    formData.append("image", data.thumbnail)
+    formData.append("url", data.url);
+    const response = await axios.post(`${url}/`, formData, {
         headers: {
-            "Content-Type": "application/json",
-            authtoken: `${token}`,
+            "Content-Type": "multipart/form-data",
+            "authtoken": `${token}`,
         },
     });
-
-    return response.data;
+    return response?.data;
 }
 
 export const updateOrder = async (id: string, data: any) => {
@@ -43,7 +47,7 @@ export const updateOrder = async (id: string, data: any) => {
     });
 
     console.log(" Update Order Response ", response.data)
-    return response.data;
+    return response?.data;
 }
 
 export const deleteOrder = async (id: string) => {

@@ -19,16 +19,20 @@ export const getCategories = async () => {
 };
 
 export const createCategory = async (data: any) => {
-    console.log(" Activity data = ", data)
+    var formData = new FormData()
+    formData.append("title", data.title)
+    formData.append("description", data.description)
+    formData.append("image", data.thumbnail)
+
+    console.log(" News data = ", data)
     let newData = data.images
-    const response = await axios.post(`${url}news/`, data, {
+    const response = await axios.post(`${url}news/`, formData, {
         headers: {
-            // "Content-Type":"application/json"
             "Content-Type": "multipart/form-data",
             "authtoken": `${token}`
         },
     });
-    console.log(" Activity Upload response = ", response)
+    console.log(" News  Response = ", response)
     return response.data;
 };
 

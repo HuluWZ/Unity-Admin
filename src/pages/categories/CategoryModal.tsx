@@ -72,14 +72,11 @@ const FormDialog = ({
         // id: selectedCategory ? selectedCategory.id : "",
         title: selectedCategory ? selectedCategory.title : "",
         description: selectedCategory ? selectedCategory.description : "",
-        topicId: selectedCategory ? selectedCategory.topicId : "",
         thumbnail: selectedCategory ? selectedCategory.thumbnail : "",
     };
 
     const validationSchema = Yup.object({
-        title: Yup.string().required("Required"),
-        description: Yup.string().required("Required"),
-        topicId: Yup.string().required("Required")
+        title: Yup.string().required(" Title is Required"),
     });
  
 
@@ -137,11 +134,12 @@ const FormDialog = ({
                             handleEdit(values);
                             setSelectedCategory(null);
                         } else {
-                            values.topicId = topicId
                             values.thumbnail = file;
                             values.description = content;
                             console.log(" Value Added : ",values)
                             handleAdd(values);
+                            SetFile(null)
+                            setContent('')
                         }
                         resetForm();
                         setSubmitting(false);
@@ -186,7 +184,7 @@ const FormDialog = ({
             
                             <br></br>
                            <Button variant="contained" component="label">  Upload Thumbnail
-                                <Input type="file"  style={{ display: 'none' }}  inputProps={{ required:true }} onChange={handleFileSelect}   />
+                                <Input type="file"  style={{ display: 'none' }}   onChange={handleFileSelect}   />
                             </Button>
 
        

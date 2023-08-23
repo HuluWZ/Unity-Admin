@@ -46,8 +46,7 @@ const FormDialog = ({
     };
 
     const validationSchema = Yup.object({
-        title: Yup.string().required("Required"),
-        topicId: Yup.string().required("Required")
+        title: Yup.string().required(" Title is Required"),
     });
  
 
@@ -119,7 +118,6 @@ const FormDialog = ({
                             values.file = pdf;
                             values.thumbnailUrl = file
                             values.topicId = topicId;
-                            console.log(topicId,file,pdf)
                             console.log(" values :",values)
                             setSubmitting(true);
                             handleAdd({

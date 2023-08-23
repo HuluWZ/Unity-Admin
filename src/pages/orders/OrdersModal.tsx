@@ -62,9 +62,8 @@ const FormDialog = ({
 }: FormDialogProps) => {
   const { products } = useProduct();
  const validationSchema = Yup.object({
-        title: Yup.string().required("Required"),
-        description: Yup.string().required("Required"),
-        url:Yup.string().required("Required")
+        title: Yup.string().required(" Title is Required"),
+        url:Yup.string().required(" Url is Required")
     });
  const initialValues = {
         // id: selectedOrder ? selectedOrder.id : "",
