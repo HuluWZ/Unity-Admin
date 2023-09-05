@@ -34,7 +34,8 @@ import OrderDetail from '../pages/orders/OrderDetail';
 import SaleList from '../pages/sales';
 import SalesDetail from '../pages/sales/SalesDetail';
 
-
+import Market from "../pages/market";
+import MarketDetail from "../pages/market/SalesDetail";
 
 import ReportList from '../pages/report';
 import OrderReport from '../pages/report/OrderReport';
@@ -79,6 +80,10 @@ const RoutesComponent = () => {
                      <Route path="treatments" element={<Outlet />}>
                         <Route index element={<SaleList />} />
                         <Route path=":id" element={<SalesDetail />} />
+                    </Route>
+                    <Route path="markets" element={<Outlet />}>
+                        <Route index element={<Market />} />
+                        <Route path=":id" element={<MarketDetail />} />
                     </Route>
                     <Route path="reports" element={<Outlet />}>
                         <Route index element={<ReportList />} />

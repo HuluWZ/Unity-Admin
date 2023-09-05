@@ -8,13 +8,14 @@ import { lightTheme, darkTheme } from "../theme";
 import { useTheme } from "../hooks/useTheme";
 import { NotificationProvider } from "../hooks/useNotification";
 import { AuthProvider } from "../hooks/useAuth";
-// import { OrgProvider } from "../hooks/useOrg";
+import { ForumProvider } from "../hooks/useForum";
 import { CategoryProvider } from "../hooks/useCategory";
 import { ProductProvider } from "../hooks/useProduct";
 import { DiscountProvider } from "../hooks/useDiscount";
 import { OrderProvider } from "../hooks/useOrder";
 import { CustomerProvider } from "../hooks/useCustomer";
 import { SalesProvider } from "../hooks/useSales";
+import { MarketProvider } from "../hooks/useMarket";
 
 
 
@@ -40,7 +41,8 @@ function CombinedComponent() {
                 >
                     <NotificationProvider>
                         <AuthProvider>
-                            {/* <OrgProvider> */}
+                        <MarketProvider>
+                            <ForumProvider>
                                 <CategoryProvider>
                                     <ProductProvider>
                                         <DiscountProvider>
@@ -54,7 +56,8 @@ function CombinedComponent() {
                                         </DiscountProvider>
                                     </ProductProvider>
                                 </CategoryProvider>
-                            {/* </OrgProvider> */}
+                              </ForumProvider>
+                            </MarketProvider>
                         </AuthProvider>
                     </NotificationProvider>
                 </SnackbarProvider>
