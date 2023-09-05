@@ -9,26 +9,26 @@ const token = localStorage.getItem("token") || "";
 //get all categories
 export const getCustomers = async () => {
     // console.log(" Get  Data Customer ",`${api}get`)
-
-    const response = await axios.get(`${api}`, {
+    const response = await axios.get(`${api}all`, {
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            authtoken: `${token}`,
         },
     });
-    console.log(" Customers ", response.data)
     return response.data;
 }
 
 //create category
 export const createCustomer = async (data: any) => {
-    const response = await axios.post(`${api}/`, data, {
+    delete data.id
+    console.log(data," Create Customer ")
+    const response = await axios.post(`${api}signup`, data, {
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            authtoken: `${token}`,
         },
     });
-
+    console.log(" Response ",response);
     return response.data;
 }
 
@@ -38,7 +38,7 @@ export const getCustomerById = async (id: any) => {
     const response = await axios.get(`${api}get/${id}`, {
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            authtoken: `${token}`,
         },
     });
 
@@ -50,7 +50,7 @@ export const updateCustomer = async (id: any, data: any) => {
     const response = await axios.put(`${api}update/${id}`, data, {
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            authtoken: `${token}`,
         },
     });
 
@@ -59,13 +59,14 @@ export const updateCustomer = async (id: any, data: any) => {
 
 
 export const deleteCustomer = async (id: any) => {
+    console.log(" Delete Customer ",id)
     const response = await axios.delete(`${api}delete/${id}`, {
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            authtoken: `${token}`,
         },
     });
-
+    console.log(" Response Delete  ",response);
     return response.data;
 }
 
@@ -89,7 +90,7 @@ export const login = async (data: any) => {
         const response = await axios.post(`${api}login`, data, {
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
+                authtoken: `${token}`,
             }
         });
         console.log(" Login Response ",response)

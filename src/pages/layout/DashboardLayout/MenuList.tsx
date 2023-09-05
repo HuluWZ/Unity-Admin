@@ -78,12 +78,12 @@ export default function AccountMenu() {
                     <Avatar /> Profile
                 </MenuItem>
                 <Divider />
-                <MenuItem component={Link} to="settings">
+                {/* <MenuItem component={Link} to="settings">
                     <ListItemIcon>
                         <Settings fontSize="small" />
                     </ListItemIcon>
                     Settings
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem onClick={logoutAction}>
                     <ListItemIcon>
                         <Logout fontSize="small" />

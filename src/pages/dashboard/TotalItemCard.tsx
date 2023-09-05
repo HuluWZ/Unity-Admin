@@ -11,7 +11,7 @@ import PictureAsPdfTwoToneIcon from '@mui/icons-material/PictureAsPdfOutlined';
 import ArchiveTwoToneIcon from '@mui/icons-material/ArchiveOutlined';
 import MainCard from '../../components/MainCard';
 import BallotIcon from '@mui/icons-material/Ballot';
-
+import ArticleIcon from "@mui/icons-material/Article";
 const CardWrapper = styled(MainCard)(({ theme }) => ({
     background: "#5e35b1",
     color: '#fff',
@@ -78,7 +78,7 @@ const TotalItem = ({ totalItem }: any) => {
                                         opacity: 0.9,
                                     }}
                                 >
-                                    <BallotIcon fontSize="inherit" />
+                                    <ArticleIcon fontSize="inherit" />
                                 </Avatar>
                             </Grid>
                             <Grid item>

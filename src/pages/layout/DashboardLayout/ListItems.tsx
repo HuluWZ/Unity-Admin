@@ -23,57 +23,58 @@ import ForumIcon from '@mui/icons-material/Forum';
 import PeopleIcon from '@mui/icons-material/People';
 import TopicIcon from '@mui/icons-material/Topic';
 import HealingIcon from '@mui/icons-material/Healing';
+import StorefrontIcon from '@mui/icons-material/Storefront';
 const listAdminItems = [
-    {
-        name: 'Dashboard',
-        icon: <DashbordIcon />,
-        path: '/app/dashboard',
-    },
-    {
-        name: 'News',
-        icon: <NewspaperIcon />,
-        path: '/app/news',
-    },
-    {
-        name: 'Books',
-        icon: <MenuBookIcon />,
-        path: '/app/products',
-    },
-    {
-        name: 'Videos',
-        icon: <OndemandVideoIcon />,
-        path: '/app/orders',
-    },
-     {
-        name: 'Forum',
-        icon: <ForumIcon />,
-        path: '/app/forum',
-    },
-          {
-        name: 'Treatment',
-        icon: <HealingIcon />,
-        path: '/app/sales',
-    },
-               {
-        name: 'Users',
-        icon: <PeopleIcon />,
-        path: '/app/users',
-    },
-                    {
-        name: 'Topic',
-        icon: <TopicIcon />,
-        path: '/app/topic',
-    }
+  {
+    name: "Dashboard",
+    icon: <DashbordIcon />,
+    path: "/app/dashboard",
+  },
+  {
+    name: "News",
+    icon: <NewspaperIcon />,
+    path: "/app/news",
+  },
+  {
+    name: "Books",
+    icon: <MenuBookIcon />,
+    path: "/app/books",
+  },
+  {
+    name: "Videos",
+    icon: <OndemandVideoIcon />,
+    path: "/app/videos",
+  },
+  {
+    name: "Forum",
+    icon: <ForumIcon />,
+    path: "/app/forums",
+  },
+  {
+    name: "Treatment",
+    icon: <HealingIcon />,
+    path: "/app/treatments",
+  },
+  {
+    name: "Market",
+    icon: <StorefrontIcon />,
+    path: "/app/markets",
+  },
+  {
+    name: "Users",
+    icon: <PeopleIcon />,
+    path: "/app/users",
+  },
 ];
 
-const listReportItems = [
-    {
-        name: 'Reports',
-        icon: <AssessmentIcon />,
-        path: '/app/reports',
-        color: colors.red[500],
-    },
-];
+// const listReportItems = [
+//     {
+//         name: 'Reports',
+//         icon: <AssessmentIcon />,
+//         path: '/app/reports',
+//         color: colors.red[500],
+//     },
+// ];
 
 export const mainListItems = (
     <React.Fragment>
@@ -108,7 +109,7 @@ export const mainListItems = (
 //Secondary Nav Items
 export const secondaryListItems = (
     <React.Fragment>
-        <ListSubheader inset sx={{ fontFamily: 'Montserrat' }}>
+        {/* <ListSubheader inset sx={{ fontFamily: 'Montserrat' }}>
             Reports
         </ListSubheader>
         <List sx={{
@@ -125,7 +126,7 @@ export const secondaryListItems = (
                     </ListItemIcon>
                     <ListItemText primary={item.name.toUpperCase()} />
                 </ListItemButton>))}
-        </List>
+        </List> */}
     </React.Fragment>
 );
 

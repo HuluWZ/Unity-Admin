@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }: any) => {
             showNotification('Welcome '+ name , 'info');
         } catch (error: any) {
             dispatch({ type: 'LOGIN_FAILURE', payload: error });
-            showNotification("Invalid email or password", "error");
+            showNotification("Invalid phone or pin", "error");
         }
     };
 

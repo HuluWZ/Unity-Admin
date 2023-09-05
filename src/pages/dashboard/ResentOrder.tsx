@@ -57,31 +57,20 @@ const RecentOrder = ({ orders }: any) => {
                         </Grid>
                         <Grid item xs={12}>
                             {/* show only 5 orders sort by created date */}
-                            {orders?.booking?.slice(0,5).map((order: any) => (
+                            {orders?.result?.slice(0,3).map((order: any) => (
                                 <Grid container spacing={3} key={order._id}>
                                     <Grid item xs={12}>
                                         <Grid container alignItems="center" justifyContent="space-between">
                                             <Grid item>
                                                 <Typography variant="subtitle1" color="inherit">
-                                                    { getFullName(order).slice(0,16) }
+                                                    { order.title}
                                                 </Typography>
                                             </Grid>
                                             <Grid item>
                                                 <Grid container alignItems="center" justifyContent="space-between">
                                                     <Grid item>
                                                         <Typography variant="subtitle1" color="inherit">
-                                                             { order?.status}
-                                                        </Typography>
-                                                    </Grid>
-                                                </Grid>
-                                            </Grid>
-                                            <Grid item>
-                                                <Grid container alignItems="center" justifyContent="space-between">
-                                                    <Grid item>
-                                                        <Typography variant="subtitle1" color="inherit">
-                                                            <a href={"tel:" + order?.contactDetails?.phoneNumber} >
-                                                                {order?.contactDetails?.phoneNumber?.slice(0,12) || "             "}
-                                                            </a>
+                                                             { order?.status == 2? "Pending" :"Approved"}
                                                         </Typography>
                                                     </Grid>
                                                 </Grid>
@@ -95,11 +84,6 @@ const RecentOrder = ({ orders }: any) => {
                                                     {moment(order.createdAt).fromNow()}
                                                 </Typography>
                                             </Grid>
-                                            <Grid item>
-                                                <Typography variant="subtitle2" color="inherit">
-                                                    {order?.totalPrice}
-                                                </Typography>
-                                            </Grid>
                                         </Grid>
                                         <Divider />
                                     </Grid>
@@ -111,7 +95,7 @@ const RecentOrder = ({ orders }: any) => {
                 </CardContent>
                 <CardActions sx={{ p: 1.25, pt: 0, justifyContent: 'center' }}>
                     <Button size="small" disableElevation>
-                        <Link to="/app/orders" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <Link to="/app/news" style={{ textDecoration: 'none', color: 'inherit' }}>
                             View All
                         </Link>
                         <ChevronRightOutlinedIcon />

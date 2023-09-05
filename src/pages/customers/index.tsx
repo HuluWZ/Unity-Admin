@@ -18,12 +18,12 @@ const Customers = () => {
     const [openConfirm, setOpenConfirm] = React.useState(false);
     if (isLoading) return (
         <PageView
-            title="Customers"
+            title="Users"
             backPath="/app/dashboard"
             actions={[
                 {
                     icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
-                    label: "Add Customer",
+                    label: "Add Users",
                     handler: () => {
                         setOpen(true)
                         setSelectedCustomer(null)
@@ -44,12 +44,12 @@ const Customers = () => {
 
     if (isError) return (
         <PageView
-            title="Customers"
+            title="Users"
             backPath="/app/dashboard"
             actions={[
                 {
                     icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
-                    label: "Add Customer",
+                    label: "Add Users",
                     handler: () => {
                         setOpen(true)
                         setSelectedCustomer(null)
@@ -70,12 +70,12 @@ const Customers = () => {
 
     return (
         <PageView
-            title="Customers"
+            title="Users"
             backPath="/app/dashboard"
             actions={[
                 {
                     icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
-                    label: "Add Customer",
+                    label: "Add Users",
                     handler: () => {
                         setOpen(true)
                         setSelectedCustomer(null)
@@ -111,8 +111,8 @@ const Customers = () => {
                     deleteCustomerMutation(selectedCustomer.id)
                     setOpenConfirm(false)
                 }}
-                title="Delete Customer"
-                description="Are you sure you want to delete this customer?"
+                title="Delete User"
+                description="Are you sure you want to delete this user?"
                 confirmText="Delete"
                 cancelText="Cancel"
             />

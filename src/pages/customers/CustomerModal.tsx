@@ -10,12 +10,15 @@ import { Button, ButtonGroup, MenuItem } from "@mui/material";
 
 
 const validationSchema = Yup.object().shape({
-    fullName: Yup.string().required("Full Name is required"),
-    phoneNumber: Yup.string().required("Phone Number is required"),
-    email: Yup.string().email("Email is invalid").required("Email is required"),
-    address: Yup.string().required("Address is required"),
-    city: Yup.string().required("City is required"),
-    paymentMethod: Yup.string().required("Payment Method is required"),
+  name: Yup.string().required("Name is required"),
+  phoneNumber: Yup.string().required("Phone Number is required"),
+  pin: Yup.string().min(4).required("Pin is required"),
+  qualification: Yup.string().required("Qualification is required"),
+  state: Yup.string().required("State is required"),
+  district: Yup.string().required("District is required"),
+  area: Yup.string().required("Area is required"),
+  labName: Yup.string().required("Lab Name is required"),
+  role: Yup.string().required("Role is required"),
 });
 
 
@@ -34,151 +37,203 @@ const FormDialog = (props: FormDialogProps) => {
     const { open, handleClose, handleAdd, handleUpdate, selectedCustomer, setCustomer } = props;
 
     return (
-        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">
-                {selectedCustomer ? "Update Customer" : "Add Customer"}
-            </DialogTitle>
-            <DialogContent>
-                <Formik
-                    initialValues={{
-                        id: selectedCustomer?.id || "",
-                        fullName: selectedCustomer?.fullName || "",
-                        phoneNumber: selectedCustomer?.phoneNumber || "",
-                        email: selectedCustomer?.email || "",
-                        address: selectedCustomer?.address || "",
-                        city: selectedCustomer?.city || "",
-                        paymentMethod: selectedCustomer?.paymentMethod || "",
-                    }}
-                    validationSchema={validationSchema}
-                    onSubmit={(values, { setSubmitting }) => {
-                        if (selectedCustomer) {
-                            handleUpdate(values);
-                        } else {
-                            handleAdd(values);
-                        }
-                        setSubmitting(false);
-                        handleClose();
-                    }}
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">
+          {selectedCustomer ? "Update User" : "Add User"}
+        </DialogTitle>
+        <DialogContent>
+          <Formik
+            initialValues={{
+              id: selectedCustomer?.id || "",
+              name: selectedCustomer?.name || "",
+              phoneNumber: selectedCustomer?.phoneNumber || "",
+              qualification: selectedCustomer?.qualification || "",
+              pin: selectedCustomer?.pin || "",
+              state: selectedCustomer?.state || "",
+              district: selectedCustomer?.district || "",
+              area: selectedCustomer?.area || "",
+              labName: selectedCustomer?.labName || "",
+              role: selectedCustomer?.role || "",
+            }}
+            validationSchema={validationSchema}
+            onSubmit={(values, { setSubmitting }) => {
+              if (selectedCustomer) {
+                handleUpdate(values);
+              } else {
+                console.log(" Values ", values);
+                handleAdd(values);
+              }
+              setSubmitting(false);
+              handleClose();
+            }}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              isSubmitting,
+            }: /* and other goodies */
+            any) => (
+              <form onSubmit={handleSubmit}>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="name"
+                  name="name"
+                  label="Full Name"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  value={values.name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.name && Boolean(errors.name)}
+                  helperText={touched.name && errors.name}
+                />
+                <TextField
+                  margin="dense"
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  label="Phone Number"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  value={values.phoneNumber}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.phoneNumber && Boolean(errors.phoneNumber)}
+                  helperText={touched.phoneNumber && errors.phoneNumber}
+                />
+                <TextField
+                  margin="dense"
+                  id="pin"
+                  name="pin"
+                  label="Pin"
+                  type="number"
+                  fullWidth
+                  variant="standard"
+                  value={values.pin}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.pin && Boolean(errors.pin)}
+                  helperText={touched.pin && errors.pin}
+                />
+                <TextField
+                  margin="dense"
+                  id="qualification"
+                  name="qualification"
+                  label="Qualification"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  value={values.qualification}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.qualification && Boolean(errors.qualification)}
+                  helperText={touched.qualification && errors.qualification}
+                />
+                <TextField
+                  margin="dense"
+                  id="state"
+                  name="state"
+                  label="State"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  value={values.state}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.state && Boolean(errors.state)}
+                  helperText={touched.state && errors.state}
+                />
+                <TextField
+                  margin="dense"
+                  id="district"
+                  name="district"
+                  label="District"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  value={values.district}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.district && Boolean(errors.district)}
+                  helperText={touched.district && errors.district}
+                />
+                <TextField
+                  margin="dense"
+                  id="area"
+                  name="area"
+                  label="Area"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  value={values.area}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.area && Boolean(errors.area)}
+                  helperText={touched.area && errors.area}
+                />
+                <TextField
+                  margin="dense"
+                  id="labName"
+                  name="labName"
+                  label="Lab Name"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  value={values.labName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.labName && Boolean(errors.labName)}
+                  helperText={touched.labName && errors.labName}
+                />
+                {/* paymentMethod will be a dropdown  */}
+                <TextField
+                  margin="dense"
+                  id="role"
+                  name="role"
+                  label="Role"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  value={values.role}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.role && Boolean(errors.role)}
+                  helperText={touched.role && errors.role}
+                  select
                 >
-                    {({
-                        values,
-                        errors,
-                        touched,
-                        handleChange,
-                        handleBlur,
-                        handleSubmit,
-                        isSubmitting,
-                        /* and other goodies */
-                    }: any) => (
-                        <form onSubmit={handleSubmit}>
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="fullName"
-                                name="fullName"
-                                label="Full Name"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                                value={values.fullName}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={touched.fullName && Boolean(errors.fullName)}
-                                helperText={touched.fullName && errors.fullName}
-                            />
-                            <TextField
-                                margin="dense"
-                                id="phoneNumber"
-                                name="phoneNumber"
-                                label="Phone Number"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                                value={values.phoneNumber}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={touched.phoneNumber && Boolean(errors.phoneNumber)}
-                                helperText={touched.phoneNumber && errors.phoneNumber}
-                            />
-                            <TextField
-                                margin="dense"
-                                id="email"
-                                name="email"
-                                label="Email Address"
-                                type="email"
-                                fullWidth
-                                variant="standard"
-                                value={values.email}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={touched.email && Boolean(errors.email)}
-                                helperText={touched.email && errors.email}
-                            />
-                            <TextField
-                                margin="dense"
-                                id="address"
-                                name="address"
-                                label="Address"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                                value={values.address}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={touched.address && Boolean(errors.address)}
-                                helperText={touched.address && errors.address}
-                            />
-                            <TextField
-                                margin="dense"
-                                id="city"
-                                name="city"
-                                label="City"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                                value={values.city}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={touched.city && Boolean(errors.city)}
-                                helperText={touched.city && errors.city}
-                            />
-                            {/* paymentMethod will be a dropdown  */}
-                            <TextField
-                                margin="dense"
-                                id="paymentMethod"
-                                name="paymentMethod"
-                                label="Payment Method"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                                value={values.paymentMethod}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={touched.paymentMethod && Boolean(errors.paymentMethod)}
-                                helperText={touched.paymentMethod && errors.paymentMethod}
-                                select
-                            >
-                                <MenuItem value="Cash">Cash</MenuItem>
-                                <MenuItem value="Credit">Credit</MenuItem>
-                                <MenuItem value="Check">Check</MenuItem>
-                                <MenuItem value="Transfer">Transfer</MenuItem>
-                                <MenuItem value="TeleBirr">TeleBirr</MenuItem>
-                            </TextField>
-                            <DialogActions>
-                                <ButtonGroup>
-                                    <Button onClick={handleClose} color="primary">
-                                        Cancel
-                                    </Button>
-                                    <Button type="submit" color="primary" disabled={isSubmitting} variant="contained">
-                                        {selectedCustomer ? "Update" : "Add"}
-                                    </Button>
-                                </ButtonGroup>
-                            </DialogActions>
-                        </form>
-                    )}
-                </Formik>
-            </DialogContent>
-        </Dialog>
+                  <MenuItem value="user">User</MenuItem>
+                  <MenuItem value="admin">Admin</MenuItem>
+                </TextField>
+                <DialogActions>
+                  <ButtonGroup>
+                    <Button onClick={handleClose} color="primary">
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      color="primary"
+                      disabled={isSubmitting}
+                      variant="contained"
+                    >
+                      {selectedCustomer ? "Update" : "Add"}
+                    </Button>
+                  </ButtonGroup>
+                </DialogActions>
+              </form>
+            )}
+          </Formik>
+        </DialogContent>
+      </Dialog>
     );
 };
 

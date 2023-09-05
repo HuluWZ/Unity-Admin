@@ -1,7 +1,7 @@
 import { styled, useTheme } from '@mui/material/styles';
 import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
-
+import BookIcon from "@mui/icons-material/Book";
 import MainCard from '../../components/MainCard';
 
 
@@ -52,7 +52,7 @@ const TotalIncome = ({ totalSales }: any) => {
                                     opacity: 0.9
                                 }}
                             >
-                                <TableChartOutlinedIcon fontSize="inherit" />
+                                <BookIcon fontSize="inherit" />
                             </Avatar>
                         </ListItemAvatar>
                         <ListItemText

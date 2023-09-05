@@ -46,7 +46,7 @@ const Dashboard = () => {
     </PageView>
   }
   
-  console.log(" Orders - ",orders);
+  console.log(" Customers - ",customers);
 
 
   return (
@@ -67,10 +67,10 @@ const Dashboard = () => {
               <Grid item lg={4} md={12} sm={12} xs={12}>
                 <Grid container spacing={1.5}>
                   <Grid item sm={6} xs={12} md={6} lg={12}>
-                    <TotalIncome totalSales={products?.length || 0} />
+                    <TotalIncome totalSales={products?.result?.length || 0} />
                   </Grid>
                   <Grid item sm={6} xs={12} md={6} lg={12}>
-                    <TotalCustomer totalCustomer={customers?.result || 0} />
+                    <TotalCustomer totalCustomer={customers?.result?.length || 0} />
                   </Grid>
                 </Grid>
               </Grid>
