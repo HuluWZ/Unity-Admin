@@ -595,10 +595,10 @@ const SalesView = ({
                          style={{ fontWeight: problemIndex == index ? 'bold' : 'normal' }}>
                              {problem?.name}
                       </Typography>
-                      <Typography className={classes.sectorTypography}>{problem.sector.name}</Typography>
+                      <Typography className={classes.sectorTypography}>{problem?.sector?.name}</Typography>
                       <IconButton
                          className={classes.deleteButton}
-                              onClick={() => handleDeleteClick(problem.id)}
+                              onClick={() => handleDeleteClick(problem?.id)}
                            >
                 <DeleteIcon />
               </IconButton>
