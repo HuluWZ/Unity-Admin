@@ -105,7 +105,7 @@ const SalesView = ({
     const [categories, setCategories] = useState([{ id: '', name: '' }]);
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedProblem, setSelectedProblem] = useState('');
-    const [problems, setProblem] = useState([{ id: '', name: '' }]);
+    const [problems, setProblem] = useState([{ id: '', name: '',rate:0,count:'',market:{name:''} }]);
     const [solutions, setSolution] = useState<ObjectWithAttributes[]>([]);
     const [message, setMessage] = useState('');
     const [selectedIndex, setIndex] = useState(0)
@@ -114,6 +114,9 @@ const SalesView = ({
       const [isModalOpen2, setIsModalOpen2] = useState(false);
     const [newSectorName, setNewSectorName] = useState('');
     const [newProblemName, setNewProblemName] = useState('');
+    const [newRate, setRate] = useState(0);
+    const [newCount, setCount] = useState("");
+
     const [allproblems, setAllProblem] = useState([{ id: '', name: '',rate:'',count:'', market:{name:''} }]);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -201,6 +204,17 @@ const SalesView = ({
     const handleNewProblemNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNewProblemName(event.target.value);
     };
+    const handleNewCountChange = (
+      event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+      setCount(event.target.value);
+    };
+    const handleNewRateChange = (
+      event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+      const newRate = parseFloat(event.target.value)
+      setRate(newRate);
+    };
     const [selectedSector, setSelectedSector] = useState<number | ''>('');
 
     const handleSectorChange = (event: SelectChangeEvent<number>) => {
@@ -228,18 +242,17 @@ const SalesView = ({
   };
 
   const handleDeleteConfirm = async () => {
-    console.log(" Selected Problem = ",selectedProblemId);
-    const response = await axios.delete(`${url}/problem/${selectedProblemId}`, {
+    console.log(" Selected Zone = ",selectedProblemId);
+    const response = await axios.delete(`${api}market/zone/${selectedProblemId}`, {
             headers: {
                 "Content-Type": "application/json",
             }
     });
-    console.log(" Selected Problem = ",response);
+    console.log(" Selected Zone Deleted = ",response);
     setDeleteDialogOpen(false);
     setSelectedProblemId(null);
   };
   const handleDeleteSectorConfirm = async () => {
-    // TODO: Make delete request using selectedProblemId
     console.log(" Selected Sector Delete = ",selectedSectorId);
     const response = await axios.delete(`${url}/sector/${selectedSectorId}`, {
             headers: {
@@ -275,10 +288,10 @@ const SalesView = ({
         console.log(" Response Create Sector ",response)
     };
      const handleAddProblem = async() => {
-      const data = {name:newProblemName,sectorId:selectedSector};
+      const data = {name:newProblemName,rate:newRate,count:newCount,marketId:selectedSector};
         // Make your API POST request here with newSectorName
-        console.log(" new Problem Data ", data);
-        const response = await axios.post(`${url}/problem`, data, {
+        console.log(" New Zone Data = ", data);
+        const response = await axios.post(`${api}market/zone/`, data, {
             headers: {
                 "Content-Type": "application/json",
                 authtoken: `${token}`
@@ -287,21 +300,22 @@ const SalesView = ({
          setIsModalOpen(false);
          setSelectedSector('')
          setNewProblemName('')
+         setCount('')
+         setRate(0)
 
-        // if (response?.data?.result) {
-        //  console.log(" Sucess ")   
-        //  setSnackbarColor('success');
-        //  setSnackbarMessage('Problem added successfully');
 
-        // } else {
-        //     console.log(" Error ")   
-        //    setSnackbarColor('error');
-        //   setSnackbarMessage('Failed to add problem');
+        if (response?.data?.result) {
+         console.log(" Sucess ")   
+         setSnackbarColor('success');
+         setSnackbarMessage('Zone Added successfully');
+        } else {
+          console.log(" Error ")   
+          setSnackbarColor('error');
+          setSnackbarMessage('Failed To Add Zone');
 
-        // }
-        // setSnackbarOpen(false);
-
-        console.log(" Response Create Problem ",response)
+        }
+        setSnackbarOpen(false);
+        console.log(" Response Create Zone ",response)
     };
     const handleDeleteProblem = async() => {
         console.log(" New Problem Delete ID ");
@@ -535,27 +549,52 @@ const SalesView = ({
           </Grid>
           <hr />
           <br></br>
-          {/* <Grid container spacing={1}>
-                    <Button variant="contained" color="primary"
-                    onClick={handleModalOpen}
-                    style={{ marginLeft: 880,width:200 }}>
-                    Add Problem
-                        </Button>
-                        <br></br>
-                    </Grid> */}
+          <Grid container spacing={1}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleModalOpen}
+              style={{ marginLeft: 880, width: 200 }}
+            >
+              Add Zone
+            </Button>
+            <br></br>
+          </Grid>
 
           <Dialog open={isModalOpen} onClose={handleModalClose}>
-            <DialogTitle>Add New Problem </DialogTitle>
+            <DialogTitle>Add New Zone </DialogTitle>
             <DialogContent>
               <TextField
-                label="Problem Name"
+                label="Zone Name"
+                id="name"
                 value={newProblemName}
                 onChange={handleNewProblemNameChange}
                 fullWidth
+                required
               />
-              <InputLabel>Select Sector</InputLabel>
-              <Select value={selectedSector} onChange={handleSectorChange}>
-                <MenuItem value="">None</MenuItem>
+              
+              <TextField
+                label="Count"
+                id="count"
+                value={newCount}
+                onChange={handleNewCountChange}
+                fullWidth
+                required
+              />
+             
+              <TextField
+                label="Rate"
+                id="rate"
+                type="number"
+                value={newRate}
+                onChange={handleNewRateChange}
+                fullWidth
+                required
+              />
+              
+              <InputLabel>Select Market</InputLabel>
+              <Select value={selectedSector}  required onChange={handleSectorChange}>
+                <MenuItem value="" disabled>None</MenuItem>
                 {categories.map((sector) => (
                   <MenuItem key={sector.id} value={sector.id}>
                     {sector.name}
@@ -579,20 +618,33 @@ const SalesView = ({
               ? problems?.map((problem, index) => (
                   <Grid item xs={10} sm={7} md={3} key={index}>
                     <Card className={classes.card2}>
-                      <Typography
-                        variant="h6"
-                        onClick={() =>
-                          handleProblemClick(problem?.id, problem?.name, index)
-                        }
-                        style={{
-                          fontWeight: problemIndex == index ? "bold" : "normal",
-                        }}
-                      >
-                        {problem?.name} | {problem?.rate} | {problem?.count}
-                      </Typography>
-                      <Typography className={classes.sectorTypography}>
-                        {problem?.market?.name}
-                      </Typography>
+                      <CardContent className={classes.cardContent}>
+                        <Typography
+                          variant="h6"
+                          onClick={() =>
+                            handleProblemClick(
+                              problem?.id,
+                              problem?.name,
+                              index
+                            )
+                          }
+                          style={{
+                            fontWeight:
+                              problemIndex == index ? "bold" : "normal",
+                          }}
+                        >
+                          {problem?.name} | {problem?.rate} | {problem?.count}
+                        </Typography>
+                        <Typography className={classes.sectorTypography}>
+                          {problem?.market?.name}
+                        </Typography>
+                        <IconButton
+                          className={classes.deleteButton}
+                          onClick={() => handleDeleteClick(problem.id)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </CardContent>
                     </Card>
                   </Grid>
                 ))
@@ -619,12 +671,12 @@ const SalesView = ({
                         <Typography className={classes.sectorTypography}>
                           {problem?.market?.name}
                         </Typography>
-                        {/* <IconButton
+                        <IconButton
                           className={classes.deleteButton}
                           onClick={() => handleDeleteClick(problem.id)}
                         >
                           <DeleteIcon />
-                        </IconButton> */}
+                        </IconButton>
                       </CardContent>
                     </Card>
                   </Grid>
@@ -632,7 +684,7 @@ const SalesView = ({
             <Dialog open={deleteDialogOpen}>
               <DialogTitle>Confirm Delete</DialogTitle>
               <DialogContent>
-                Are you sure you want to delete this problem?
+                Are you sure you want to delete this zone?
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleDeleteCancel} color="primary">

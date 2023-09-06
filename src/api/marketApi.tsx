@@ -17,6 +17,7 @@ export const getSales = async () => {
 };
 
 export const createSale = async (data: any) => {
+  delete data.id
   console.log(" Create Market API ", data);
   const response = await axios.post(`${url}/type/`, data, {
     headers: {
