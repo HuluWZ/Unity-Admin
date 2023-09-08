@@ -1,15 +1,12 @@
-import React from 'react'
-import PageView from '../../components/PageView'
+import React from 'react';
+import PageView from '../../components/PageView';
 import ConfirmModal from "../../components/ConfirmModal";
 import LoadingComponent from "../../components/LoadingComponent";
 import { useFarmer } from '../../hooks/useFarmer';
 import { AddCircleRounded } from "@mui/icons-material";
-
 import CustomersView from "./CustomerList";
 import FormDialog from "./CustomerModal";
 import { Alert } from '@mui/material';
-
-
 
 const Customers = () => {
     const { customers, isLoading, error, deleteCustomerMutation, createCustomerMutation, updateCustomerMutation } = useFarmer();

@@ -10,6 +10,8 @@ const token = localStorage.getItem("token");
 
 // console.log(" URL =  ", `${url}forum/`,token)
 export const getForums = async () => {
+    try{
+
         console.log(" Get All Forums : ",url);
         const response = await axios.get(`${url}forum/`, {
             headers: {
@@ -19,7 +21,25 @@ export const getForums = async () => {
         });
         console.log(" All Forums  Response  - ",response.data);
         return response.data;
+    }catch(err){
+        throw err;
+    }
 }
+export const getTanks = async () => {
+    try{
+        console.log(" Get All Tanks : ", url);
+        const response = await axios.get(`${url}tank/`, {
+          headers: {
+            "Content-Type": "application/json",
+            authtoken: `${token}`,
+          },
+        });
+        console.log(" Alls  Tanks Response  - ", response.data);
+        return response.data;
+    }catch(error){
+        throw error;
+    }
+};
 
 export const getForum = async (id: string) => {
         console.log(" Get Forum  by Id-  ",id)
@@ -34,6 +54,8 @@ export const getForum = async (id: string) => {
 }
 
 export const createForum = async (data: any) => {
+    try{
+
         const response = await axios.post(`${url}forum`, data, {
             headers: {
                 "Content-Type": "application/json",
@@ -42,6 +64,9 @@ export const createForum = async (data: any) => {
         });
         console.log(" Create Product -  ",response?.data,data)
         return response.data;
+    }catch(err){
+        throw err;
+    }
 }
 
 export const updateForum = async (id: string, data: any) => {
