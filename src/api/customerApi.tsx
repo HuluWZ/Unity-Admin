@@ -46,14 +46,15 @@ export const getCustomerById = async (id: any) => {
 }
 
 //update category
-export const updateCustomer = async (id: any, data: any) => {
-    const response = await axios.put(`${api}update/${id}`, data, {
+export const updateCustomer = async (id: any) => {
+    console.log(" Approve User ",id)
+    const response = await axios.put(`${api}approve/${id}`, {
         headers: {
             "Content-Type": "application/json",
             authtoken: `${token}`,
         },
     });
-
+    console.log(" Approve Respone ",response)
     return response.data;
 }
 

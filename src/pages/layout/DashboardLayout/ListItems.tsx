@@ -24,6 +24,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import TopicIcon from '@mui/icons-material/Topic';
 import HealingIcon from '@mui/icons-material/Healing';
 import StorefrontIcon from '@mui/icons-material/Storefront';
+import AgricultureIcon from "@mui/icons-material/Agriculture";
 const listAdminItems = [
   {
     name: "Dashboard",
@@ -64,6 +65,11 @@ const listAdminItems = [
     name: "Users",
     icon: <PeopleIcon />,
     path: "/app/users",
+  },
+  {
+    name: "Farmers",
+    icon: <AgricultureIcon />,
+    path: "/app/farmers",
   },
 ];
 

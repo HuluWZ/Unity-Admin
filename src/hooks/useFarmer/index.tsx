@@ -1,20 +1,20 @@
 import { createContext, useContext } from 'react';
-import { getCustomers, createCustomer, getCustomerById, updateCustomer, deleteCustomer } from '../../api/customerApi';
+import { getCustomers, createCustomer, getCustomerById, updateCustomer, deleteCustomer } from '../../api/farmerApi';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { useNotification } from '../useNotification';
 
-export const CustomerContext = createContext({} as any);
+export const FarmerContext = createContext({} as any);
 
 
-export const CustomerProvider = ({ children }: any) => {
+export const FarmerProvider = ({ children }: any) => {
     const queryClient = useQueryClient();
     const { showNotification } = useNotification();
 
-    const { data: customers, isLoading, error } = useQuery('customers', getCustomers);
+    const { data: customers, isLoading, error } = useQuery('farmers', getCustomers);
 
     const { mutate: createCustomerMutation, isLoading: createCustomerLoading } = useMutation(createCustomer, {
         onSuccess: () => {
-            showNotification('Create User successfully', 'success');
+            showNotification('Created Farmer successfully', 'success');
             queryClient.invalidateQueries('customers');
         },
 
@@ -26,7 +26,7 @@ export const CustomerProvider = ({ children }: any) => {
 
     const { mutate: updateCustomerMutation } = useMutation((data: any) => updateCustomer(data?.id), {
         onSuccess: () => {
-            showNotification('Approved User successfully', 'success');
+            showNotification('Updated Farmer successfully', 'success');
             queryClient.invalidateQueries('customers');
         },
 
@@ -37,7 +37,7 @@ export const CustomerProvider = ({ children }: any) => {
 
     const { mutate: deleteCustomerMutation, isLoading: deleteCustomerLoading } = useMutation(deleteCustomer, {
         onSuccess: () => {
-            showNotification('Delete User successfully', 'success');
+            showNotification('Deleted Farmer successfully', 'success');
             queryClient.invalidateQueries('customers');
         },
 
@@ -47,7 +47,7 @@ export const CustomerProvider = ({ children }: any) => {
     });
 
     return (
-        <CustomerContext.Provider
+        <FarmerContext.Provider
             value={{
                 customers,
                 isLoading,
@@ -60,9 +60,9 @@ export const CustomerProvider = ({ children }: any) => {
             }}
         >
             {children}
-        </CustomerContext.Provider>
+        </FarmerContext.Provider>
     );
 };
 
 
-export const useCustomer = () => useContext(CustomerContext);
+export const useFarmer = () => useContext(FarmerContext);

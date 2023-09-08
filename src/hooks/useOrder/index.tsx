@@ -10,7 +10,7 @@ export const OrderProvider = ({ children }: any) => {
     const queryClient = useQueryClient();
     const { showNotification } = useNotification()
 
-    const { data: orders, isLoading, isError } = useQuery('orders', getOrders);
+    const { data: orders, isLoading, error } = useQuery('orders', getOrders);
 
     console.log(" Orders L =  ", orders);
 
@@ -64,7 +64,7 @@ export const OrderProvider = ({ children }: any) => {
     const value = {
         orders,
         isLoading,
-        isError,
+        error,
         createOrderMutation,
         updateOrderMutation,
         deleteOrderMutation,

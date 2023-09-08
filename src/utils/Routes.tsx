@@ -14,6 +14,7 @@ import Dashboard from '../pages/dashboard';
 import DashboardContent from '../pages/layout/DashboardLayout/Dashboard';
 
 import CustomerList from '../pages/customers';
+import FarmerList from "../pages/farmer";
 
 import CategoriesList from '../pages/categories';
 import CategoryDetail from '../pages/categories/CategoryDetail';
@@ -49,54 +50,56 @@ import Profile from '../pages/profile';
 
 const RoutesComponent = () => {
     return (
-        <Routes>
-            <Route path="/auth" element={<MainLayout />}>
-                <Route path="login" element={<SignIn />} />
-                <Route path="register" element={<SignUp />} />
+      <Routes>
+        <Route path="/auth" element={<MainLayout />}>
+          <Route path="login" element={<SignIn />} />
+          <Route path="register" element={<SignUp />} />
+        </Route>
+        <Route path="/" element={<PrivateRoute />}>
+          <Route path="/" element={<Navigate to="/app/dashboard" />} />
+          <Route path="app" element={<DashboardContent />}>
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="news" element={<Outlet />}>
+              <Route index element={<CategoriesList />} />
+              <Route path=":id" element={<CategoryDetail />} />
             </Route>
-            <Route path="/" element={<PrivateRoute />}>
-                <Route path="/" element={<Navigate to="/app/dashboard" />} />
-                <Route path="app" element={<DashboardContent />}>
-                    <Route path="dashboard" element={<Dashboard />} />
-                    <Route path="news" element={<Outlet />}>
-                        <Route index element={<CategoriesList />} />
-                        <Route path=":id" element={<CategoryDetail />} />
-                    </Route>
-                    <Route path="users" element={<CustomerList />} />
-                   
-                    <Route path="books" element={<Outlet />}>
-                        <Route index element={<ProductList />} />
-                        <Route path=":id" element={<ProductsDetail />} />
-                    </Route>
-                    <Route path="discounts" element={<DiscountList />} />
-                    <Route path="videos" element={<Outlet />}>
-                        <Route index element={<OrderList />} />
-                        <Route path=":id" element={<OrderDetail />} />
-                    </Route>
-                    <Route path="forums" element={<Outlet />}>
-                        <Route index element={<ForumList />} />
-                        <Route path=":id" element={<ForumDetail />} />
-                    </Route>
-                     <Route path="treatments" element={<Outlet />}>
-                        <Route index element={<SaleList />} />
-                        <Route path=":id" element={<SalesDetail />} />
-                    </Route>
-                    <Route path="markets" element={<Outlet />}>
-                        <Route index element={<Market />} />
-                        <Route path=":id" element={<MarketDetail />} />
-                    </Route>
-                    <Route path="reports" element={<Outlet />}>
-                        <Route index element={<ReportList />} />
-                        <Route path="order" element={<OrderReport />} />
-                        <Route path="sales" element={<SalesReport />} />
-                        <Route path="stoke" element={<StokeAlert />} />
-                    </Route>
-                    <Route path="settings" element={<Settings />} />
-                    <Route path="profile" element={<Profile />} />
-                </Route>
-                <Route path="*" element={<NotFound />} />
+            <Route path="users" element={<CustomerList />} />
+
+            <Route path="books" element={<Outlet />}>
+              <Route index element={<ProductList />} />
+              <Route path=":id" element={<ProductsDetail />} />
             </Route>
-        </Routes>
+            <Route path="discounts" element={<DiscountList />} />
+            <Route path="videos" element={<Outlet />}>
+              <Route index element={<OrderList />} />
+              <Route path=":id" element={<OrderDetail />} />
+            </Route>
+            <Route path="forums" element={<Outlet />}>
+              <Route index element={<ForumList />} />
+              <Route path=":id" element={<ForumDetail />} />
+            </Route>
+            <Route path="treatments" element={<Outlet />}>
+              <Route index element={<SaleList />} />
+              <Route path=":id" element={<SalesDetail />} />
+            </Route>
+            <Route path="markets" element={<Outlet />}>
+              <Route index element={<Market />} />
+              <Route path=":id" element={<MarketDetail />} />
+            </Route>
+            <Route path="farmers" element={<FarmerList />} />
+
+            <Route path="reports" element={<Outlet />}>
+              <Route index element={<ReportList />} />
+              <Route path="order" element={<OrderReport />} />
+              <Route path="sales" element={<SalesReport />} />
+              <Route path="stoke" element={<StokeAlert />} />
+            </Route>
+            <Route path="settings" element={<Settings />} />
+            <Route path="profile" element={<Profile />} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
     );
 };
 

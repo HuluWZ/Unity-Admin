@@ -16,6 +16,7 @@ import { OrderProvider } from "../hooks/useOrder";
 import { CustomerProvider } from "../hooks/useCustomer";
 import { SalesProvider } from "../hooks/useSales";
 import { MarketProvider } from "../hooks/useMarket";
+import { FarmerProvider } from "../hooks/useFarmer";
 
 
 
@@ -49,7 +50,9 @@ function CombinedComponent() {
                                             <OrderProvider>
                                                 <CustomerProvider>
                                                     <SalesProvider>
+                                                       <FarmerProvider>
                                                         <RoutesComponent />
+                                                        </FarmerProvider>
                                                     </SalesProvider>
                                                 </CustomerProvider>
                                             </OrderProvider>

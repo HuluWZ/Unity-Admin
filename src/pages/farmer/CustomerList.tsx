@@ -33,17 +33,12 @@ const CustomersView = ({
     const columns: GridColDef[] = [
       {
         field: "name",
-        headerName: "Full Name",
+        headerName: "Name",
         minWidth: 150,
       },
       {
         field: "phoneNumber",
         headerName: "Phone Number",
-        minWidth: 100,
-      },
-      {
-        field: "qualification",
-        headerName: "Qualification",
         minWidth: 100,
       },
       {
@@ -62,13 +57,18 @@ const CustomersView = ({
         minWidth: 100,
       },
       {
-        field: "labName",
-        headerName: "Lab Name",
+        field: "cultureType",
+        headerName: "Culture Type",
         minWidth: 100,
       },
       {
-        field: "status",
-        headerName: "Status",
+        field: "labOwner",
+        headerName: "Lab Owner",
+        minWidth: 100,
+      },
+      {
+        field: "labName",
+        headerName: "Lab Name",
         minWidth: 100,
       },
       {
@@ -124,12 +124,12 @@ const CustomersView = ({
           id: item?.id,
           name: item?.name,
           phoneNumber: item?.phoneNumber,
-          qualification: item?.qualification,
+          cultureType: item?.cultureType,
           state: item?.state,
           district: item?.district,
           area: item?.area,
-          labName: item?.labName,
-          status: item?.status == "2" ? "Pending" :"Approved",
+          labName: item?.user?.labName,
+          labOwner: item?.user?.name,
           createdAt: item?.createdAt,
         };
     });

@@ -9,7 +9,7 @@ import { Alert } from "@mui/material";
 import FormDialog from "./OrdersModal";
 
 const Orders = () => {
-    const { orders, isLoading, isError, deleteOrderMutation, createOrderMutation, updateOrderMutation, approveOrderMutation } = useOrder();
+    const { orders, isLoading, error, deleteOrderMutation, createOrderMutation, updateOrderMutation, approveOrderMutation } = useOrder();
     const [selectedOrder, setSelectedOrder] = React.useState<any>(null);
     const [open, setOpen] = React.useState(false);
     const [openConfirm, setOpenConfirm] = React.useState(false);
@@ -40,7 +40,7 @@ const Orders = () => {
         </PageView>
     )
 
-    if (isError) return (
+    if (error) return (
         <PageView
             title="Video"
             backPath="/app/dashboard"
