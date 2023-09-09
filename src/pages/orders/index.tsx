@@ -62,7 +62,7 @@ const Orders = () => {
                 },
             ]}
         >
-            <Alert severity="error">{isError.message}</Alert>
+            <Alert severity="error">{error.message}</Alert>
         </PageView>
     )
 
