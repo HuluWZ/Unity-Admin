@@ -6,7 +6,6 @@
   "author": "Hulunlante Worku",
   "license": "MIT",
   "description": "Unity Aqua Admin Panel",
-  "proxy": "http://backend.unityaqua.in/",
   "engines": {
     "node": "18.12.1",
     "npm": "8.19.2"
