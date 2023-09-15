@@ -263,10 +263,10 @@ const CustomersView = ({
          area: item?.area,
          size: item?.size,
          cultureType: item?.cultureType,
-         state: item?.farmer.state,
-         district: item?.farmer.district,
-         farmerName: item?.farmer?.name,
-         farmerPhone: item?.farmer?.phoneNumber,
+         state: item?.farmer ? item?.farmer?.state : 'null',
+         district: item?.farmer ? item?.farmer?.district : 'null',
+         farmerName: item?.farmer ? item?.farmer?.name : 'null',
+         farmerPhone: item?.farmer ? item?.farmer?.phoneNumber : 'null',
          createdAt: item?.createdAt,
        };
      });
