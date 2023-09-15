@@ -363,7 +363,7 @@ const CategoryInfo = ({ category }: any) => {
                                 </Box>
                             </Typography>
                         </Item>
-                    b</Grid>
+                    </Grid>
                 </Grid>
             </Grid>
         // </Grid>

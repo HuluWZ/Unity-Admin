@@ -1,7 +1,8 @@
 import {
-    DataGrid,
-    GridColDef,
-    GridToolbar,
+  DataGrid,
+  GridColDef,
+  GridToolbar,
+  GridCellParams,
 } from "@mui/x-data-grid";
 import {
     DeleteForeverRounded,
@@ -20,6 +21,7 @@ import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
 import moment from "moment";
 import { useTheme } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { useNavigate, Link } from "react-router-dom";
 
 
 const CustomersView = ({
@@ -133,22 +135,36 @@ const CustomersView = ({
           createdAt: item?.createdAt,
         };
     });
+
+      const navigate = useNavigate();
+      const handleCellClick = (params: GridCellParams) => {
+        const { row, id, field } = params;
+        if (field != "actions") {
+          console.log(params);
+          navigate(`${id}`);
+        }
+      };
+
     return (
-        <Container maxWidth="lg">
-            <Paper sx={{ background: theme.palette.background.paper }} variant="outlined">
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    rowsPerPageOptions={[5, 10, 20]}
-                    pagination
-                    autoHeight
-                    checkboxSelection
-                    components={{
-                        Toolbar: GridToolbar,
-                    }}
-                />
-            </Paper>
-        </Container>
+      <Container maxWidth="lg">
+        <Paper
+          sx={{ background: theme.palette.background.paper }}
+          variant="outlined"
+        >
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            rowsPerPageOptions={[5, 10, 20]}
+            onCellClick={handleCellClick}
+            pagination
+            autoHeight
+            checkboxSelection
+            components={{
+              Toolbar: GridToolbar,
+            }}
+          />
+        </Paper>
+      </Container>
     );
 };
 

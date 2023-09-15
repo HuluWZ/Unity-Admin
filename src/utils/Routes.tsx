@@ -14,6 +14,8 @@ import Dashboard from '../pages/dashboard';
 import DashboardContent from '../pages/layout/DashboardLayout/Dashboard';
 
 import CustomerList from '../pages/customers';
+import CustomerDetail from "../pages/customers/CategoryDetail";
+
 import FarmerList from "../pages/farmer";
 
 import CategoriesList from '../pages/categories';
@@ -63,8 +65,10 @@ const RoutesComponent = () => {
               <Route index element={<CategoriesList />} />
               <Route path=":id" element={<CategoryDetail />} />
             </Route>
-            <Route path="users" element={<CustomerList />} />
-
+            <Route path="users" element={<Outlet />}>
+              <Route index element={<CustomerList />} />
+              <Route path=":id" element={<CustomerDetail />} />
+            </Route>
             <Route path="books" element={<Outlet />}>
               <Route index element={<ProductList />} />
               <Route path=":id" element={<ProductsDetail />} />
