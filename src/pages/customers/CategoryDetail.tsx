@@ -68,14 +68,14 @@ const CategoryDetail = () => {
 
     return (
         <>
-            <PageView title={data?.result?.name || 'Un'} backPath="/forum">
-                <Container maxWidth="lg">
-                    <StyledTabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                        <StyledTab label="User & Lab Details" />
-                    </StyledTabs>
+            {/* <PageView title={data?.result?.name || 'Un'} backPath="/forum"> */}
+                {/* <Container maxWidth="lg"> */}
+                    {/* <StyledTabs value={value} onChange={handleChange} aria-label="basic tabs example"> */}
+                        {/* <StyledTab label="User & Lab Details" /> */}
+                    {/* </StyledTabs> */}
                     {value === 0 && <CategoryInfo category={data?.result} />}
-                </Container>
-            </PageView>
+                {/* </Container> */}
+            {/* </PageView> */}
         </>
     )
 }

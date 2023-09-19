@@ -1,6 +1,18 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { Grid, Card, CardContent, CardMedia, CardActions,Typography ,Button,TextField } from '@mui/material';
+import {
+  Grid,
+  Card,
+  CardContent,
+  Container,
+  CardMedia,
+  CardHeader,
+  Divider,
+  CardActions,
+  Typography,
+  Button,
+  TextField,
+} from "@mui/material";
 import { Box } from '@mui/system';
 import { useTheme } from '@mui/material/styles';
 import { useMediaQuery,Avatar } from '@mui/material';
@@ -10,9 +22,18 @@ import { useState } from 'react';
 import axios from 'axios';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import PageView from "../../components/PageView";
+import moment from "moment";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import { toast, ToastContainer } from 'react-toastify'; // Import react-toastify components and CSS
+import 'react-toastify/dist/ReactToastify.css'; // Import react-toastify CSS
 
 const api = import.meta.env.VITE_API_URL;
-const url = `${api}`;
+const url = `${api}user/`;
 
 //Heders for the request
 const token = localStorage.getItem("token");
@@ -39,270 +60,371 @@ const ItemMedia = styled(CardMedia)(({ theme }) => ({
 
 const CategoryInfo = ({ category }: any) => {
     const theme = useTheme();
-    console.log(" Selected  Item : ", category);
-    // console.log(" Product Info - ",product.user)
+      const [open, setOpen] = useState(false);
+      const handleOpenDialog = () => {
+        setOpen(true);
+      };
+
+      const handleCloseDialog = () => {
+        setOpen(false);
+      };
+
+      const handleApprove = () => {
+        setOpen(false); // Close the dialog
+
+        axios
+          .put(`${url}approve/${category.id}`)
+          .then((response) => {
+            // Handle success
+            console.log("Item approved:", response.data);
+                    toast.success("User approved successfully", {
+                      position: "top-right",
+                      autoClose: 3000, // Auto-close the notification after 3 seconds
+                    });
+
+            // You can add more logic here, such as updating your UI
+          })
+          .catch((error) => {
+            // Handle error
+            console.error("Error approving item:", error);
+                    toast.error("Error approving User", {
+                      position: "top-right",
+                      autoClose: 3000,
+                    });
+
+          });
+      };
+
+    console.log(" Selected  Category = ", category);
     return (
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={12}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={12}>
-              <Item>
-                <Typography
-                  variant="body1"
-                  color={
-                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
+      <PageView title="User Detail" backPath="/users">
+        <Container maxWidth="lg">
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6} lg={6}>
+              <Card sx={{ height: "100%" }} variant="outlined">
+                <CardHeader
+                  title="User Information"
+                  subheader={
+                    <Typography
+                      variant="caption"
+                      color="secondary"
+                      gutterBottom
+                    >
+                      {category?.name}
+                    </Typography>
                   }
-                >
-                  <Box fontWeight="fontWeightBold" m={1}>
-                    Lab Name:
-                  </Box>
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color={
-                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
-                  }
-                >
-                  <Box fontWeight="fontWeightBold" m={1}>
-                    {category && " " + category.labName}
-                  </Box>
-                </Typography>
+                />
+                <Divider />
+                <ToastContainer />
 
-                <Typography
-                  variant="body1"
-                  color={
-                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
-                  }
-                >
-                  <Box fontWeight="fontWeightBold" m={1}>
-                    Lab Image:
-                  </Box>
-                </Typography>
-                <Typography
-                  color={
-                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
-                  }
-                >
-                  <div>
-                    <a href={category.labImage} target="_blank">
-                      <img
-                        src={category.labImage}
-                        alt="Lab Image"
-                        width="250"
-                        height="250"
-                      />
-                    </a>
-                  </div>
-                </Typography>
-
-                <Typography
-                  variant="body1"
-                  color={
-                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
-                  }
-                >
-                  <Box fontWeight="fontWeightBold" m={1}>
-                    Lab Report Type:
-                  </Box>
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color={
-                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
-                  }
-                >
-                  <Box fontWeight="fontWeightBold" m={1}>
-                    {category && category?.labReport}
-                  </Box>
-                </Typography>
-
-                <Typography
-                  variant="body1"
-                  color={
-                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
-                  }
-                >
-                  <Box fontWeight="fontWeightBold" m={1}>
-                    Lab Logo:
-                  </Box>
-                </Typography>
-                <Typography
-                  color={
-                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
-                  }
-                >
-                  <div>
-                    <a href={category.labLogo} target="_blank">
-                      <img
-                        src={category.labLogo}
-                        alt="Lab Logo"
-                        width="250"
-                        height="250"
-                      />
-                    </a>
-                  </div>
-                </Typography>
-                <Typography
-                  variant="body1"
-                  color={
-                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
-                  }
-                >
-                  <Box fontWeight="fontWeightBold" m={1}>
-                    Lab Report Image:
-                  </Box>
-                </Typography>
-                <Typography
-                  color={
-                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
-                  }
-                >
-                  <div>
-                    <a href={category.labReportImage} target="_blank">
-                      <img
-                        src={category.labReportImage}
-                        alt="Lab Report Image"
-                        width="350"
-                        height="350"
-                      />
-                    </a>
-                  </div>
-                </Typography>
-              </Item>
+                <CardContent>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={6} lg={6}>
+                      <Typography
+                        variant="body1"
+                        color={
+                          theme.palette.mode === "dark"
+                            ? "textPrimary"
+                            : "textSecondary"
+                        }
+                        gutterBottom
+                      >
+                        Name
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                      >
+                        {category?.name}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={6}>
+                      <Typography
+                        variant="body1"
+                        color={
+                          theme.palette.mode === "dark"
+                            ? "textPrimary"
+                            : "textSecondary"
+                        }
+                        gutterBottom
+                      >
+                        Mobile
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                      >
+                        {category?.phoneNumber}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={6}>
+                      <Typography
+                        variant="body1"
+                        color={
+                          theme.palette.mode === "dark"
+                            ? "textPrimary"
+                            : "textSecondary"
+                        }
+                        gutterBottom
+                      >
+                        Lab Name
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                      >
+                        {category?.labName}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={6}>
+                      <Typography
+                        variant="body1"
+                        color={
+                          theme.palette.mode === "dark"
+                            ? "textPrimary"
+                            : "textSecondary"
+                        }
+                        gutterBottom
+                      >
+                        Qualification
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                      >
+                        {category?.qualification}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={6}>
+                      <Typography
+                        variant="body1"
+                        color={
+                          theme.palette.mode === "dark"
+                            ? "textPrimary"
+                            : "textSecondary"
+                        }
+                        gutterBottom
+                      >
+                        Date
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        style={{ color: "green" }}
+                        gutterBottom
+                      >
+                        {moment(category?.createdAt).format("MMMM DD, YYYY")}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
             </Grid>
-
-            <br></br>
-            <Grid item xs={12} md={12}>
-              <Item>
-                <Typography fontWeight="fontWeightBold" m={1}>
-                  User Details
-                </Typography>
-                <Typography
-                  variant="body1"
-                  color={
-                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
+            <Grid item xs={12} md={6} lg={6}>
+              <Card sx={{ height: "100%" }} variant="outlined">
+                <CardHeader
+                  title="Lab Information"
+                  subheader={
+                    <Typography
+                      variant="caption"
+                      color="secondary"
+                      gutterBottom
+                    >
+                      {category?.labName}
+                    </Typography>
                   }
+                />
+                <Divider />
+                <CardContent>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={6} lg={6}>
+                      <Typography
+                        variant="body1"
+                        color={
+                          theme.palette.mode === "dark"
+                            ? "textPrimary"
+                            : "textSecondary"
+                        }
+                        gutterBottom
+                      >
+                        State
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                      >
+                        {category?.state}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={6}>
+                      <Typography
+                        variant="body1"
+                        color={
+                          theme.palette.mode === "dark"
+                            ? "textPrimary"
+                            : "textSecondary"
+                        }
+                        gutterBottom
+                      >
+                        District
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                      >
+                        {category?.district}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={6}>
+                      <Typography
+                        variant="body1"
+                        color={
+                          theme.palette.mode === "dark"
+                            ? "textPrimary"
+                            : "textSecondary"
+                        }
+                        gutterBottom
+                      >
+                        Area
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                      >
+                        {category?.area}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={6}>
+                      <Typography
+                        variant="body1"
+                        color={
+                          theme.palette.mode === "dark"
+                            ? "textPrimary"
+                            : "textSecondary"
+                        }
+                        gutterBottom
+                      >
+                        Report Type
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                      >
+                        {category?.labReport}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={6}>
+                      <Typography
+                        variant="body1"
+                        color={
+                          theme.palette.mode === "dark"
+                            ? "textPrimary"
+                            : "textSecondary"
+                        }
+                        gutterBottom
+                      >
+                        Lab Logo
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                      >
+                        <img
+                          src={category?.labLogo}
+                          alt="Logo"
+                          width="150"
+                          height="150"
+                        />
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={6}>
+                      <Typography
+                        variant="body1"
+                        color={
+                          theme.palette.mode === "dark"
+                            ? "textPrimary"
+                            : "textSecondary"
+                        }
+                        gutterBottom
+                      >
+                        Lab Image
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                      >
+                        <img
+                          src={category?.labImage}
+                          alt="Lab Image"
+                          width="150"
+                          height="150"
+                        />
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={6}>
+                      <Typography
+                        variant="body1"
+                        color={
+                          theme.palette.mode === "dark"
+                            ? "textPrimary"
+                            : "textSecondary"
+                        }
+                        gutterBottom
+                      >
+                        Lab Report Image
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                      >
+                        <img
+                          src={category?.labReportImage}
+                          alt="Lab Image"
+                          width="150"
+                          height="150"
+                        />
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleOpenDialog}
                 >
-                  <Box fontWeight="fontWeightBold" m={1}>
-                    Full Name:
-                  </Box>
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color={
-                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
-                  }
-                >
-                  <Box fontWeight="fontWeightBold" m={1}>
-                    {category && category?.name}
-                  </Box>
-                </Typography>
-                <Typography
-                  variant="body1"
-                  color={
-                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
-                  }
-                >
-                  <Box fontWeight="fontWeightBold" m={1}>
-                    Phone Number:
-                  </Box>
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color={
-                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
-                  }
-                >
-                  <Box fontWeight="fontWeightBold" m={1}>
-                    {category && category?.phoneNumber}
-                  </Box>
-                </Typography>
-
-                <Typography
-                  variant="body1"
-                  color={
-                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
-                  }
-                >
-                  <Box fontWeight="fontWeightBold" m={1}>
-                    State:
-                  </Box>
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color={
-                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
-                  }
-                >
-                  <Box fontWeight="fontWeightBold" m={1}>
-                    {category && category?.state}
-                  </Box>
-                </Typography>
-                <Typography
-                  variant="body1"
-                  color={
-                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
-                  }
-                >
-                  <Box fontWeight="fontWeightBold" m={1}>
-                    District:
-                  </Box>
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color={
-                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
-                  }
-                >
-                  <Box fontWeight="fontWeightBold" m={1}>
-                    {category && category?.district}
-                  </Box>
-                </Typography>
-                <Typography
-                  variant="body1"
-                  color={
-                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
-                  }
-                >
-                  <Box fontWeight="fontWeightBold" m={1}>
-                    Area:
-                  </Box>
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color={
-                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
-                  }
-                >
-                  <Box fontWeight="fontWeightBold" m={1}>
-                    {category && category?.area}
-                  </Box>
-                </Typography>
-                <Typography
-                  variant="body1"
-                  color={
-                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
-                  }
-                >
-                  <Box fontWeight="fontWeightBold" m={1}>
-                    Qualification:
-                  </Box>
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color={
-                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
-                  }
-                >
-                  <Box fontWeight="fontWeightBold" m={1}>
-                    {category && category?.qualification}
-                  </Box>
-                </Typography>
-              </Item>
+                  Approve
+                </Button>
+                <Dialog open={open} onClose={handleCloseDialog}>
+                  <DialogTitle>Confirm Approval</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>
+                      Are you sure you want to approve this user?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleCloseDialog} color="primary">
+                      Cancel
+                    </Button>
+                    <Button onClick={handleApprove} color="primary">
+                      Confirm
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </Card>
             </Grid>
           </Grid>
-        </Grid>{" "}
-      </Grid>
+        </Container>
+      </PageView>
     );
 }
 

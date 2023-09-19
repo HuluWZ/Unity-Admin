@@ -158,7 +158,6 @@ const CustomersView = ({
             onCellClick={handleCellClick}
             pagination
             autoHeight
-            checkboxSelection
             components={{
               Toolbar: GridToolbar,
             }}
