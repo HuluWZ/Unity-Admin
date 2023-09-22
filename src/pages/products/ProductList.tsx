@@ -206,11 +206,20 @@ const ProductsView = ({
               {item?.title}
             </Typography>
                 <Button variant="outlined"
-                  onClick={() => { setSelectedProduct(item); 
+                  onClick={() => {
+                                        console.log(
+                                          " Edit Selected Product ",
+                                          item
+                                        );
+                     setSelectedProduct(item); 
                                 setOpen(true); 
                             }} >Edit</Button>
                 <Button variant="outlined"
                   onClick={() => { 
+                                        console.log(
+                                          " Delete Selected Product ",
+                                          item
+                                        );
                                 setSelectedProduct(item); 
                                 setOpenConfirm(true); 
                             }}>Delete</Button>
@@ -229,20 +238,20 @@ const ProductsView = ({
               {item?.title}
             </Typography>
                 <Button variant="outlined"
-                  onClick={() => { setSelectedProduct(item); 
+                  onClick={() => { 
+                    console.log(" Edit Selected Product ",item)
+                    setSelectedProduct(item); 
                                 setOpen(true); 
                             }} >Edit</Button>
                 <Button variant="outlined"
                   onClick={() => { 
+                                console.log(" Delete Selected Product ", item);
                                 setSelectedProduct(item); 
                                 setOpenConfirm(true); 
                             }}>Delete</Button>
           </CardContent>
           </Card>
-          </Grid>
-          
-
-                    
+          </Grid>          
         )))}
           
         </Grid>

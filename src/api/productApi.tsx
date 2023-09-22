@@ -26,7 +26,7 @@ export const getProducts = async () => {
 export const getProduct = async (id: string) => {
     try {
         console.log(" Get Product -  ",id)
-        const response = await axios.get(`${url}?newsId=${id}`, {
+        const response = await axios.get(`${url}/${id}`, {
             headers: {
                 "Content-Type": "application/json",
                 authtoken: `${token}`,
@@ -42,7 +42,7 @@ export const getProduct = async (id: string) => {
 
 export const createProduct = async (data: any) => {
     try {
-    var formData = new FormData()
+        var formData = new FormData()
         formData.append("title", data.title)
         formData.append("topicId", data.topicId)
         formData.append("image", data.thumbnailUrl)
@@ -77,17 +77,29 @@ export const createProductCategory = async (data: any) => {
 }
 export const updateProduct = async (id: string, data: any) => {
     try {
-
-        const response = await axios.put(`${url}?newsId=${id}`, data, {
+                var formData = new FormData();
+                if(data.title){
+                    formData.append("title", data.title);
+                }
+                if(data.topicId){
+                    formData.append("topicId", data.topicId);
+                }
+                if (data.thumbnailUrl) {
+                  formData.append("image", data.thumbnailUrl);
+                }
+                if(data.file){
+                  formData.append("pdf", data.file);
+                }
+         var contentType = data?.file || data?.thumbnailUrl ? "multipart/form-data" : "application/json"
+        const response = await axios.put(`${url}/${id}`, formData, {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type":`${contentType}` ,
                 authtoken: `${token}`,
             },
         });
         console.log(" Data  - ", { id, data }, " Response - ", response);
 
         return response.data;
-
     } catch (error) {
         console.log(error)
         console.error(error);
@@ -98,7 +110,7 @@ export const updateProduct = async (id: string, data: any) => {
 export const deleteProduct = async (id: string) => {
     try {
         console.log(`${url}/delete/${id}`, id)
-        const response = await axios.delete(`${url}?newsId=${id}`, {
+        const response = await axios.delete(`${url}/${id}`, {
             headers: {
                 "Content-Type": "application/json",
                 authtoken: `${token}`,

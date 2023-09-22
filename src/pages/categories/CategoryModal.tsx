@@ -131,12 +131,13 @@ const FormDialog = ({
                     validationSchema={validationSchema}
                     onSubmit={(values, { setSubmitting, resetForm }) => {
                         if (selectedCategory) {
+                            console.log(" Value To BE Edit : ",values,selectedCategory);
+                            console.log(content,file);
                             handleEdit(values);
                             setSelectedCategory(null);
                         } else {
                             values.thumbnail = file;
                             values.description = content;
-                            console.log(" Value Added : ",values)
                             handleAdd(values);
                             SetFile(null)
                             setContent('')

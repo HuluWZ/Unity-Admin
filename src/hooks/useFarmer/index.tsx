@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { getCustomers, createCustomer, getCustomerById, updateCustomer, deleteCustomer } from '../../api/farmerApi';
+import { getCustomers, createCustomer, deleteTank, getCustomerById, updateCustomer, deleteCustomer } from '../../api/farmerApi';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { useNotification } from '../useNotification';
 
@@ -45,22 +45,35 @@ export const FarmerProvider = ({ children }: any) => {
             showNotification(error.message, 'error');
         }
     });
+    const { mutate: deleteTankMutation, isLoading: deleteTankLoading } =
+      useMutation(deleteTank, {
+        onSuccess: () => {
+          showNotification("Deleted Tank successfully", "success");
+          queryClient.invalidateQueries("customers");
+        },
+
+        onError: (error: any) => {
+          showNotification(error.message, "error");
+        },
+      });
 
     return (
-        <FarmerContext.Provider
-            value={{
-                customers,
-                isLoading,
-                error,
-                createCustomerMutation,
-                createCustomerLoading,
-                updateCustomerMutation,
-                deleteCustomerMutation,
-                deleteCustomerLoading,
-            }}
-        >
-            {children}
-        </FarmerContext.Provider>
+      <FarmerContext.Provider
+        value={{
+          customers,
+          isLoading,
+          error,
+          createCustomerMutation,
+          createCustomerLoading,
+          updateCustomerMutation,
+          deleteCustomerMutation,
+          deleteCustomerLoading,
+          deleteTankMutation,
+          deleteTankLoading,
+        }}
+      >
+        {children}
+      </FarmerContext.Provider>
     );
 };
 

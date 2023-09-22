@@ -76,6 +76,17 @@ export const deleteCustomer = async (id: any) => {
   console.log(" Response Delete  ", response);
   return response.data;
 };
+export const deleteTank = async (id: any) => {
+  console.log(" Delete Customer ", id);
+  const response = await axios.delete(`${url}tank/delete/${id}`, {
+    headers: {
+      "Content-Type": "application/json",
+      authtoken: `${token}`,
+    },
+  });
+  console.log(" Response Delete  ", response);
+  return response.data;
+};
 
 export const register = async (data: any) => {
   try {

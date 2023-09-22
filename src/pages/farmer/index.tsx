@@ -9,10 +9,11 @@ import FormDialog from "./CustomerModal";
 import { Alert } from '@mui/material';
 
 const Customers = () => {
-    const { customers, isLoading, error, deleteCustomerMutation, createCustomerMutation, updateCustomerMutation } = useFarmer();
+    const { customers, isLoading, error, deleteTankMutation,deleteCustomerMutation, createCustomerMutation, updateCustomerMutation } = useFarmer();
     const [selectedCustomer, setSelectedCustomer] = React.useState<any>(null);
     const [open, setOpen] = React.useState(false);
     const [openConfirm, setOpenConfirm] = React.useState(false);
+    const [openConfirm2, setOpenConfirm2] = React.useState(false);
     if (isLoading) return (
         <PageView
             title="Farmers"
@@ -92,6 +93,7 @@ const Customers = () => {
           setSelectedCustomer={setSelectedCustomer}
           setOpen={setOpen}
           setOpenConfirm={setOpenConfirm}
+          setOpenConfirm2={setOpenConfirm2}
           handleUpdate={updateCustomerMutation}
         />
         <FormDialog
@@ -111,6 +113,18 @@ const Customers = () => {
           }}
           title="Delete Farmer"
           description="Are you sure you want to delete this farmer?"
+          confirmText="Delete"
+          cancelText="Cancel"
+        />
+        <ConfirmModal
+          open={openConfirm2}
+          handleClose={() => setOpenConfirm2(false)}
+          handleConfirm={() => {
+            deleteTankMutation(selectedCustomer?.id);
+            setOpenConfirm2(false);
+          }}
+          title="Delete Tank"
+          description="Are you sure you want to delete this Tank?"
           confirmText="Delete"
           cancelText="Cancel"
         />

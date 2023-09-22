@@ -66,6 +66,23 @@ const FormDialog = ({
     const handleParent = (event: React.ChangeEvent<{ value?: string | unknown}>) => {
      setTopicId(event.target.value as string);
     }
+    const handleParentChange = (
+          event: React.ChangeEvent<{ value?: string | unknown }>
+        ) => {
+          console.log(
+            " Welcome Before  ",
+            event.target.value,
+            selectedProduct.topic
+          );
+          // const { _id, name, image, url } = selectedCategory.location
+          const others = selectedProduct;
+          var selectedParen = event.target.value;
+          console.log(" Selected Topic ",selectedParen);
+          var parent = allTopics.filter((item) => item.id == selectedParen)[0];
+          console.log(" After  Change", parent, { ...others, topic: parent,topicId:parent.id });
+          setSelectedProduct({ ...others, topic: parent });
+    };
+
 
     useEffect(() => {
         async function fetchTopic() {
@@ -83,145 +100,198 @@ const FormDialog = ({
        }, []);
 
 
-    
-   
-
     return (
-        <Dialog
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="form-dialog-title"
-            fullWidth
-            maxWidth="md"
-        >
-            <DialogTitle
-                id="form-dialog-title"
-            >
-                {selectedProduct ? "Edit Book" : "Add Book"}
-            </DialogTitle>
-            <DialogContent sx={{ marginTop: "1rem" }}>
-                <Formik
-                    initialValues={initialValues}
-                    validationSchema={validationSchema}
-                    onSubmit={(values, { setSubmitting, resetForm }) => {
-                        console.log(" Data ", values," Selected Product ",selectedProduct);
-                        if (selectedProduct) {
-                            setSubmitting(true);
-                            handleEdit({
-                                ...values
-                            });
-                            setSelectedProduct(null);
-                            setSubmitting(false);
-                            resetForm();
-                            handleClose();
-                        } else {
-                            values.file = pdf;
-                            values.thumbnailUrl = file
-                            values.topicId = topicId;
-                            console.log(" values :",values)
-                            setSubmitting(true);
-                            handleAdd({
-                                ...values
-                            });
-                            setSelectedProduct(null);
-                            setSubmitting(false);
-                            resetForm();
-                            handleClose();
-                        }
-                    }}
-                >
-                    {({
-                        values,
-                        errors,
-                        touched,
-                        handleChange,
-                        handleBlur,
-                        handleSubmit,
-                        isSubmitting,
-                        setFieldValue,
-                    }: any) => (
-                        <form onSubmit={handleSubmit}>
-                            {/* <Grid container spacing={2} mt={1}> */}
-                               
-                            <TextField
-                                autoFocus
-                                id="title"
-                                label="Title"
-                                type="text"
-                                // fullWidth
-                                style={{ width: 400 }} // set the width to 300px
-                                variant="standard"
-                                value={values.title}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={Boolean(touched.title && errors.title)}
-                                helperText={touched.title && errors.title}
-                                sx={{
-                                    marginBottom:2
-                                }}
-                            />
-                            
-                            <br></br>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+        fullWidth
+        maxWidth="md"
+      >
+        <DialogTitle id="form-dialog-title">
+          {selectedProduct ? "Edit Book" : "Add Book"}
+        </DialogTitle>
+        <DialogContent sx={{ marginTop: "1rem" }}>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={(values, { setSubmitting, resetForm }) => {
+              console.log(
+                " Data ",
+                values,
+                " Selected Product ",
+                selectedProduct
+              );
+              if (selectedProduct) {
+                values.file = pdf ? pdf : "";
+                values.thumbnailUrl = file ? file : "";
+                values.topicId = selectedProduct?.topic ? selectedProduct?.topic?.id : "";
+                values.id = selectedProduct?.id
+                console.log(" Edit Book values : ", values,file,pdf);
+                setSubmitting(true);
+                handleEdit({
+                  ...values,
+                });
+                setSelectedProduct(null);
+                setSubmitting(false);
+                resetForm();
+                handleClose();
+              } else {
+                values.file = pdf;
+                values.thumbnailUrl = file;
+                values.topicId = topicId;
+                console.log(" Add Book values : ", values);
+                setSubmitting(true);
+                handleAdd({
+                  ...values,
+                });
+                setSelectedProduct(null);
+                setSubmitting(false);
+                resetForm();
+                handleClose();
+              }
+            }}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              isSubmitting,
+              setFieldValue,
+            }: any) => (
+              <form onSubmit={handleSubmit}>
+                {/* <Grid container spacing={2} mt={1}> */}
 
-            
-            <FormControl margin='normal'  sx={{ m: 1, minWidth: 200 }}>
-                 <InputLabel> Select Category</InputLabel>
-                 <Select value={topicId} id="topicId" onChange={handleParent} label="Select Topic">
-                   {allTopics?.map((loc) => (
-                    <MenuItem key={loc?.id} value={loc?.id}>{loc?.name}</MenuItem>
-                    ))}
-                </Select>
-            </FormControl> 
-                                <br></br>
-                                 <br></br>
-                           <Button variant="contained" component="label">  Upload PDF
-                                <Input type="file"  style={{ display: 'none' }}   onChange={handlePdfSelect}   />
-                            </Button>
+                <TextField
+                  autoFocus
+                  id="title"
+                  label="Title"
+                  type="text"
+                  // fullWidth
+                  style={{ width: 400 }} // set the width to 300px
+                  variant="standard"
+                  value={values.title}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={Boolean(touched.title && errors.title)}
+                  helperText={touched.title && errors.title}
+                  sx={{
+                    marginBottom: 2,
+                  }}
+                />
 
-                            <br></br>
-                            <br></br>
-                           <Button variant="contained" component="label">  Upload Thumbnail
-                                <Input type="file"  style={{ display: 'none' }}   onChange={handleFileSelect}   />
-                            </Button>
+                <br></br>
 
-       
+                {!selectedProduct && (
+                  <FormControl margin="normal" sx={{ m: 1, minWidth: 200 }}>
+                    <InputLabel> Select Category</InputLabel>
+                    <Select
+                      value={topicId}
+                      id="topicId"
+                      onChange={handleParent}
+                      label="Select Topic"
+                    >
+                      {allTopics?.map((loc) => (
+                        <MenuItem key={loc?.id} value={loc?.id}>
+                          {loc?.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
+                {selectedProduct && (
+                  <FormControl margin="normal" sx={{ m: 1, minWidth: 200 }}>
+                    <InputLabel> Select Category</InputLabel>
+                    <Select
+                      value={
+                        selectedProduct?.topic
+                          ? selectedProduct?.topic?.id
+                          : topicId
+                      }
+                      id="topicId"
+                      onChange={
+                        selectedProduct?.topic
+                          ? handleParentChange
+                          : handleParent
+                      }
+                      label="Select Topic"
+                    >
+                      {allTopics?.map((loc) => (
+                        <MenuItem key={loc?.id} value={loc?.id}>
+                          {loc?.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
+                <br></br>
+                <br></br>
+                <Button variant="contained" component="label">
+                  {" "}
+                  Upload PDF
+                  <Input
+                    type="file"
+                    style={{ display: "none" }}
+                    onChange={handlePdfSelect}
+                  />
+                </Button>
 
-                <div >
-      <div>
-                                    {file &&
-                                        (<img key={file?.name} src={URL.createObjectURL(file)} alt={file?.name} width="200" />)}
-      </div>
-      
-    </div>
-                            
-                            <br></br>
+                <br></br>
+                <br></br>
+                <Button variant="contained" component="label">
+                  {" "}
+                  Upload Thumbnail
+                  <Input
+                    type="file"
+                    style={{ display: "none" }}
+                    onChange={handleFileSelect}
+                  />
+                </Button>
 
-                                <Grid item xs={12} sm={12}>
-                                    <DialogActions>
-                                        <ButtonGroup>
-                                            <Button onClick={handleClose}>Cancel</Button>
-                                            <Button
-                                                type="submit"
-                                                disabled={isSubmitting}
-                                                variant="contained"
-                                            >
-                                                {isSubmitting ? (
-                                                    <ThreeDots color="#fff" height={20} width={20} />
-                                                ) : selectedProduct ? (
-                                                    "Update"
-                                                ) : (
-                                                    "Add"
-                                                )}
-                                            </Button>
-                                        </ButtonGroup>
-                                    </DialogActions>
-                                </Grid>
-                            {/* </Grid> */}
-                        </form>
+                <div>
+                  <div>
+                    {file && (
+                      <img
+                        key={file?.name}
+                        src={URL.createObjectURL(file)}
+                        alt={file?.name}
+                        width="200"
+                      />
                     )}
-                </Formik>
-            </DialogContent>
-        </Dialog>
+                  </div>
+                </div>
+
+                <br></br>
+
+                <Grid item xs={12} sm={12}>
+                  <DialogActions>
+                    <ButtonGroup>
+                      <Button onClick={handleClose}>Cancel</Button>
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        variant="contained"
+                      >
+                        {isSubmitting ? (
+                          <ThreeDots color="#fff" height={20} width={20} />
+                        ) : selectedProduct ? (
+                          "Update"
+                        ) : (
+                          "Add"
+                        )}
+                      </Button>
+                    </ButtonGroup>
+                  </DialogActions>
+                </Grid>
+                {/* </Grid> */}
+              </form>
+            )}
+          </Formik>
+        </DialogContent>
+      </Dialog>
     );
 };
 
