@@ -54,143 +54,145 @@ const api = import.meta.env.VITE_API_URL;
    // Add other properties as needed
  }
 
- const TankRegistrationModal = ({customers}) => {
-    const [open2, setOpen2] = useState(false);
-        const [formData, setFormData] = useState({
-          area: "",
-          size: "",
-          cultureType: "",
-          farmerId: "",
-        });
-        //  const [all, setAll] = useState([]);
+//  const TankRegistrationModal = ({customers:any}) => {
+//     const [open2, setOpen2] = useState(false);
+//         const [formData, setFormData] = useState({
+//           area: "",
+//           size: "",
+//           cultureType: "",
+//           farmerId: "",
+//         });
+//         //  const [all, setAll] = useState([]);
 
-        //  useEffect(() => {
-        //    async function fetchTopic() {
-        //      const response = await axios.get(`${api}farmer/`, {
-        //        headers: {
-        //          "Content-Type": "application/json",
-        //        },
-        //      });
-        //      console.log(" All Tanks Before = ", response.data.result);
-        //      // const data = await response.json();
-        //      setAll(response?.data?.result);
-        //      console.log(" Done ", all);
-        //    }
-        //    fetchTopic();
-        //  }, []);
+//         //  useEffect(() => {
+//         //    async function fetchTopic() {
+//         //      const response = await axios.get(`${api}farmer/`, {
+//         //        headers: {
+//         //          "Content-Type": "application/json",
+//         //        },
+//         //      });
+//         //      console.log(" All Tanks Before = ", response.data.result);
+//         //      // const data = await response.json();
+//         //      setAll(response?.data?.result);
+//         //      console.log(" Done ", all);
+//         //    }
+//         //    fetchTopic();
+//         //  }, []);
 
 
-    const handleOpen = () => {
-      setOpen2(true);
-    };
+//     const handleOpen = () => {
+//       setOpen2(true);
+//     };
 
-    const handleClose = () => {
-      setOpen2(false);
-    };
-     const handleChange = (e) => {
-       const { name, value } = e.target;
-       setFormData({ ...formData, [name]: value });
-     };
+//     const handleClose = () => {
+//       setOpen2(false);
+//     };
+//      const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//        const { name, value } = e.target;
+//        setFormData({ ...formData, [name]: value });
+//      };
 
-     const handleSubmit = async (e) => {
-       e.preventDefault();
+//      const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
+//        e.preventDefault();
 
-       // Send the form data to /farmer/create using a POST request here
-       // You may use axios or fetch for this purpose
+//        // Send the form data to /farmer/create using a POST request here
+//        // You may use axios or fetch for this purpose
 
-       console.log(formData);
+//        console.log(formData);
 
-       // Close the modal
-       handleClose();
-     };
-     return (
-       <>
+//        // Close the modal
+//        handleClose();
+//      };
+//      return (
+//        <>
       
-         <Grid container spacing={3}>
-           <Button
-            //  variant="contained"
-            //  color="primary"
-             onClick={handleOpen}
-             style={{ marginLeft: 980, width: 150 }}
-           >
-             Add Tank
-           </Button>
-         </Grid>
-           <br></br>
-         <Dialog
-           open={open2}
-           onClose={handleClose}
-           aria-labelledby="form-dialog-title"
-         >
-           <DialogTitle id="form-dialog-title">Add Tank</DialogTitle>
-           <DialogContent>
-             {/* <form onSubmit={handleSubmit}> */}
-               <TextField
-                 margin="dense"
-                 label="Area"
-                 name="area"
-                 value={formData.area}
-                 onChange={handleChange}
-                 variant="standard"
-                 fullWidth
-                 required
-               />
-               <TextField
-                 label="Size"
-                 name="size"
-                 value={formData.size}
-                 onChange={handleChange}
-                 variant="standard"
-                 fullWidth
-                 required
-               />
-               {/* <FormControl fullWidth> */}
-                 <InputLabel>Culture Type</InputLabel>
-                 <Select
-                   label="Culture Type"
-                   name="cultureType"
-                   variant="standard"
-                   value={formData.cultureType}
-                   onChange={handleChange}
-                   required
-                 >
-                   <MenuItem value="Fish">Fish</MenuItem>
-                   <MenuItem value="Shrimp">Shrimp</MenuItem>
-                   <MenuItem value="Poly">Poly</MenuItem>
-                 </Select>
-               {/* </FormControl> */}
-               {/* <FormControl fullWidth> */}
-                 <InputLabel>Farmer</InputLabel>
-                 <Select
-                   label="Farmer"
-                   variant="standard"
-                   name="farmerId"
-                   value={formData.farmerId}
-                   onChange={handleChange}
-                   required
-                 >
-                   {customers?.map((farmer) => (
-                     <MenuItem key={farmer.id} value={farmer.id}>
-                       {farmer.name}
-                     </MenuItem>
-                   ))}
-                 </Select>
-               {/* </FormControl> */}
-               <DialogActions>
-                 <Button type="submit" onClick={handleSubmit} variant="contained" color="primary">
-                   Add
-                 </Button>
-                 <Button onClick={handleClose} color="primary">
-                   Cancel
-                 </Button>
-               </DialogActions>
-             {/* </form> */}
-           </DialogContent>
-         </Dialog>
-       </>
-     );
+//          <Grid container spacing={3}>
+//            <Button
+//             //  variant="contained"
+//             //  color="primary"
+//              onClick={handleOpen}
+//              style={{ marginLeft: 980, width: 150 }}
+//            >
+//              Add Tank
+//            </Button>
+//          </Grid>
+//            <br></br>
+//          <Dialog
+//            open={open2}
+//            onClose={handleClose}
+//            aria-labelledby="form-dialog-title"
+//          >
+//            <DialogTitle id="form-dialog-title">Add Tank</DialogTitle>
+//            <DialogContent>
+//              <form onSubmit={handleSubmit}>
+//                <TextField
+//                  margin="dense"
+//                  label="Area"
+//                  name="area"
+//                  value={formData.area}
+//                  onChange={handleChange}
+//                  variant="standard"
+//                  fullWidth
+//                  required
+//                />
+//                <TextField
+//                  label="Size"
+//                  name="size"
+//                  value={formData.size}
+//                  onChange={handleChange}
+//                  variant="standard"
+//                  fullWidth
+//                  required
+//                />
+//                <FormControl fullWidth>
+//                  <InputLabel>Culture Type</InputLabel>
+//                  <Select
+//                    label="Culture Type"
+//                    name="cultureType"
+//                    variant="standard"
+//                    value={formData.cultureType}
+//                    onChange={handleChange}
+//                    required
+//                  >
+//                    <MenuItem value="Fish">Fish</MenuItem>
+//                    <MenuItem value="Shrimp">Shrimp</MenuItem>
+//                    <MenuItem value="Poly">Poly</MenuItem>
+//                  </Select>
+//                </FormControl>
+//                <FormControl fullWidth>
+//                  <InputLabel>Farmer</InputLabel>
+//                  <Select
+//                    label="Farmer"
+//                    variant="standard"
+//                    name="farmerId"
+//                    value={formData.farmerId}
+//                    onChange={handleChange}
+//                    required
+//                  >
+//                    {customers?.map((farmer:any) => (
+//                      <MenuItem key={farmer.id} value={farmer.id}>
+//                        {farmer.name}
+//                      </MenuItem>
+//                    ))}
+//                  </Select>
+//                </FormControl>
+//                <DialogActions>
+//                  <Button 
+//                  type="submit" 
+//                  onClick={handleSubmit} variant="contained" color="primary">
+//                    Add
+//                  </Button>
+//                  <Button onClick={handleClose} color="primary">
+//                    Cancel
+//                  </Button>
+//                </DialogActions>
+//              </form>
+//            </DialogContent>
+//          </Dialog>
+//        </>
+//      );
 
- }
+//  }
 
 const CustomersView = ({
   customers,
@@ -444,8 +446,8 @@ const CustomersView = ({
         </Paper>
         <hr></hr>
         <br/>
-        {/* <TankRegistrationModal customers={customers?.result} /> */}
-        <br/>
+        {/* <TankRegistrationModal customers={customers?.result} />
+        <br/> */}
         <Paper
           sx={{ background: theme.palette.background.paper }}
           variant="outlined"

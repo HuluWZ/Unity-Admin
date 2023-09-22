@@ -21,13 +21,11 @@ import FarmerList from "../pages/farmer";
 import CategoriesList from '../pages/categories';
 import CategoryDetail from '../pages/categories/CategoryDetail';
 
-
 import ForumList from '../pages/forum';
 import ForumDetail from '../pages/forum/CategoryDetail';
 
 import ProductList from '../pages/products';
 import ProductsDetail from '../pages/products/ProductDetail';
-
 
 import DiscountList from '../pages/discounts';
 
@@ -46,7 +44,6 @@ import SalesReport from '../pages/report/SalesReport';
 import StokeAlert from '../pages/report/StokeAlert';
 
 import Settings from '../pages/settings';
-
 import Profile from '../pages/profile';
 
 

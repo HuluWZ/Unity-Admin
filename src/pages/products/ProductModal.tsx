@@ -38,7 +38,7 @@ const FormDialog = ({
 }: FormDialogProps) => {
     const { categories } = useCategory();
     const initialValues = {
-        // id: selectedProduct ? selectedProduct.id : "",
+        id: selectedProduct ? selectedProduct.id : "",
         title: selectedProduct ? selectedProduct.title : "",
         topicId: selectedProduct ? selectedProduct.topicId : "",
         thumbnailUrl: selectedProduct ? selectedProduct.thumbnailUrl : "",
