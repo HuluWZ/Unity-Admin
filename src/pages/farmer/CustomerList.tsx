@@ -443,11 +443,9 @@ const CustomersView = ({
           />
         </Paper>
         <hr></hr>
-        <br />
-        <br />
-        {/* <> */}
+        <br/>
         {/* <TankRegistrationModal customers={customers?.result} /> */}
-        {/* </> */}
+        <br/>
         <Paper
           sx={{ background: theme.palette.background.paper }}
           variant="outlined"

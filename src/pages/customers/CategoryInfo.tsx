@@ -320,7 +320,51 @@ const CategoryInfo = ({ category }: any) => {
                         {category?.labReport}
                       </Typography>
                     </Grid>
-                    <Grid item xs={12} md={6} lg={6}>
+                  </Grid>
+                </CardContent>
+                {/* <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleOpenDialog}
+                >
+                  Approve
+                </Button> */}
+                <Dialog open={open} onClose={handleCloseDialog}>
+                  <DialogTitle>Confirm Approval</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>
+                      Are you sure you want to approve this user?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleCloseDialog} color="primary">
+                      Cancel
+                    </Button>
+                    <Button onClick={handleApprove} color="primary">
+                      Confirm
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </Card>
+            </Grid>
+            <Grid item xs={12}>
+              <Card sx={{ height: "100%" }} variant="outlined">
+                <CardHeader
+                  title="Lab Image"
+                  subheader={
+                    <Typography
+                      variant="caption"
+                      color="secondary"
+                      gutterBottom
+                    >
+                      {/* {category?.labName} */}
+                    </Typography>
+                  }
+                />
+                <Divider />
+                <CardContent>
+                  <Grid container spacing={6}>
+                    <Grid item xs={12} md={4}>
                       <Typography
                         variant="body1"
                         color={
@@ -340,12 +384,12 @@ const CategoryInfo = ({ category }: any) => {
                         <img
                           src={category?.labLogo}
                           alt="Logo"
-                          width="150"
-                          height="150"
+                          width="200"
+                          height="200"
                         />
                       </Typography>
                     </Grid>
-                    <Grid item xs={12} md={6} lg={6}>
+                    <Grid item xs={12} md={4}>
                       <Typography
                         variant="body1"
                         color={
@@ -365,12 +409,12 @@ const CategoryInfo = ({ category }: any) => {
                         <img
                           src={category?.labImage}
                           alt="Lab Image"
-                          width="150"
-                          height="150"
+                          width="200"
+                          height="200"
                         />
                       </Typography>
                     </Grid>
-                    <Grid item xs={12} md={6} lg={6}>
+                    <Grid item xs={12} md={4}>
                       <Typography
                         variant="body1"
                         color={
@@ -390,18 +434,19 @@ const CategoryInfo = ({ category }: any) => {
                         <img
                           src={category?.labReportImage}
                           alt="Lab Image"
-                          width="150"
-                          height="150"
+                          width="200"
+                          height="200"
                         />
                       </Typography>
                     </Grid>
                   </Grid>
-                </CardContent>
+                  </CardContent>
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={handleOpenDialog}
-                >
+                  style={{ marginLeft: "920px" }}
+                  >
                   Approve
                 </Button>
                 <Dialog open={open} onClose={handleCloseDialog}>
