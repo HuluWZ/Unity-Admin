@@ -1,5 +1,13 @@
 import { createContext, useContext } from 'react';
-import { getCustomers, createCustomer, deleteTank, getCustomerById, updateCustomer, deleteCustomer } from '../../api/farmerApi';
+import {
+  getCustomers,
+  createCustomer,
+  deleteTank,
+  getCustomerById,
+  getTankById,
+  updateCustomer,
+  deleteCustomer,
+} from "../../api/farmerApi";
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { useNotification } from '../useNotification';
 

@@ -42,16 +42,28 @@ export const createCustomer = async (data: any) => {
 
 //get category by id
 export const getCustomerById = async (id: any) => {
+  console.log(" Get Farmer by ID ",id)
   const response = await axios.get(`${api}find/${id}`, {
     headers: {
       "Content-Type": "application/json",
       authtoken: `${token}`,
     },
   });
-
+  console.log(" Get Farmer Response ",response?.data);
   return response.data;
 };
 
+export const getTankById = async (id: any) => {
+  console.log(" Get Tank By by ID ", id);
+  const response = await axios.get(`${url}tank/farmer/${id}`, {
+    headers: {
+      "Content-Type": "application/json",
+      authtoken: `${token}`,
+    },
+  });
+  console.log(" Get Tanks Response ", response?.data);
+  return response?.data;
+};
 //update category
 export const updateCustomer = async (id: any) => {
   console.log(" Approve User ", id);

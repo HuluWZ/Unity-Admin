@@ -1,7 +1,8 @@
 import {
-    DataGrid,
-    GridColDef,
-    GridToolbar,
+  DataGrid,
+  GridColDef,
+  GridToolbar,
+  GridCellParams,
 } from "@mui/x-data-grid";
 import {
     DeleteForeverRounded,
@@ -23,6 +24,7 @@ import { useTheme } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import axios from 'axios';
 import {useState,useEffect} from 'react';
+import { useNavigate, Link } from "react-router-dom";
 
 import {
   Dialog,
@@ -425,6 +427,15 @@ const CustomersView = ({
     };
   });
   console.log(" All ", all);
+        const navigate = useNavigate();
+        const handleCellClick = (params: GridCellParams) => {
+          const { row, id, field } = params;
+          if (field != "actions") {
+            console.log(params);
+            navigate(`${id}`);
+          }
+        };
+
   return (
     <div>
       <Container maxWidth="lg">
@@ -436,6 +447,7 @@ const CustomersView = ({
             rows={rows}
             columns={columns}
             rowsPerPageOptions={[5, 10, 20]}
+            onCellClick={handleCellClick}
             pagination
             autoHeight
             checkboxSelection
@@ -445,7 +457,7 @@ const CustomersView = ({
           />
         </Paper>
         <hr></hr>
-        <br/>
+        <br />
         {/* <TankRegistrationModal customers={customers?.result} />
         <br/> */}
         <Paper

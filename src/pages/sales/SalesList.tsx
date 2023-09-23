@@ -503,7 +503,7 @@ const SalesView = ({
                   className={classes.deleteButton}
                   onClick={() => handleDeleteSectorClick(sector.id)}
               >
-                <DeleteIcon />
+                {/* <DeleteIcon /> */}
               </IconButton>
      
               </CardContent>       
