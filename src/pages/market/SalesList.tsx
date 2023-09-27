@@ -463,11 +463,8 @@ const SalesView = ({
         .then((response) => {
           console.log(" Delete Response ",response);
          if (response.status == 200) {
-        // Table deleted successfully
             toast.success('Table deleted successfully');
-           // Update your data or state here if necessary
           } else {
-        // Handle other status codes as needed
             toast.error('Error deleting table');
          }
       setDeleteDialogOpen(false);
@@ -496,17 +493,10 @@ const SalesView = ({
           <Paper
             sx={{ background: theme.palette.background.paper }}
             variant="outlined"
-          ></Paper>
-
-          <div>
-            <select value={selectedMarket} onChange={handleMarket}>
-              <option value="1">Fish</option>
-              <option value="2">Shrimp</option>
-            </select>
-          </div>
-          <hr></hr>
-          <br></br>
-          <br></br>
+           >
+           </Paper>
+        <br/>
+        <br/>
           <div>
             <Slider {...sliderSettings}>
               {allZones?.length > 1 &&
@@ -610,8 +600,14 @@ const SalesView = ({
             <ToastContainer />
           </div>
           <div>
-            <Grid container spacing={4}>
-              <Grid item xs={8}>
+            <Grid container spacing={3}>
+              <Grid item xs={3}>
+                <select value={selectedMarket} onChange={handleMarket}>
+                  <option value="1">Fish</option>
+                  <option value="2">Shrimp</option>
+                </select>
+              </Grid>
+              <Grid item xs={6}>
                 {marketTable.length > 0 &&
                   marketTable.map((table, index) => (
                     <Grid item key={index} xs={8}>
@@ -701,8 +697,8 @@ const SalesView = ({
                   </Button>
                 </DialogActions>
               </Dialog>
-              <Grid item xs={4}>
-                <Typography variant="subtitle1">Select a Date:</Typography>
+              <Grid item xs={3}>
+                <Typography variant="subtitle1">Calender</Typography>
                 <DatePicker
                   selected={selectedDate}
                   onChange={handleDateChange}
