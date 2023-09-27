@@ -153,11 +153,9 @@ const ProductsView = ({
           <Grid item xs={10} sm={7} md={3} key={index}>
             <Card className={classes.card}>
               <CardContent>{category?.name}</CardContent>
-              {/* <Button onClick={() => handleDeleteClick(category)}>Delete</Button> */}
                  <IconButton onClick={() => handleDeleteClick(category)}>
-    <DeleteIcon color="error" />
-  </IconButton>
-
+                     <DeleteIcon color="error" />
+                 </IconButton>
             </Card>
           </Grid>
         ))}

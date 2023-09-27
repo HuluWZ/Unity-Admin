@@ -21,7 +21,7 @@ const Sales = () => {
             actions={[
                 {
                     icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
-                    label: "Add Market",
+                    label: "Add Zone",
                     handler: () => {
                         setOpen(true)
                         setSelectedSales(null)
@@ -47,7 +47,7 @@ const Sales = () => {
             actions={[
                 {
                     icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
-                    label: "Add Market",
+                    label: "Add Zone",
                     handler: () => {
                         setOpen(true)
                         setSelectedSales(null)
@@ -73,7 +73,7 @@ const Sales = () => {
             actions={[
                 {
                     icon: <AddCircleRounded style={{ fontSize: "1rem" }} />,
-                    label: "Add Market",
+                    label: "Add Zone",
                     handler: () => {
                         setOpen(true)
                         setSelectedSales(null)

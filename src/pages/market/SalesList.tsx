@@ -9,13 +9,34 @@ import {
     EditRounded,
     VisibilityRounded,
 } from "@mui/icons-material";
+import { AddCircleRounded } from "@mui/icons-material";
 import {
-    Box, IconButton, Container, Grid, Typography,
-    Chip, Button, Paper, Dialog, DialogTitle,
-    DialogContent, DialogActions, TextField
+  Box,
+  IconButton,
+  Container,
+  Grid,
+  Typography,
+  Chip,
+  Button,
+  Paper,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableContainer,
+  TableCell,
 } from "@mui/material";
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 
 import { 
   colors, 
@@ -25,12 +46,22 @@ import {
   Snackbar,
 DialogContentText
 } from "@mui/material"; 
+// import DateFnsUtils from "@date-io/date-fns";
+// import {
+//   MuiPickersUtilsProvider,
+//   KeyboardDatePicker,
+// } from "@mui/material/DatePicker";
+
 import { useTheme } from "@mui/system";
 import { Link } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import { useState, useEffect } from 'react'
 import axios from 'axios';
 import { SelectChangeEvent } from '@mui/material/Select';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const api = import.meta.env.VITE_API_URL; 
 const url = `${api}treatment`; 
@@ -64,7 +95,9 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     justifyContent: 'space-between',
   },
-
+  selected: {
+  fontWeight: 'bold',
+},
   cardMedia: {
     paddingTop: '-25.25%', // 16:9 aspect ratio (for 9:16 use paddingBottom)
     maxWidth: '50%', // Limit image width
@@ -84,249 +117,156 @@ const useStyles = makeStyles((theme) => ({
 
 
 }));
-interface ObjectWithAttributes {
-  id: number | string;
-  name: string;
-  description: string;
-  images: [string],
-  imageUrl1: string
-  imageUrl2: string
-  imageUrl3: string
-}
 
-//  id: '', name: '',description:'',images:[''],imageUrl1:'',imageUrl2:'',imageUrl3:'' 
+  const sliderSettings = {
+    infinite: true,
+    slidesToShow: 6, // You can adjust the number of visible cities
+    slidesToScroll: 1,
+    autoplay: true,
+    speed: 1000,
+    autoplaySpeed: 2000,
+    pauseOnHover: true,
+  };
+
 const SalesView = ({
     sales,
     setSelectedSales,
     setOpen,
     setOpenConfirm,
 }: any) => {
-    const classes = useStyles(); // Assign the classes object to a variable
-    const [categories, setCategories] = useState([{ id: '', name: '' }]);
-    const [selectedCategory, setSelectedCategory] = useState('');
-    const [selectedProblem, setSelectedProblem] = useState('');
-    const [problems, setProblem] = useState([{ id: '', name: '',rate:0,count:'',market:{name:''} }]);
-    const [solutions, setSolution] = useState<ObjectWithAttributes[]>([]);
-    const [message, setMessage] = useState('');
-    const [selectedIndex, setIndex] = useState(0)
-    const [problemIndex, setProblemIndex] = useState(0)
-  const [isModalOpen, setIsModalOpen] = useState(false);
-      const [isModalOpen2, setIsModalOpen2] = useState(false);
-    const [newSectorName, setNewSectorName] = useState('');
-    const [newProblemName, setNewProblemName] = useState('');
-    const [newRate, setRate] = useState(0);
-    const [newCount, setCount] = useState("");
+     const classes = useStyles(); // Assign the classes object to a variable
+    
+   //TODO
+     const [openZone, setOpenZone] = useState(false);
+     const [zoneName, setZoneName] = useState("");
+     const [selectedMarketId, setSelectedMarketId] = useState("");
+     const [selectedZoneId, setSelectedZoneId] = useState("");
+     const [selectedMarket, setSelectedMarket] = useState("1");
+     const [marketTable,setMarketTable] = useState([])
+     const [selectedDate, setSelectedDate] = useState(new Date());
 
-    const [allproblems, setAllProblem] = useState([{ id: '', name: '',rate:'',count:'', market:{name:''} }]);
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState('');
-    const [snackbarColor, setSnackbarColor] = useState('success'); // 'success' or 'error'
-    const [selectedImage, setSelectedImage] = useState<File | null>(null);
+    const handleDateChange = async(date) => {
+      setSelectedDate(date);
+      console.log(" Date Change ",selectedZoneId);
+      await handleZoneClick2(selectedZoneId,date);
+      console.log("ENDDDDD");
+    };
 
 
-  const handleImageChange = (event:React.ChangeEvent<HTMLInputElement>) => {
-    const file = event?.target?.files && event.target.files[0]; // Get the first selected file
-    setSelectedImage( file);
+    const handleClickOpen = () => {
+       setOpenZone(true);
+    };
+
+    const handleClose = () => {
+       setOpenZone(false);
+    };
+
+    const handleNameChange = (event) => {
+       setZoneName(event.target.value);
+    };
+    const handleMarketChange = (event) => {
+         setSelectedMarketId(event.target.value);
+    };
+     const handleMarket = async(event) => {
+        const {value} = event.target;
+        setSelectedMarket(value);
+        const response = await fetch(
+          `${api}market/find/market/${value}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await response.json();
+        console.log(" Get All Zone Change : ",value,data?.result);
+        setAllZone(data?.result);
+    }
+    const handleZoneClick = async(cityId) => {
+      const date = selectedDate?.toISOString().split("T")[0];
+      console.log(" Zone Date ",cityId,date);
+      setSelectedZoneId(cityId);
+      const response = await fetch(
+        `${api}market/find/zone/${cityId}?date=${date}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(" Response ",response);  
+      if (!response.ok) {
+          setMarketTable([])                  
+      }else{
+          const data = await response.json();
+          console.log(" Get All Type Table Change : ", data?.result);
+          setMarketTable(data?.result);
+        }
   };
-    useEffect(() => {
+  const handleZoneClick2 = async (cityId,selectedDate) => {
+    const date = selectedDate?.toISOString().split("T")[0];
+    console.log(" Zone Date ", cityId, date);
+    setSelectedZoneId(cityId);
+    const response = await fetch(
+      `${api}market/find/zone/${cityId}?date=${date}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(" Response ", response);
+    if (!response?.ok) {
+      setMarketTable([]);
+    } else {
+      const data = await response.json();
+      console.log(" All Type Table Change = ",data?.result);
+      setMarketTable(data?.result);
+    }
+  };
+      const [allZones,setAllZone] = useState([{id:'',name:''}])
+      useEffect(() => {
         async function fetchTopic() {
-            const response = await fetch(`${api}market/all`, {
-                headers: {
-                    "Content-Type": "application/json",
-                }
-            });
-            const data = await response.json();
-            console.log(" All Category = ",data);
-            setCategories(data?.result);
+          const response = await fetch(
+            `${api}market/find/market/${selectedMarket}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          const data = await response.json();
+          console.log(" Get All Zone : ",selectedMarket, data?.result);
+          setAllZone(data?.result);
         }
         fetchTopic();
-    }, []);
-    useEffect(() => {
-        async function fetchProblems() {
-            const response = await fetch(`${api}market/zone/all`, {
-                headers: {
-                    "Content-Type": "application/json",
-                }
-            });
-            const data = await response.json();
-            setAllProblem(data?.result);
-        }
-        fetchProblems();
-    }, []);
-    const handleSectorClick = async (id: any,name:string,index:number) => {
-        const response = await fetch(`${api}market/find/market/${id}`, {
-            headers: {
-                "Content-Type": "application/json",
-            }
-        });
-        setSelectedCategory(name);
-        setIndex(index);
-        // console.log(" Sector ",name," Id: ",id)
-        const data = await response.json();
-        // console.log(" Get Selected Problem : ", data?.result,name)
-        setProblem(data?.result);
-    }
+      }, []);
 
-  const handleProblemClick = async (id: any, name: string, index: number) => {
-      console.log(" Get Farmer ",id)
-        const response = await fetch(`${api}market/find/zone/${id}`, {
-            headers: {
-                "Content-Type": "application/json",
-            }
-        });
-        setSelectedProblem(name);
-        setProblemIndex(index);
-        const data = await response.json();
-        console.log(" Get Selected Solution : ", data?.result,id)
-      setSolution(data?.result);
-      console.log(" Test ",solutions)
-    }
-    // Handle Modal 
-    const handleModalOpen = () => {
-      setIsModalOpen(true);
-    };
 
-  const handleModalOpen2 = () => {
-      setIsModalOpen2(true);
-    };
-    const handleModalClose = () => {
-      setIsModalOpen(false);
-      setNewSectorName(''); // Clear the input field
-  };
-  const handleModalClose2 = () => {
-      setIsModalOpen2(false);
-      setNewSectorName(''); // Clear the input field
-    };
+       const handleAddZone = () => {
+         // Send a POST request with the entered name
+         axios
+           .post(`${api}market/zone/`, { name: zoneName,marketId:selectedMarketId })
+           .then((response) => {
+             // Handle the response if needed
+             console.log("Add Zone :", response.data);
+              toast.success("Zone added successfully", {
+                     position: "top-right",
+                     autoClose: 3000, 
+              });
+             handleClose();
+             setZoneName("");
+             setSelectedMarketId("");
+           })
+           .catch((error) => {
+              toast.error("Error adding zone. Please try again later.", {
+                    position: "top-right",
+                    autoClose: 3000,
+              });
+             console.error("Error sending POST request:", error);
+           });
+       };
     
-    const handleNewSectorNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setNewSectorName(event.target.value);
-    };
-    const handleNewProblemNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setNewProblemName(event.target.value);
-    };
-    const handleNewCountChange = (
-      event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-      setCount(event.target.value);
-    };
-    const handleNewRateChange = (
-      event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-      const newRate = parseFloat(event.target.value)
-      setRate(newRate);
-    };
-    const [selectedSector, setSelectedSector] = useState<number | ''>('');
-
-    const handleSectorChange = (event: SelectChangeEvent<number>) => {
-          const value = event.target.value;
-        setSelectedSector(value === '' ? '' : Number(value));
-    };
-
-
-    const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [deleteDialogOpen2, setDeleteDialogOpen2] = useState(false);
-  const [selectedProblemId, setSelectedProblemId] = useState(null);
-  const [selectedSectorId, setSelectedSectorId] = useState(null);
-
-  const handleDeleteSectorClick = (problemId: any) => {
-    setSelectedSectorId(problemId);
-    setDeleteDialogOpen2(true);
-  };
-
-  const handleDeleteClick = (problemId: any) => {
-    setSelectedProblemId(problemId);
-    setDeleteDialogOpen(true);
-  };
-
-  const handleDeleteConfirm = async () => {
-    console.log(" Selected Zone = ",selectedProblemId);
-    const response = await axios.delete(`${api}market/zone/${selectedProblemId}`, {
-            headers: {
-                "Content-Type": "application/json",
-            }
-    });
-    console.log(" Selected Zone Deleted = ",response);
-    setDeleteDialogOpen(false);
-    setSelectedProblemId(null);
-  };
-  const handleDeleteSectorConfirm = async () => {
-    console.log(" Selected Sector Delete = ",selectedSectorId);
-    const response = await axios.delete(`${url}/sector/${selectedSectorId}`, {
-            headers: {
-                "Content-Type": "application/json",
-            }
-    });
-    console.log(" Selected Sector Delete = ",response);
-    setDeleteDialogOpen2(false);
-    setSelectedSectorId(null);
-  };
-  const handleDeleteCancel = () => {
-    setDeleteDialogOpen(false);
-    setSelectedProblemId(null);
-  };
-  const handleDeleteCancel2 = () => {
-    setDeleteDialogOpen2(false);
-    setSelectedSectorId(null);
-  };
-
-
-    const handleAddSector = async() => {
-      const data = {name:newSectorName,image:selectedImage};
-        // Make your API POST request here with newSectorName
-        console.log(" new Sector Data ", data);
-        const response = await axios.post(`${url}/sector`, data, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-                authtoken: `${token}`
-            }
-        });
-        
-        setIsModalOpen2(false);
-        console.log(" Response Create Sector ",response)
-    };
-     const handleAddProblem = async() => {
-      const data = {name:newProblemName,rate:newRate,count:newCount,marketId:selectedSector};
-        // Make your API POST request here with newSectorName
-        console.log(" New Zone Data = ", data);
-        const response = await axios.post(`${api}market/zone/`, data, {
-            headers: {
-                "Content-Type": "application/json",
-                authtoken: `${token}`
-            }
-        });
-         setIsModalOpen(false);
-         setSelectedSector('')
-         setNewProblemName('')
-         setCount('')
-         setRate(0)
-
-
-        if (response?.data?.result) {
-         console.log(" Sucess ")   
-         setSnackbarColor('success');
-         setSnackbarMessage('Zone Added successfully');
-        } else {
-          console.log(" Error ")   
-          setSnackbarColor('error');
-          setSnackbarMessage('Failed To Add Zone');
-
-        }
-        setSnackbarOpen(false);
-        console.log(" Response Create Zone ",response)
-    };
-    const handleDeleteProblem = async() => {
-        console.log(" New Problem Delete ID ");
-        const response = await axios.delete(`${url}/problem/{id}`);
-         setIsModalOpen(false);
-         
-
-        console.log(" Response Delete Problem ",response)
-  };
-
-
     const theme = useTheme();
     console.log(" All Market :=: ", sales);
     const columns: GridColDef[] = [
@@ -411,315 +351,367 @@ const SalesView = ({
           status: item?.status
         };
     });
+  const [openTable, setOpenTable] = useState(false);
+  const [tableName, setTableName] = useState("");
+  const [numRows, setNumRows] = useState(0);
+  const [data, setData] = useState([]);
 
-    const rowSolution: GridRowsProp = solutions?.map((item: any) => {
-      return {
-        id: item?.id,
-        name: item?.name,
-        count: item?.count,
-        rate: item?.rate,
-        marketzone: item?.market_zone?.name,
-        market: item?.market_zone?.market?.name,
-        status: item?.status,
-      };
+
+  const handleOpenTable = () => {
+      setOpenTable(true);
+  };
+
+  const handleCloseTable = () => {
+      setOpenTable(false);
+      setTableName("");
+      setNumRows(0);
+      setData([]);
+  };  
+
+  
+ 
+
+    // const handleTableRowChange = (index, field, value) => {
+    //   const updatedRowData = [...rowData];
+    //   updatedRowData[index][field] = value;
+    //   setRowData(updatedRowData);
+    // };
+
+
+  const handleRowCountChange = (event) => {
+    const count = parseInt(event.target.value, 10) || 0;
+    console.log(" Row Count ",count);
+    setNumRows(count);
+      if (count > 0) {
+        handleAddData(count);
+      } else {
+        // If count is 0, reset the data array
+        setData([]);
+      }
+  };
+
+  const handleAddData = (count) => {
+    var newData = [];
+    for (let i = 0; i < count; i++) {
+      newData.push({ count: "", rate: 0.0 });
+    }
+    setData(newData);
+  };
+
+  const handleDataChange = (event, index, field) => {
+    var newData = [...data];
+    var {value} = event.target;
+    console.log(field,value,index," Field Value Index Order ")
+    newData[index][field] = field == "rate" ? parseFloat(value) : value;
+    setData(newData);
+  };
+  const handleSave = () => {
+    // Prepare the data for the POST request
+    var postData = {
+      name: tableName,
+      data:data,
+      marketZoneId:selectedZoneId ? selectedZoneId :3,
+    };
+    console.log(" Form Data ",postData);
+      axios.post(`${api}market/type/`,
+        postData,
+    )
+        .then((response) => {
+          console.log(" Response Add table ", response);
+          if (response.status == 200 || response.status == 201) {
+            // Table deleted successfully
+            toast.success("Table added successfully");
+            // Update your data or state here if necessary
+          } else {
+            // Handle other status codes as needed
+            toast.error("Error adding table");
+          }
+        })
+        .catch((error) => {
+          console.error("Delete request error:", error);
+          toast.error("Error adding table");
+        });
+       handleCloseTable();
+  };
+       const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+       const [tableToDeleteId, setTableToDeleteId] = useState(null);
+       const [tableVisibility, setTableVisibility] = useState({});
+
+       useEffect(() => {
+         // Initialize tableVisibility with all table IDs set to true (show all tables by default)
+         const initialVisibility = {};
+         marketTable.forEach((table) => {
+           initialVisibility[table.id] = true;
+         });
+         setTableVisibility(initialVisibility);
+       }, [marketTable]);
+
+       const handleDeleteClick = (tableId) => {
+         setTableToDeleteId(tableId);
+         setDeleteDialogOpen(true);
+       };
+
+       const handleShowHideClick = (tableId) => {
+         setTableVisibility((prevVisibility) => ({
+           ...prevVisibility,
+           [tableId]: !prevVisibility[tableId],
+         }));
+       };
+
+       const handleDeleteConfirm = () => {
+            axios.delete(`${api}market/type/${tableToDeleteId}`)
+        .then((response) => {
+          console.log(" Delete Response ",response);
+         if (response.status == 200) {
+        // Table deleted successfully
+            toast.success('Table deleted successfully');
+           // Update your data or state here if necessary
+          } else {
+        // Handle other status codes as needed
+            toast.error('Error deleting table');
+         }
+      setDeleteDialogOpen(false);
+      setTableToDeleteId(null);
+    })
+    .catch((error) => {
+      console.error('Delete request error:', error);
+      toast.error('Error deleting table');
+      setDeleteDialogOpen(false);
+      setTableToDeleteId(null);
     });
+    setDeleteDialogOpen(false);
+};
+
+      //  };
+
+       const handleCloseDeleteDialog = () => {
+         setDeleteDialogOpen(false);
+         setTableToDeleteId(null);
+       };
+
+
     return (
       <>
         <Container maxWidth="lg">
           <Paper
             sx={{ background: theme.palette.background.paper }}
             variant="outlined"
-          >
-            <DataGrid
-              rows={rows}
-              columns={columns}
-              autoHeight
-              pagination
-              rowsPerPageOptions={[5, 10, 20]}
-              initialState={{
-                pagination: {
-                  pageSize: 10,
-                },
-              }}
-              components={{
-                Toolbar: GridToolbar,
-              }}
-            />
-          </Paper>
+          ></Paper>
+
+          <div>
+            <select value={selectedMarket} onChange={handleMarket}>
+              <option value="1">Fish</option>
+              <option value="2">Shrimp</option>
+            </select>
+          </div>
           <hr></hr>
           <br></br>
           <br></br>
+          <div>
+            <Slider {...sliderSettings}>
+              {allZones?.length > 1 &&
+                allZones.map((city) => (
+                  <div
+                    key={city?.id}
+                    className={`${
+                      selectedZoneId == city?.id ? `${useStyles.selected}` : ""
+                    }`}
+                    style={{
+                      fontWeight: "bold",
+                    }}
+                    onClick={() => handleZoneClick(city?.id)}
+                  >
+                    <p
+                      style={{
+                        fontWeight:
+                          selectedZoneId == city?.id ? "bold" : "normal",
+                      }}
+                    >
+                      {city?.name}
+                    </p>
+                  </div>
+                ))}
+            </Slider>
+          </div>
+          <hr></hr>
+          <hr></hr>
 
           <div>
-            {/* <Grid container spacing={1}>
-                    <Button variant="contained" color="primary"
-                    onClick={handleModalOpen2}
-                    style={{ marginLeft: 880 }}>
-                    Add Sector
-                        </Button>
-                        <br></br>
-                        <br></br>
-                    </Grid> */}
-            <br></br>
-            <Dialog open={isModalOpen2} onClose={handleModalClose2}>
-              <DialogTitle>Add New Sector</DialogTitle>
+            <Button
+              variant="contained"
+              onClick={handleOpenTable}
+              endIcon={<AddCircleRoundedIcon />}
+              style={{
+                backgroundColor: "blue",
+                color: "white",
+                marginLeft: "990px",
+                marginTop: "10px",
+              }}
+            >
+              Add Table
+            </Button>
+            <Dialog open={openTable} onClose={handleCloseTable}>
+              <DialogTitle>Add Table</DialogTitle>
               <DialogContent>
                 <TextField
-                  label="Sector Name"
-                  value={newSectorName}
-                  onChange={handleNewSectorNameChange}
+                  label="Table Name"
                   fullWidth
+                  value={tableName}
+                  onChange={(e) => setTableName(e.target.value)}
+                  required
                 />
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
+                <TextField
+                  label="Number of Rows"
+                  type="number"
+                  fullWidth
+                  value={numRows}
+                  onChange={handleRowCountChange}
+                  required
                 />
+                {numRows > 0 && (
+                  <Grid container spacing={2}>
+                    {data.map((item, index) => (
+                      <Grid container item spacing={1} xs={12} key={index}>
+                        <Grid item xs={6}>
+                          <TextField
+                            label={`Count ${index + 1}`}
+                            fullWidth
+                            value={item.count}
+                            onChange={(e) =>
+                              handleDataChange(e, index, "count")
+                            }
+                            margin="normal"
+                          />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <TextField
+                            label={`Rate ${index + 1}`}
+                            fullWidth
+                            type="number"
+                            value={item.rate}
+                            onChange={(e) => handleDataChange(e, index, "rate")}
+                            margin="normal"
+                          />
+                        </Grid>
+                      </Grid>
+                    ))}
+                  </Grid>
+                )}
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleModalClose2} color="primary">
+                <Button onClick={handleCloseTable} color="secondary">
                   Cancel
                 </Button>
-                <Button onClick={handleAddSector} color="primary">
+                <Button onClick={handleSave} color="primary">
                   Add
                 </Button>
               </DialogActions>
             </Dialog>
-            <Snackbar
-              open={snackbarOpen}
-              autoHideDuration={3000}
-              onClose={handleSnackbarClose}
-              anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-              // Use 'success' or 'error' color here
-              sx={{
-                backgroundColor: snackbarColor === "success" ? "green" : "red",
-              }}
-            >
-              <Typography variant="body1">{snackbarMessage}</Typography>
-            </Snackbar>
+            <ToastContainer />
           </div>
-          <Grid container spacing={3}>
-            {categories.map((sector, index) => (
-              <Grid item xs={10} sm={7} md={3} key={index}>
-                <Card className={classes.card}>
-                  <CardMedia
-                    className={classes.cardMedia}
-                    component="img"
-                    height="200"
-                    width="390"
-                    image={svgImage[index]}
-                    alt={sector.name}
-                  />
-                  <CardContent>
-                    <Typography
-                      variant="h6"
-                      onClick={() =>
-                        handleSectorClick(sector?.id, sector?.name, index)
-                      }
-                      style={{
-                        fontWeight: selectedIndex == index ? "bold" : "normal",
-                      }}
-                    >
-                      {sector?.name}
-                    </Typography>
-                    {/* <IconButton
-                  className={classes.deleteButton}
-                  onClick={() => handleDeleteSectorClick(sector.id)}
-              >
-                <DeleteIcon /> */}
-                    {/* </IconButton> */}
-                  </CardContent>
-                </Card>
+          <div>
+            <Grid container spacing={4}>
+              <Grid item xs={8}>
+                {marketTable.length > 0 &&
+                  marketTable.map((table, index) => (
+                    <Grid item key={index} xs={8}>
+                      <Paper
+                        key={index}
+                        elevation={6}
+                        style={{ marginBottom: "20px", textAlign: "center" }}
+                      >
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          style={{ padding: "10px" }}
+                        >
+                          {table?.name}
+                        </Typography>
+                        <Button onClick={() => handleShowHideClick(table.id)}>
+                          {tableVisibility[table.id]
+                            ? "Hide Table"
+                            : "Show Table"}
+                        </Button>
+                        <Button
+                          color="secondary"
+                          onClick={() => handleDeleteClick(table.id)}
+                        >
+                          Delete
+                        </Button>
+                        {tableVisibility[table?.id] && (
+                          <>
+                            <TableContainer size="small">
+                              <Table size="small">
+                                <TableHead>
+                                  <TableRow>
+                                    <TableCell style={{ width: "50px" }}>
+                                      Count
+                                    </TableCell>
+                                    <TableCell style={{ width: "50px" }}>
+                                      Rate
+                                    </TableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  {table?.status.map((row, rowIndex) => (
+                                    <TableRow key={rowIndex}>
+                                      <TableCell style={{ width: "50px" }}>
+                                        {row.count}
+                                      </TableCell>
+                                      <TableCell style={{ width: "50px" }}>
+                                        {row.rate}
+                                      </TableCell>
+                                      <TableCell
+                                        style={{ width: "50px" }}
+                                      ></TableCell>
+                                    </TableRow>
+                                  ))}
+                                </TableBody>
+                              </Table>
+                            </TableContainer>
+                          </>
+                        )}
+                      </Paper>
+                    </Grid>
+                  ))}
               </Grid>
-            ))}
-            <Dialog open={deleteDialogOpen2}>
-              <DialogTitle>Confirm Delete</DialogTitle>
-              <DialogContent>
-                Are you sure you want to delete this sector?
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleDeleteCancel2} color="primary">
-                  Cancel
-                </Button>
-                <Button onClick={handleDeleteSectorConfirm} color="secondary">
-                  Delete
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </Grid>
-          <hr />
-          <br></br>
-          <Grid container spacing={1}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleModalOpen}
-              style={{ marginLeft: 880, width: 200 }}
-            >
-              Add Zone
-            </Button>
-            <br></br>
-          </Grid>
-
-          <Dialog open={isModalOpen} onClose={handleModalClose}>
-            <DialogTitle>Add New Zone </DialogTitle>
-            <DialogContent>
-              <TextField
-                label="Zone Name"
-                id="name"
-                value={newProblemName}
-                onChange={handleNewProblemNameChange}
-                fullWidth
-                required
-              />
-              
-              <TextField
-                label="Count"
-                id="count"
-                value={newCount}
-                onChange={handleNewCountChange}
-                fullWidth
-                required
-              />
-             
-              <TextField
-                label="Rate"
-                id="rate"
-                type="number"
-                value={newRate}
-                onChange={handleNewRateChange}
-                fullWidth
-                required
-              />
-              
-              <InputLabel>Select Market</InputLabel>
-              <Select value={selectedSector}  required onChange={handleSectorChange}>
-                <MenuItem value="" disabled>None</MenuItem>
-                {categories.map((sector) => (
-                  <MenuItem key={sector.id} value={sector.id}>
-                    {sector.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleModalClose} color="primary">
-                Cancel
-              </Button>
-              <Button onClick={handleAddProblem} color="primary">
-                Add
-              </Button>
-            </DialogActions>
-          </Dialog>
-          <br></br>
-
-          <Grid container spacing={3}>
-            {selectedCategory
-              ? problems?.map((problem, index) => (
-                  <Grid item xs={10} sm={7} md={3} key={index}>
-                    <Card className={classes.card2}>
-                      <CardContent className={classes.cardContent}>
-                        <Typography
-                          variant="h6"
-                          onClick={() =>
-                            handleProblemClick(
-                              problem?.id,
-                              problem?.name,
-                              index
-                            )
-                          }
-                          style={{
-                            fontWeight:
-                              problemIndex == index ? "bold" : "normal",
-                          }}
-                        >
-                          {problem?.name} | {problem?.rate} | {problem?.count}
-                        </Typography>
-                        <Typography className={classes.sectorTypography}>
-                          {problem?.market?.name}
-                        </Typography>
-                        <IconButton
-                          className={classes.deleteButton}
-                          onClick={() => handleDeleteClick(problem.id)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))
-              : allproblems?.map((problem, index) => (
-                  <Grid item xs={10} sm={7} md={3} key={index}>
-                    <Card className={classes.card2}>
-                      <CardContent className={classes.cardContent}>
-                        <Typography
-                          variant="h6"
-                          onClick={() =>
-                            handleProblemClick(
-                              problem?.id,
-                              problem?.name,
-                              index
-                            )
-                          }
-                          style={{
-                            fontWeight:
-                              problemIndex == index ? "bold" : "normal",
-                          }}
-                        >
-                          {problem?.name} | {problem?.rate} | {problem?.count}
-                        </Typography>
-                        <Typography className={classes.sectorTypography}>
-                          {problem?.market?.name}
-                        </Typography>
-                        <IconButton
-                          className={classes.deleteButton}
-                          onClick={() => handleDeleteClick(problem.id)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-            <Dialog open={deleteDialogOpen}>
-              <DialogTitle>Confirm Delete</DialogTitle>
-              <DialogContent>
-                Are you sure you want to delete this zone?
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleDeleteCancel} color="primary">
-                  Cancel
-                </Button>
-                <Button onClick={handleDeleteConfirm} color="secondary">
-                  Delete
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </Grid>
-          <hr />
-          <br></br>
-          {solutions?.length > 0 && (
-            <Paper
-              sx={{ background: theme.palette.background.paper }}
-              variant="outlined"
-            >
-              <DataGrid
-                rows={rowSolution}
-                columns={columns}
-                autoHeight
-                pagination
-                rowsPerPageOptions={[5, 10, 20]}
-                initialState={{
-                  pagination: {
-                    pageSize: 10,
-                  },
-                }}
-                components={{
-                  Toolbar: GridToolbar,
-                }}
-              />
-            </Paper>
-          )}
+              <ToastContainer position="top-right" autoClose={3000} />
+              <Dialog
+                open={deleteDialogOpen}
+                onClose={handleCloseDeleteDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">Delete Table</DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    Are you sure you want to delete this table?
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleCloseDeleteDialog} color="primary">
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleDeleteConfirm}
+                    color="primary"
+                    autoFocus
+                  >
+                    Confirm
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              <Grid item xs={4}>
+                <Typography variant="subtitle1">Select a Date:</Typography>
+                <DatePicker
+                  selected={selectedDate}
+                  onChange={handleDateChange}
+                  dateFormat="yyyy-MM-dd"
+                />
+              </Grid>
+            </Grid>
+          </div>
+          <div></div>
         </Container>
       </>
     );

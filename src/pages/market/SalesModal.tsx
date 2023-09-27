@@ -23,8 +23,6 @@ import { useState, useEffect } from 'react';
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
-  rate: Yup.string().required("Rate is required"),
-  count: Yup.string().required("Count is required"),
 });
 const api = import.meta.env.VITE_API_URL; 
 const url = `${api}market`; 
@@ -101,9 +99,7 @@ const FormDialog = ({
             initialValues={{
               id: selectedSales?.id || "",
               name: selectedSales?.name || "",
-              rate: selectedSales?.rate || "",
-              count: selectedSales?.count || "",
-              marketZoneId: selectedSales?.marketZoneId || "",
+              marketId: selectedSales?.marketId || "",
             }}
             validationSchema={ValidationSchema}
             onSubmit={(values, { setSubmitting, resetForm }) => {
@@ -111,14 +107,13 @@ const FormDialog = ({
               if (selectedSales) {
                 handleUpdate(values);
               } else {
-                values.marketZoneId = selectedSector;
+                values.marketId = selectedSector;
                 console.log(" Values ", values);
                 handleAdd(values);
               }
               handleClose();
               resetForm();
               setSelectedSector("");
-              setSelectedImages([]);
               setSubmitting(false);
             }}
           >
@@ -134,7 +129,7 @@ const FormDialog = ({
             }: any) => (
               <form onSubmit={handleSubmit}>
                 <DialogTitle id="form-dialog-title">
-                  {selectedSales ? "Update Market" : "Add Market"}
+                  {selectedSales ? "Update Zone" : "Add Zone"}
                 </DialogTitle>
                 <DialogContent>
                   <Grid container spacing={2}>
@@ -154,51 +149,16 @@ const FormDialog = ({
                         helperText={touched.name && errors.name}
                       />
                     </Grid>
-                    <Grid item xs={12}>
-                      <Grid item xs={12}>
-                        <TextField
-                          margin="dense"
-                          id="rate"
-                          label="Rate"
-                          type="number"
-                          fullWidth
-                          variant="standard"
-                          value={values.rate}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          error={Boolean(touched.rate && errors.rate)}
-                          helperText={touched.rate && errors.rate}
-                        />
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        margin="dense"
-                        id="count"
-                        label="Count"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        value={values.count}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={Boolean(touched.count && errors.count)}
-                        helperText={touched.count && errors.count}
-                      />
-                    </Grid>
+                    
                     {!selectedSales && 
                     <Grid item xs={12}>
-                      <InputLabel>Select Market Zone</InputLabel>
+                      <InputLabel>Select Market</InputLabel>
                       <Select
                         value={selectedSector}
                         onChange={handleSectorChange}
                         >
-                        <MenuItem value="">None</MenuItem>
-                        {allproblems?.map((sector) => (
-                          <MenuItem key={sector.id} value={sector.id}>
-                            {sector.name}
-                          </MenuItem>
-                        ))}
+                        <MenuItem value="1">Fish</MenuItem>
+                        <MenuItem value="2">Shrimp</MenuItem>
                       </Select>
                     </Grid>
                       }

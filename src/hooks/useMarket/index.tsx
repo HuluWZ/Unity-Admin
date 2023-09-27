@@ -25,11 +25,11 @@ export const MarketProvider = ({ children }: any) => {
   const { mutate: createSaleMutation } = useMutation(createSale, {
     onSuccess: () => {
       queryClient.invalidateQueries("sales");
-      showNotification("Market Type Added successfully", "success");
+      showNotification("Market Zone Added successfully", "success");
     },
 
     onError: (error: any) => {
-      showNotification(error.message, "error");
+      showNotification("Market Zone Already Exist", "error");
     },
   });
 
