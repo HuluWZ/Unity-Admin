@@ -46,11 +46,6 @@ import {
   Snackbar,
 DialogContentText
 } from "@mui/material"; 
-// import DateFnsUtils from "@date-io/date-fns";
-// import {
-//   MuiPickersUtilsProvider,
-//   KeyboardDatePicker,
-// } from "@mui/material/DatePicker";
 
 import { useTheme } from "@mui/system";
 import { Link } from "react-router-dom";
@@ -151,23 +146,19 @@ const SalesView = ({
       await handleZoneClick2(selectedZoneId,date);
       console.log("ENDDDDD");
     };
-
-
     const handleClickOpen = () => {
        setOpenZone(true);
     };
-
     const handleClose = () => {
        setOpenZone(false);
     };
-
     const handleNameChange = (event) => {
        setZoneName(event.target.value);
     };
     const handleMarketChange = (event) => {
          setSelectedMarketId(event.target.value);
     };
-     const handleMarket = async(event) => {
+    const handleMarket = async(event) => {
         const {value} = event.target;
         setSelectedMarket(value);
         const response = await fetch(
@@ -371,12 +362,7 @@ const SalesView = ({
   
  
 
-    // const handleTableRowChange = (index, field, value) => {
-    //   const updatedRowData = [...rowData];
-    //   updatedRowData[index][field] = value;
-    //   setRowData(updatedRowData);
-    // };
-
+  
 
   const handleRowCountChange = (event) => {
     const count = parseInt(event.target.value, 10) || 0;
