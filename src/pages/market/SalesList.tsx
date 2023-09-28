@@ -37,6 +37,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
+import React from "react";
 
 import { 
   colors, 
@@ -123,6 +124,13 @@ const useStyles = makeStyles((theme) => ({
     pauseOnHover: true,
   };
 
+  interface DataItem {
+  count: string;
+  rate: number;
+}
+type TableVisibility = Record<string, boolean>;
+
+
 const SalesView = ({
     sales,
     setSelectedSales,
@@ -135,12 +143,12 @@ const SalesView = ({
      const [openZone, setOpenZone] = useState(false);
      const [zoneName, setZoneName] = useState("");
      const [selectedMarketId, setSelectedMarketId] = useState("");
-     const [selectedZoneId, setSelectedZoneId] = useState("");
+     const [selectedZoneId, setSelectedZoneId] = useState<string>("");
      const [selectedMarket, setSelectedMarket] = useState("1");
-     const [marketTable,setMarketTable] = useState([])
+     const [marketTable,setMarketTable] = useState([{id:"",name:"",status:[{rate:0,count:""}]}])
      const [selectedDate, setSelectedDate] = useState(new Date());
 
-    const handleDateChange = async(date) => {
+    const handleDateChange = async(date:Date) => {
       setSelectedDate(date);
       console.log(" Date Change ",selectedZoneId);
       await handleZoneClick2(selectedZoneId,date);
@@ -152,68 +160,78 @@ const SalesView = ({
     const handleClose = () => {
        setOpenZone(false);
     };
-    const handleNameChange = (event) => {
+    const handleNameChange = (event:React.ChangeEvent<HTMLInputElement>) => {
        setZoneName(event.target.value);
     };
-    const handleMarketChange = (event) => {
-         setSelectedMarketId(event.target.value);
+    const handleMarketChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+      setSelectedMarketId(event.target.value);
     };
-    const handleMarket = async(event) => {
-        const {value} = event.target;
-        setSelectedMarket(value);
-        const response = await fetch(
-          `${api}market/find/market/${value}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const data = await response.json();
-        console.log(" Get All Zone Change : ",value,data?.result);
-        setAllZone(data?.result);
-    }
-    const handleZoneClick = async(cityId) => {
+    const handleMarket = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+      const { value } = event.target;
+      setSelectedMarket(value);
+      const response = await fetch(`${api}market/find/market/${value}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      console.log(" Get All Zone Change : ", value, data?.result);
+      setAllZone(data?.result);
+    };
+    const handleZoneClick = (cityId:string) => {
       const date = selectedDate?.toISOString().split("T")[0];
       console.log(" Zone Date ",cityId,date);
       setSelectedZoneId(cityId);
-      const response = await fetch(
+      fetch(
         `${api}market/find/zone/${cityId}?date=${date}`,
         {
           headers: {
             "Content-Type": "application/json",
           },
         }
-      );
-      console.log(" Response ",response);  
-      if (!response.ok) {
-          setMarketTable([])                  
-      }else{
-          const data = await response.json();
-          console.log(" Get All Type Table Change : ", data?.result);
-          setMarketTable(data?.result);
+      ).then(response=>{
+        if (!response.ok) {
+            setMarketTable([])   
+            return                
         }
+        return response.json();
+      }).then(data=>{
+        console.log(" Response ",data);  
+        console.log(" Get All Type Table Change : ", data?.result);
+        setMarketTable(data?.result);
+      }).catch(error => {
+                    setMarketTable([])                  
+      // Handle any errors that occurred during the fetch
+      console.error('There was a problem with the fetch operation:', error);
+    });
   };
-  const handleZoneClick2 = async (cityId,selectedDate) => {
+  const handleZoneClick2 =  (cityId:string,selectedDate:Date) => {
     const date = selectedDate?.toISOString().split("T")[0];
     console.log(" Zone Date ", cityId, date);
     setSelectedZoneId(cityId);
-    const response = await fetch(
+    fetch(
       `${api}market/find/zone/${cityId}?date=${date}`,
       {
         headers: {
           "Content-Type": "application/json",
         },
       }
-    );
-    console.log(" Response ", response);
-    if (!response?.ok) {
-      setMarketTable([]);
-    } else {
-      const data = await response.json();
+    ).then(response=>{
+
+      if (!response?.ok) {
+        setMarketTable([]);
+        return 
+      }
+      return response.json()
+    }).then(data=>{
       console.log(" All Type Table Change = ",data?.result);
       setMarketTable(data?.result);
-    }
+    }).catch(error => {
+      setMarketTable([]);
+      // Handle any errors that occurred during the fetch
+      console.error('There was a problem with the fetch operation:', error);
+    });
+
   };
       const [allZones,setAllZone] = useState([{id:'',name:''}])
       useEffect(() => {
@@ -345,7 +363,7 @@ const SalesView = ({
   const [openTable, setOpenTable] = useState(false);
   const [tableName, setTableName] = useState("");
   const [numRows, setNumRows] = useState(0);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<DataItem[]>([{count:"",rate:0}]);
 
 
   const handleOpenTable = () => {
@@ -364,7 +382,7 @@ const SalesView = ({
 
   
 
-  const handleRowCountChange = (event) => {
+  const handleRowCountChange = (event:React.ChangeEvent<HTMLInputElement>) => {
     const count = parseInt(event.target.value, 10) || 0;
     console.log(" Row Count ",count);
     setNumRows(count);
@@ -376,7 +394,7 @@ const SalesView = ({
       }
   };
 
-  const handleAddData = (count) => {
+  const handleAddData = (count:Number) => {
     var newData = [];
     for (let i = 0; i < count; i++) {
       newData.push({ count: "", rate: 0.0 });
@@ -384,11 +402,12 @@ const SalesView = ({
     setData(newData);
   };
 
-  const handleDataChange = (event, index, field) => {
+  const handleDataChange = (event:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index:number, field:string) => {
     var newData = [...data];
-    var {value} = event.target;
-    console.log(field,value,index," Field Value Index Order ")
-    newData[index][field] = field == "rate" ? parseFloat(value) : value;
+    var { value } = event.target;
+    console.log(field, value, index, " Field Value Index Order ");
+    // newData[index][field] = field == "rate" ? parseFloat(value) : value;
+    (newData[index] as any)[field] = field === 'rate' ? parseFloat(value) : value;
     setData(newData);
   };
   const handleSave = () => {
@@ -420,24 +439,26 @@ const SalesView = ({
        handleCloseTable();
   };
        const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-       const [tableToDeleteId, setTableToDeleteId] = useState(null);
-       const [tableVisibility, setTableVisibility] = useState({});
+       const [tableToDeleteId, setTableToDeleteId] = useState("");
+      //  const [tableVisibility, setTableVisibility] = useState({});
+     const [tableVisibility, setTableVisibility] = useState<TableVisibility>({});
 
        useEffect(() => {
          // Initialize tableVisibility with all table IDs set to true (show all tables by default)
-         const initialVisibility = {};
+        //  const initialVisibility = {};
+        const initialVisibility: TableVisibility = {};
          marketTable.forEach((table) => {
            initialVisibility[table.id] = true;
          });
          setTableVisibility(initialVisibility);
        }, [marketTable]);
 
-       const handleDeleteClick = (tableId) => {
+       const handleDeleteClick = (tableId:string) => {
          setTableToDeleteId(tableId);
          setDeleteDialogOpen(true);
        };
 
-       const handleShowHideClick = (tableId) => {
+       const handleShowHideClick = (tableId:string) => {
          setTableVisibility((prevVisibility) => ({
            ...prevVisibility,
            [tableId]: !prevVisibility[tableId],
@@ -454,13 +475,13 @@ const SalesView = ({
             toast.error('Error deleting table');
          }
       setDeleteDialogOpen(false);
-      setTableToDeleteId(null);
+      setTableToDeleteId("");
     })
     .catch((error) => {
       console.error('Delete request error:', error);
       toast.error('Error deleting table');
       setDeleteDialogOpen(false);
-      setTableToDeleteId(null);
+      setTableToDeleteId("");
     });
     setDeleteDialogOpen(false);
 };
@@ -469,7 +490,7 @@ const SalesView = ({
 
        const handleCloseDeleteDialog = () => {
          setDeleteDialogOpen(false);
-         setTableToDeleteId(null);
+         setTableToDeleteId("");
        };
 
 
@@ -489,12 +510,6 @@ const SalesView = ({
                 allZones.map((city) => (
                   <div
                     key={city?.id}
-                    className={`${
-                      selectedZoneId == city?.id ? `${useStyles.selected}` : ""
-                    }`}
-                    style={{
-                      fontWeight: "bold",
-                    }}
                     onClick={() => handleZoneClick(city?.id)}
                   >
                     <p
@@ -552,7 +567,7 @@ const SalesView = ({
                           <TextField
                             label={`Count ${index + 1}`}
                             fullWidth
-                            value={item.count}
+                            value={item?.count}
                             onChange={(e) =>
                               handleDataChange(e, index, "count")
                             }
@@ -564,7 +579,7 @@ const SalesView = ({
                             label={`Rate ${index + 1}`}
                             fullWidth
                             type="number"
-                            value={item.rate}
+                            value={item?.rate}
                             onChange={(e) => handleDataChange(e, index, "rate")}
                             margin="normal"
                           />
@@ -610,19 +625,18 @@ const SalesView = ({
                           {table?.name}
                         </Typography>
                         <Button onClick={() => handleShowHideClick(table.id)}>
-                          {tableVisibility[table.id]
+                          {tableVisibility[table?.id]
                             ? "Hide Table"
                             : "Show Table"}
                         </Button>
                         <Button
                           color="secondary"
-                          onClick={() => handleDeleteClick(table.id)}
+                          onClick={() => handleDeleteClick(table?.id)}
                         >
                           Delete
                         </Button>
                         {tableVisibility[table?.id] && (
-                          <>
-                            <TableContainer size="small">
+                            <TableContainer >
                               <Table size="small">
                                 <TableHead>
                                   <TableRow>
@@ -651,7 +665,6 @@ const SalesView = ({
                                 </TableBody>
                               </Table>
                             </TableContainer>
-                          </>
                         )}
                       </Paper>
                     </Grid>
