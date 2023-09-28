@@ -33,7 +33,7 @@ import {
 } from "@mui/material";
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import Slider from "react-slick";
+import Slider,{Settings} from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
@@ -114,15 +114,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-  const sliderSettings = {
-    infinite: true,
-    slidesToShow: 6, // You can adjust the number of visible cities
-    slidesToScroll: 1,
-    autoplay: true,
-    speed: 1000,
-    autoplaySpeed: 2000,
-    pauseOnHover: true,
-  };
+  
 
   interface DataItem {
   count: string;
@@ -130,7 +122,15 @@ const useStyles = makeStyles((theme) => ({
 }
 type TableVisibility = Record<string, boolean>;
 
-
+const sliderSettings = {
+  infinite: true,
+  slidesToShow: 6, // You can adjust the number of visible cities
+  slidesToScroll: 1,
+  autoplay: true,
+  speed: 2000,
+  autoplaySpeed: 3000,
+  pauseOnHover: true,
+};
 const SalesView = ({
     sales,
     setSelectedSales,
@@ -138,16 +138,14 @@ const SalesView = ({
     setOpenConfirm,
 }: any) => {
      const classes = useStyles(); // Assign the classes object to a variable
-    
-   //TODO
-     const [openZone, setOpenZone] = useState(false);
+    const [openZone, setOpenZone] = useState(false);
      const [zoneName, setZoneName] = useState("");
      const [selectedMarketId, setSelectedMarketId] = useState("");
      const [selectedZoneId, setSelectedZoneId] = useState<string>("");
      const [selectedMarket, setSelectedMarket] = useState("1");
      const [marketTable,setMarketTable] = useState([{id:"",name:"",status:[{rate:0,count:""}]}])
      const [selectedDate, setSelectedDate] = useState(new Date());
-
+    
     const handleDateChange = async(date:Date) => {
       setSelectedDate(date);
       console.log(" Date Change ",selectedZoneId);
@@ -609,7 +607,7 @@ const SalesView = ({
                 </select>
               </Grid>
               <Grid item xs={6}>
-                {marketTable.length > 0 &&
+                {marketTable[0]?.id &&
                   marketTable.map((table, index) => (
                     <Grid item key={index} xs={8}>
                       <Paper
