@@ -112,122 +112,151 @@ const FormDialog = ({
     const handleEditorChange = (value:string) => {
        setContent(value);
     }
+    const handleOverviewChange = (value: string) => {
+      const { description, ...others } = selectedCategory;
+      setSelectedCategory({ ...others, description: value });
+    };
 
 
 
     return (
-        <Dialog
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="form-dialog-title"
-        >
-            <DialogTitle id="form-dialog-title" sx={{
-            }}>
-                {selectedCategory ? "Edit News" : "Add News"}
-            </DialogTitle>
-            <DialogContent sx={{ marginTop: "2rem" }}>
-                <Formik
-                    initialValues={initialValues}
-                    validationSchema={validationSchema}
-                    onSubmit={(values, { setSubmitting, resetForm }) => {
-                        if (selectedCategory) {
-                            console.log(" Value To BE Edit : ",values,selectedCategory);
-                            console.log(content,file);
-                            handleEdit(values);
-                            setSelectedCategory(null);
-                        } else {
-                            values.thumbnail = file;
-                            values.description = content;
-                            handleAdd(values);
-                            SetFile(null)
-                            setContent('')
-                        }
-                        resetForm();
-                        setSubmitting(false);
-                        handleClose();
-                    }}
-                >
-                    {({
-                        values,
-                        errors,
-                        touched,
-                        handleChange,
-                        handleBlur,
-                        handleSubmit,
-                        isSubmitting,
-                    }: any) => (
-                        <form onSubmit={handleSubmit}>
-                            <TextField
-                                autoFocus
-                                id="title"
-                                label="Title"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                                value={values.title}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={Boolean(touched.title && errors.title)}
-                                helperText={touched.title && errors.title}
-                                sx={{
-                                    marginBottom:2
-                                }}
-                            />
-                            <br></br>
-                            <h4>Description</h4>
-                            {selectedCategory ?
-                                (<ReactQuill theme="snow" id="content" value={values.description} onChange={handleChange} modules={modules} formats={formats} />) :
-                                (<ReactQuill theme="snow" id="content" value={content} onChange={handleEditorChange} modules={modules} formats={formats} />
-)}
-                            <br></br>
-                            <br></br>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title" sx={{}}>
+          {selectedCategory ? "Edit News" : "Add News"}
+        </DialogTitle>
+        <DialogContent sx={{ marginTop: "2rem" }}>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={(values, { setSubmitting, resetForm }) => {
+              if (selectedCategory) {
+                console.log(" Value To BE Edit : ", values, selectedCategory);
+                console.log(content, file);
+                values.thumbnail = file ? file : "";
+                if (selectedCategory?.description) {
+                    values.description = selectedCategory.description;
+                } else {
+                    values.description = content ? content : "";
+                }
+                handleEdit(values);
+                setSelectedCategory(null);
+                SetFile(null);
+                setContent("");
+                console.log(" Value To BE Edit : ", values);
+              } else {
+                values.thumbnail = file;
+                values.description = content;
+                handleAdd(values);
+                SetFile(null);
+                setContent("");
+              }
+              resetForm();
+              setSubmitting(false);
+              handleClose();
+            }}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              isSubmitting,
+            }: any) => (
+              <form onSubmit={handleSubmit}>
+                <TextField
+                  autoFocus
+                  id="title"
+                  label="Title"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  value={values.title}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={Boolean(touched.title && errors.title)}
+                  helperText={touched.title && errors.title}
+                  sx={{
+                    marginBottom: 2,
+                  }}
+                />
+                <br></br>
+                <h4>Description</h4>
+                {selectedCategory ? (
+                  <ReactQuill
+                    theme="snow"
+                    id="content"
+                    value={values?.description}
+                    onChange={handleOverviewChange}
+                    modules={modules}
+                    formats={formats}
+                  />
+                ) : (
+                  <ReactQuill
+                    theme="snow"
+                    id="content"
+                    value={content}
+                    onChange={handleEditorChange}
+                    modules={modules}
+                    formats={formats}
+                  />
+                )}
+                <br></br>
+                <br></br>
 
-            
-                            <br></br>
-                           <Button variant="contained" component="label">  Upload Thumbnail
-                                <Input type="file"  style={{ display: 'none' }}   onChange={handleFileSelect}   />
-                            </Button>
+                <br></br>
+                <Button variant="contained" component="label">
+                  {" "}
+                  Upload Thumbnail
+                  <Input
+                    type="file"
+                    style={{ display: "none" }}
+                    onChange={handleFileSelect}
+                  />
+                </Button>
 
-       
-
-                <div >
-      <div>
-                                    {file &&
-                                        (<img key={file?.name} src={URL.createObjectURL(file)} alt={file?.name} width="200" />)}
-      </div>
-      
-    </div>
-                            
-                            <br></br>
-                            <DialogActions>
-                                <ButtonGroup>
-                                    <Button onClick={handleClose}>
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        disabled={isSubmitting}
-                                    >
-                                        {isSubmitting ? (
-                                            <ThreeDots
-                                                color="#fff"
-                                                height={20}
-                                                width={20}
-                                            />
-                                        ) : selectedCategory ? (
-                                            "Edit"
-                                        ) : (
-                                            "Add"
-                                        )}
-                                    </Button>
-                                </ButtonGroup>
-                            </DialogActions>
-                        </form>
+                <div>
+                  <div>
+                    {file && (
+                      <img
+                        key={file?.name}
+                        src={URL.createObjectURL(file)}
+                        alt={file?.name}
+                        width="200"
+                      />
                     )}
-                </Formik>
-            </DialogContent>
-        </Dialog>
+                  </div>
+                </div>
+
+                <br></br>
+                <DialogActions>
+                  <ButtonGroup>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? (
+                        <ThreeDots color="#fff" height={20} width={20} />
+                      ) : selectedCategory ? (
+                        "Edit"
+                      ) : (
+                        "Add"
+                      )}
+                    </Button>
+                  </ButtonGroup>
+                </DialogActions>
+              </form>
+            )}
+          </Formik>
+        </DialogContent>
+      </Dialog>
     );
 };
 

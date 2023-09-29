@@ -50,13 +50,25 @@ export const getCategoryById = async (id: any) => {
 
 //update category
 export const updateCategory = async (id: any, data: any) => {
-    const response = await axios.put(`${url}news/`, {...data,id}, {
+    console.log(data,id);
+    var formData = new FormData();
+        if(data?.thumbnail){
+            formData.append("image", data.thumbnail);
+        } 
+        if(data?.title){
+          formData.append("title", data.title);
+        }
+        if (data?.description) {
+            formData.append("description", data.description);
+        }
+    var contentType = data?.thumbnail ? "multipart/form-data": "application/json" ;
+    const response = await axios.put(`${url}news/id`, formData, {
         headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": `${contentType}`,
             authtoken: `${token}`,
         },
     });
-
+    console.log(" Updated Response ",response);
     return response.data;
 };
 

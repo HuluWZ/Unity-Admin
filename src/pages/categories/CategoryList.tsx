@@ -18,6 +18,7 @@ import {
   colors,
   Paper,
   CardMedia,
+  Typography,
 } from "@mui/material";
 import { useNavigate,Link } from "react-router-dom";
 import { useTheme } from "@mui/system";
@@ -61,6 +62,21 @@ const CategoriesView = ({
             field: "description",
             headerName: "Description",
             width: 350,
+            renderCell:(params:any)=>{
+              const {row} = params;
+              return (
+                <>
+                <Typography
+                  variant="body2"
+                  color="textPrimary"
+                  gutterBottom
+                  dangerouslySetInnerHTML={{
+                    __html: row?.description,
+                  }}
+                />
+                </>
+              );
+            }
         },
     {
       field: "thumbnail",

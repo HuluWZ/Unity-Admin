@@ -55,44 +55,64 @@ const CategoryInfo = ({ category }: any) => {
     const news = category?.description?.split(".")
     // console.log(" Product Info - ",product.user)
     return (
-        <Grid container spacing={2}>
-
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={12}>
+          <Grid container spacing={2}>
             <Grid item xs={12} md={12}>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} md={12}>
-                        <Item>
-                           
-                            <Typography variant="body2" color={theme.palette.mode === 'dark' ? '#fff' : 'text.primary'}>
-                                <Box fontWeight="fontWeightBold" m={1}>
-                                    {category && category?.title}
-                                </Box>
-                            </Typography>
-                            <div>
-                                <a href={category?.thumbnail}>
-                                      <img src={category?.thumbnail} width="300" height="300" alt="News Image"></img>
-                                </a>
-                            </div>
-                            <Typography>{ dateForm}</Typography>
-                            <Typography variant="body1" color={theme.palette.mode === 'dark' ? '#fff' : 'text.primary'}>
-                                <Box fontWeight="fontWeightBold" m={1}>
-                                </Box>
-                            </Typography>
-                            {news && news?.map((imageUrl: any) => (
-                            <Typography variant="body2" color={theme.palette.mode === 'dark' ? '#fff' : 'text.primary'}>
-                                <Box fontWeight="fontWeightBold" m={1}>
-                                    {category && imageUrl} .
-                                </Box>
-                            </Typography>
-                                
-                        )) }
-                            
-                        </Item>
-                    </Grid>
-                
-                </Grid>
+              <Item>
+                <Typography
+                  variant="body2"
+                  color={
+                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
+                  }
+                >
+                  <Box fontWeight="fontWeightBold" m={1}>
+                    {category && category?.title}
+                  </Box>
+                </Typography>
+                <div>
+                  <a href={category?.thumbnail}>
+                    <img
+                      src={category?.thumbnail}
+                      width="300"
+                      height="300"
+                      alt="News Image"
+                    ></img>
+                  </a>
+                </div>
+                <Typography>{dateForm}</Typography>
+                <Typography
+                  variant="body1"
+                  color={
+                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
+                  }
+                >
+                  <Box fontWeight="fontWeightBold" m={1}></Box>
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color={
+                    theme.palette.mode === "dark" ? "#fff" : "text.primary"
+                  }
+                >
+                  <Box fontWeight="fontWeightBold" m={1}>
+                    <Typography
+                      variant="body2"
+                      color="textPrimary"
+                      fontWeight={"bold"}
+                      gutterBottom
+                      dangerouslySetInnerHTML={{
+                        __html: category?.description,
+                      }}
+                    />
+                  </Box>
+                </Typography>
+              </Item>
             </Grid>
+          </Grid>
         </Grid>
-    )
+      </Grid>
+    );
 }
 
 export default CategoryInfo
