@@ -175,6 +175,7 @@ const SalesView = ({
       const data = await response.json();
       console.log(" Get All Zone Change : ", value, data?.result);
       setAllZone(data?.result);
+      setMarketTable([])
     };
     const handleZoneClick = (cityId:string) => {
       const date = selectedDate?.toISOString().split("T")[0];
