@@ -103,6 +103,8 @@ const CategoryInfo = ({ category,tank }: any) => {
           });
       };
 
+      const findSum = (num) =>  num.reduce((acc, obj) => acc + Number(obj.size), 0);
+
     console.log(" Selected  Category = ", category);
     return (
       <PageView title="Farmer Detail" backPath="/users">
@@ -305,9 +307,9 @@ const CategoryInfo = ({ category,tank }: any) => {
                         color="textPrimary"
                         gutterBottom
                       >
-                        {tank?.poly?.length +
-                          tank?.fish?.length +
-                          tank?.shrimp?.length || 0}
+                        {findSum(tank?.poly) +
+                          findSum(tank?.fish) +
+                          findSum(tank?.shrimp) || 0}
                       </Typography>
                     </Grid>
                     <Grid item xs={12} md={6} lg={6}>
@@ -327,7 +329,7 @@ const CategoryInfo = ({ category,tank }: any) => {
                         color="textPrimary"
                         gutterBottom
                       >
-                        {tank?.fish?.length || 0}
+                        {findSum(tank?.fish) || 0}
                       </Typography>
                     </Grid>
                     <Grid item xs={12} md={6} lg={6}>
@@ -347,7 +349,7 @@ const CategoryInfo = ({ category,tank }: any) => {
                         color="textPrimary"
                         gutterBottom
                       >
-                        {tank?.shrimp?.length || 0}
+                        {findSum(tank?.shrimp) || 0}
                       </Typography>
                     </Grid>
                     <Grid item xs={12} md={6} lg={6}>
@@ -367,7 +369,7 @@ const CategoryInfo = ({ category,tank }: any) => {
                         color="textPrimary"
                         gutterBottom
                       >
-                        {tank?.poly?.length || 0}
+                        {findSum(tank?.poly) || 0}
                       </Typography>
                     </Grid>
                   </Grid>

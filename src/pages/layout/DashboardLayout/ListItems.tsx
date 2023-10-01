@@ -70,17 +70,8 @@ const listAdminItems = [
     name: "Farmers",
     icon: <AgricultureIcon />,
     path: "/app/farmers",
-  },
+  }
 ];
-
-// const listReportItems = [
-//     {
-//         name: 'Reports',
-//         icon: <AssessmentIcon />,
-//         path: '/app/reports',
-//         color: colors.red[500],
-//     },
-// ];
 
 export const mainListItems = (
     <React.Fragment>

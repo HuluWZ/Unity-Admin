@@ -129,7 +129,6 @@ function DashboardContent() {
             }}
           >
             <IconButton color="inherit" onClick={toggleDarkMode}>
-              {/* make switch case for dark mode using theme toggle */}
               {darkMode ? <LightModeIcon /> : <DarkModeIcon />}
             </IconButton>
             <MeanuList />

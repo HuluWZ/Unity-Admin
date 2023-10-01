@@ -460,22 +460,6 @@ const CustomersView = ({
         <br />
         {/* <TankRegistrationModal customers={customers?.result} />
         <br/> */}
-        <Paper
-          sx={{ background: theme.palette.background.paper }}
-          variant="outlined"
-        >
-          <DataGrid
-            rows={rowss}
-            columns={columnss}
-            rowsPerPageOptions={[5, 10, 20]}
-            pagination
-            autoHeight
-            checkboxSelection
-            components={{
-              Toolbar: GridToolbar,
-            }}
-          />
-        </Paper>
       </Container>
     </div>
   );
