@@ -104,13 +104,17 @@ const listAdminItems = [
   },
 ];
 
-export const mainListItems = (
-  showMarketSubcategories,
-  setShowMarketSubcategories,
-  showUsersSubcategories,
-  setShowUsersSubcategories
-) => {
+type ShowMarketSubcategories = boolean;
+type SetShowMarketSubcategories = React.Dispatch<React.SetStateAction<boolean>>;
+type ShowUsersSubcategories = boolean;
+type SetShowUsersSubcategories = React.Dispatch<React.SetStateAction<boolean>>;
 
+export const mainListItems = (
+  showMarketSubcategories: ShowMarketSubcategories,
+  setShowMarketSubcategories: SetShowMarketSubcategories,
+  showUsersSubcategories: ShowUsersSubcategories,
+  setShowUsersSubcategories: SetShowUsersSubcategories
+) => {
   return (
     <React.Fragment>
       <ListSubheader inset sx={{ fontFamily: "Montserrat" }}>

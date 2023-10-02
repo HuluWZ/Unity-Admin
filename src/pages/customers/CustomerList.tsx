@@ -150,7 +150,7 @@ const CustomersView = ({
         }
       };
 
-      const rowss = rows.filter(item=> item.status == status)
+      const rowss = rows.filter((item:{status:""}) => item.status == status);
     return (
       <Container maxWidth="lg">
         <Paper

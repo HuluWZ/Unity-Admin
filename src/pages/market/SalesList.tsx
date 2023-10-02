@@ -33,7 +33,7 @@ import {
 } from "@mui/material";
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import Slider,{Settings} from "react-slick";
+import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
@@ -121,6 +121,16 @@ const useStyles = makeStyles((theme) => ({
   count: string;
   rate: number;
 }
+interface SliderSettings {
+  infinite: boolean;
+  slidesToShow: number;
+  slidesToScroll: number;
+  autoplay:boolean;
+  speed: number;
+  autoplaySpeed: number;
+  pauseOnHover: boolean;
+}
+
 type TableVisibility = Record<string, boolean>;
 
 const sliderSettings = {
@@ -141,7 +151,7 @@ const SalesView = ({
     const location = useLocation();
 
      const classes = useStyles(); // Assign the classes object to a variable
-    const [openZone, setOpenZone] = useState(false);
+     const [openZone, setOpenZone] = useState(false);
      const [zoneName, setZoneName] = useState("");
      var  selectedMarketId = location.pathname.split("/")[3]
      const [selectedZoneId, setSelectedZoneId] = useState<string>("");
@@ -166,9 +176,9 @@ const SalesView = ({
     };
     const handleMarket = async (event: React.ChangeEvent<HTMLSelectElement>) => {
       const { value } = event.target;
-      setSelectedMarket(value);
+      // setSelectedMarket(value);
       const response = await fetch(
-        `${api}market/find/market/${location.pathname.split("/")[3]}`,
+        `${api}market/find/market/${selectedMarket}`,
         {
           headers: {
             "Content-Type": "application/json",

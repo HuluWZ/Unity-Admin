@@ -103,7 +103,7 @@ const CategoryInfo = ({ category,tank }: any) => {
           });
       };
 
-      const findSum = (num) =>  num.reduce((acc, obj) => acc + Number(obj.size), 0);
+    const findSum = (num:[]) =>  num.reduce((acc, obj:{size:""}) => acc + Number(obj.size), 0);
 
     console.log(" Selected  Category = ", category);
     return (
