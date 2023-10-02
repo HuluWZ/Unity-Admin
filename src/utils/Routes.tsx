@@ -66,7 +66,8 @@ const RoutesComponent = () => {
             <Route path="users" element={<Outlet />}>
               <Route path="1" element={<CustomerList />} />
               <Route path="2" element={<CustomerList />} />
-              <Route path=":id" element={<CustomerDetail />} />
+              <Route path="1/:id" element={<CustomerDetail />} />
+              <Route path="2/:id" element={<CustomerDetail />} />
             </Route>
             <Route path="books" element={<Outlet />}>
               <Route index element={<ProductList />} />
