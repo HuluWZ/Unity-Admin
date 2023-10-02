@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }: any) => {
             console.log(" Login Response  ",response)
             dispatch({ type: 'LOGIN_SUCCESS', payload: response });
             const { name } = response?.result?.user
-            console.log(name,response,response?.result)
+            console.log(name,response,response?.result?.authToken)
             localStorage.setItem('token', response?.result?.authToken);
             localStorage.setItem('user', response?.result?.user);
             navigate('/app/dashboard');

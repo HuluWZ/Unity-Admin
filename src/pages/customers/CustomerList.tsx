@@ -125,7 +125,6 @@ const CustomersView = ({
       location.pathname.split("/")[3] == "2" ? "Pending" : "Approved";
     console.log(" Status  ",status)
     const rows = customers?.result?.map((item: any) => {
-      // if(item?.status == status ){
         return {
           id: item?.id,
           name: item?.name,
@@ -136,9 +135,8 @@ const CustomersView = ({
           area: item?.area,
           labName: item?.labName,
           status: item?.status == "2" ? "Pending" :"Approved",
-          createdAt: item?.createdAt,
+          createdAt: item?.updatedAt,
         };
-      // }
     });
 
       const navigate = useNavigate();

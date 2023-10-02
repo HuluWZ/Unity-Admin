@@ -36,7 +36,9 @@ const api = import.meta.env.VITE_API_URL;
 const url = `${api}user/`;
 
 //Heders for the request
-const token = localStorage.getItem("token");
+var token = localStorage.getItem("token");
+
+console.log(" User Token = ",token,localStorage.getItem("user"))
 
 const Item = styled(Card)(({ theme }) => ({
     display: 'flex',
@@ -71,17 +73,20 @@ const CategoryInfo = ({ category }: any) => {
 
       const handleApprove = () => {
         setOpen(false); // Close the dialog
-
+        console.log(" Before API Call ",category?.id,token);
         axios
-          .put(`${url}approve/${category.id}`)
+          .put(`${url}approve/${category?.id}`,null,{
+            headers:{
+              "authtoken":`${token}`
+            }
+          })
           .then((response) => {
             // Handle success
-            console.log("Item approved:", response.data);
-                    toast.success("User approved successfully", {
+            console.log(" Item approved:", response.data);
+            toast.success("User approved successfully", {
                       position: "top-right",
                       autoClose: 3000, // Auto-close the notification after 3 seconds
                     });
-
             // You can add more logic here, such as updating your UI
           })
           .catch((error) => {
@@ -209,16 +214,42 @@ const CategoryInfo = ({ category }: any) => {
                         }
                         gutterBottom
                       >
-                        Date
+                        {category.status == "2" ? "Date" : "Approved Date"}
                       </Typography>
                       <Typography
                         variant="body1"
                         style={{ color: "green" }}
                         gutterBottom
                       >
-                        {moment(category?.createdAt).format("MMMM DD, YYYY")}
+                        {category?.approvedDate
+                          ? moment(category?.approvedDate).format(
+                              "MMMM DD, YYYY"
+                            )
+                          : moment(category?.updatedAt).format("MMMM DD, YYYY")}
                       </Typography>
                     </Grid>
+                    {category?.status == "1" && (
+                      <Grid item xs={12} md={6} lg={6}>
+                        <Typography
+                          variant="body1"
+                          color={
+                            theme.palette.mode === "dark"
+                              ? "textPrimary"
+                              : "textSecondary"
+                          }
+                          gutterBottom
+                        >
+                          Approved By
+                        </Typography>
+                        <Typography
+                          variant="body1"
+                          color="textPrimary"
+                          gutterBottom
+                        >
+                          {category?.approver?.name || "Yafet"}
+                        </Typography>
+                      </Grid>
+                    )}
                   </Grid>
                 </CardContent>
               </Card>
@@ -440,15 +471,17 @@ const CategoryInfo = ({ category }: any) => {
                       </Typography>
                     </Grid>
                   </Grid>
-                  </CardContent>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleOpenDialog}
-                  style={{ marginLeft: "920px" }}
+                </CardContent>
+                {category.status == "2" && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleOpenDialog}
+                    style={{ marginLeft: "580px" }}
                   >
-                  Approve
-                </Button>
+                    Approve
+                  </Button>
+                )}
                 <Dialog open={open} onClose={handleCloseDialog}>
                   <DialogTitle>Confirm Approval</DialogTitle>
                   <DialogContent>

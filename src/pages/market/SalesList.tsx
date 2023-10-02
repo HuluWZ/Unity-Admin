@@ -137,7 +137,7 @@ const sliderSettings: SliderSettings = {
   infinite: true,
   slidesToShow: 6, // You can adjust the number of visible cities
   slidesToScroll: 1,
-  autoplay: true,
+  autoplay: false,
   speed: 2000,
   autoplaySpeed: 3000,
   pauseOnHover: true,
