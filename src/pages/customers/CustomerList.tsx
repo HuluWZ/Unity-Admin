@@ -22,6 +22,7 @@ import moment from "moment";
 import { useTheme } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useNavigate, Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 
 const CustomersView = ({
@@ -32,6 +33,7 @@ const CustomersView = ({
     handleUpdate
 }: any) => {
     const theme = useTheme();
+    const location = useLocation()
     const columns: GridColDef[] = [
       {
         field: "name",
@@ -119,9 +121,11 @@ const CustomersView = ({
         },
       },
     ];
-
-
+    var status =
+      location.pathname.split("/")[3] == "2" ? "Pending" : "Approved";
+    console.log(" Status  ",status)
     const rows = customers?.result?.map((item: any) => {
+      // if(item?.status == status ){
         return {
           id: item?.id,
           name: item?.name,
@@ -134,6 +138,7 @@ const CustomersView = ({
           status: item?.status == "2" ? "Pending" :"Approved",
           createdAt: item?.createdAt,
         };
+      // }
     });
 
       const navigate = useNavigate();
@@ -145,6 +150,7 @@ const CustomersView = ({
         }
       };
 
+      const rowss = rows.filter(item=> item.status == status)
     return (
       <Container maxWidth="lg">
         <Paper
@@ -152,7 +158,7 @@ const CustomersView = ({
           variant="outlined"
         >
           <DataGrid
-            rows={rows}
+            rows={rowss}
             columns={columns}
             rowsPerPageOptions={[5, 10, 20]}
             onCellClick={handleCellClick}

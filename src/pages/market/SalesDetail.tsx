@@ -33,8 +33,7 @@ const SalesDetail = () => {
       keepPreviousData: true,
     }
   );
-
-   const [openDialog, setOpenDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [actionResult, setActionResult] = useState('');
     const handleApprove = async () => {

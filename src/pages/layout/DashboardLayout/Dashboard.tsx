@@ -89,6 +89,8 @@ function DashboardContent() {
   const toggleDrawer = () => {
     setOpen(!open);
   };
+    const [showMarketSubcategories, setShowMarketSubcategories] = React.useState(false);
+    const [showUsersSubcategories, setShowUsersSubcategories] = React.useState(false);
 
 
   return (
@@ -168,9 +170,16 @@ function DashboardContent() {
           </IconButton>
         </Toolbar>
         {/* <Divider /> */}
-        <List>{mainListItems}</List>
+        <List>
+          {mainListItems(
+            showMarketSubcategories,
+            setShowMarketSubcategories,
+            showUsersSubcategories,
+            setShowUsersSubcategories
+          )}
+        </List>
         <Divider sx={{ mt: 2 }} />
-        <List>{secondaryListItems}</List>
+        {/* <List>{secondaryListItems}</List> */}
         <Box sx={{ flexGrow: 1 }} />
         <Box style={!open ? { display: "none" } : {}}>
           <Footer />

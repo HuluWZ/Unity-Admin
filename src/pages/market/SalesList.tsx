@@ -58,6 +58,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useLocation } from "react-router-dom";
 
 const api = import.meta.env.VITE_API_URL; 
 const url = `${api}treatment`; 
@@ -137,12 +138,14 @@ const SalesView = ({
     setOpen,
     setOpenConfirm,
 }: any) => {
+    const location = useLocation();
+
      const classes = useStyles(); // Assign the classes object to a variable
     const [openZone, setOpenZone] = useState(false);
      const [zoneName, setZoneName] = useState("");
-     const [selectedMarketId, setSelectedMarketId] = useState("");
+     var  selectedMarketId = location.pathname.split("/")[3]
      const [selectedZoneId, setSelectedZoneId] = useState<string>("");
-     const [selectedMarket, setSelectedMarket] = useState("1");
+     var selectedMarket = location.pathname.split("/")[3];
      const [marketTable,setMarketTable] = useState([{id:"",name:"",status:[{rate:0,count:""}]}])
      const [selectedDate, setSelectedDate] = useState(new Date());
     
@@ -161,17 +164,17 @@ const SalesView = ({
     const handleNameChange = (event:React.ChangeEvent<HTMLInputElement>) => {
        setZoneName(event.target.value);
     };
-    const handleMarketChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-      setSelectedMarketId(event.target.value);
-    };
     const handleMarket = async (event: React.ChangeEvent<HTMLSelectElement>) => {
       const { value } = event.target;
       setSelectedMarket(value);
-      const response = await fetch(`${api}market/find/market/${value}`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `${api}market/find/market/${location.pathname.split("/")[3]}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const data = await response.json();
       console.log(" Get All Zone Change : ", value, data?.result);
       setAllZone(data?.result);
@@ -254,23 +257,26 @@ const SalesView = ({
        const handleAddZone = () => {
          // Send a POST request with the entered name
          axios
-           .post(`${api}market/zone/`, { name: zoneName,marketId:selectedMarketId })
+           .post(`${api}market/zone/`, {
+             name: zoneName,
+             marketId: selectedMarket,
+           })
            .then((response) => {
              // Handle the response if needed
              console.log("Add Zone :", response.data);
-              toast.success("Zone added successfully", {
-                     position: "top-right",
-                     autoClose: 3000, 
-              });
+             toast.success("Zone added successfully", {
+               position: "top-right",
+               autoClose: 3000,
+             });
              handleClose();
              setZoneName("");
-             setSelectedMarketId("");
+             //  setSelectedMarketId(location.pathname.split("/")[3]);
            })
            .catch((error) => {
-              toast.error("Error adding zone. Please try again later.", {
-                    position: "top-right",
-                    autoClose: 3000,
-              });
+             toast.error("Error adding zone. Please try again later.", {
+               position: "top-right",
+               autoClose: 3000,
+             });
              console.error("Error sending POST request:", error);
            });
        };
@@ -347,7 +353,7 @@ const SalesView = ({
             },
         },
     ];
-
+   console.log(" URL ",location.pathname.split("/")[3],selectedMarket)
     const rows: GridRowsProp = sales?.result.map((item: any) => {
         return {
           id: item?.id,
@@ -375,9 +381,6 @@ const SalesView = ({
       setNumRows(0);
       setData([]);
   };  
-
-  
- 
 
   
 
@@ -439,12 +442,9 @@ const SalesView = ({
   };
        const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
        const [tableToDeleteId, setTableToDeleteId] = useState("");
-      //  const [tableVisibility, setTableVisibility] = useState({});
-     const [tableVisibility, setTableVisibility] = useState<TableVisibility>({});
+       const [tableVisibility, setTableVisibility] = useState<TableVisibility>({});
 
        useEffect(() => {
-         // Initialize tableVisibility with all table IDs set to true (show all tables by default)
-        //  const initialVisibility = {};
         const initialVisibility: TableVisibility = {};
          marketTable.forEach((table) => {
            initialVisibility[table.id] = true;
@@ -602,10 +602,7 @@ const SalesView = ({
           <div>
             <Grid container spacing={3}>
               <Grid item xs={3}>
-                <select value={selectedMarket} onChange={handleMarket}>
-                  <option value="1">Fish</option>
-                  <option value="2">Shrimp</option>
-                </select>
+
               </Grid>
               <Grid item xs={6}>
                 {marketTable[0]?.id &&

@@ -64,7 +64,8 @@ const RoutesComponent = () => {
               <Route path=":id" element={<CategoryDetail />} />
             </Route>
             <Route path="users" element={<Outlet />}>
-              <Route index element={<CustomerList />} />
+              <Route path="1" element={<CustomerList />} />
+              <Route path="2" element={<CustomerList />} />
               <Route path=":id" element={<CustomerDetail />} />
             </Route>
             <Route path="books" element={<Outlet />}>
@@ -85,8 +86,8 @@ const RoutesComponent = () => {
               <Route path=":id" element={<SalesDetail />} />
             </Route>
             <Route path="markets" element={<Outlet />}>
-              <Route index element={<Market />} />
-              <Route path=":id" element={<MarketDetail />} />
+              <Route path="1" index element={<Market />} />
+              <Route path="2" index element={<Market />} />
             </Route>
             <Route path="farmers" element={<Outlet />}>
               <Route index element={<FarmerList />} />

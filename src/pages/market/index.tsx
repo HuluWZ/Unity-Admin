@@ -10,9 +10,9 @@ import SalesView from './SalesList'
 
 const Sales = () => {
     const { sales, isLoading, error, deleteSaleMutation, createSaleMutation, updateSaleMutation } = useMarket();
-    const [selectedSales, setSelectedSales] = useState<any>(null);
-    const [open, setOpen] = useState(false);
-    const [openConfirm, setOpenConfirm] = useState(false);
+    const [ selectedSales, setSelectedSales] = useState<any>(null);
+    const [ open, setOpen] = useState(false);
+    const [ openConfirm, setOpenConfirm] = useState(false);
     console.log(" MARKET ",sales);
     if (isLoading) return (
         <PageView

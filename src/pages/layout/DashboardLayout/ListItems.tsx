@@ -25,6 +25,13 @@ import TopicIcon from '@mui/icons-material/Topic';
 import HealingIcon from '@mui/icons-material/Healing';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import AgricultureIcon from "@mui/icons-material/Agriculture";
+import PhishingIcon from "@mui/icons-material/Phishing";
+import SailingIcon from "@mui/icons-material/Sailing";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import  {useState } from 'react';
+import PendingIcon from "@mui/icons-material/Pending";
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 const listAdminItems = [
   {
     name: "Dashboard",
@@ -60,47 +67,140 @@ const listAdminItems = [
     name: "Market",
     icon: <StorefrontIcon />,
     path: "/app/markets",
+    subcategories: [
+      {
+        name: "Fish",
+        icon: <PhishingIcon />,
+        path: "/app/markets/1",
+      },
+      {
+        name: "Shrimp",
+        icon: <SailingIcon />,
+        path: "/app/markets/2",
+      },
+    ],
   },
   {
     name: "Users",
     icon: <PeopleIcon />,
     path: "/app/users",
+    subcategories: [
+      {
+        name: "Pending",
+        icon: <PendingIcon/>,
+        path: "/app/users/2",
+      },
+      {
+        name: "Approved",
+        icon: <CheckBoxIcon/>,
+        path: "/app/users/1",
+      },
+    ],
   },
   {
     name: "Farmers",
     icon: <AgricultureIcon />,
     path: "/app/farmers",
-  }
+  },
 ];
 
 export const mainListItems = (
+  showMarketSubcategories,
+  setShowMarketSubcategories,
+  showUsersSubcategories,
+  setShowUsersSubcategories
+) => {
+
+  return (
     <React.Fragment>
-        <ListSubheader inset sx={{ fontFamily: 'Montserrat' }}>
-            Admin
-        </ListSubheader>
-        <List
-            sx={{
-                [`& .active, & .${listItemClasses.root}:hover`]: {
-                    "& .MuiListItemIcon-root": {
-                        color: colors.blue[500],
-                    },
-                },
-            }}
-
-        >
-            {listAdminItems.map((item, index) => (
-                <ListItemButton key={index} component={NavLink} to={item.path}>
-                    <ListItemIcon>
-                        {item.icon}
-                    </ListItemIcon>
-                    <ListItemText primary={item.name.toUpperCase()} />
-                </ListItemButton>
-            ))}
-        </List>
-
-
-    </React.Fragment >
-);
+      <ListSubheader inset sx={{ fontFamily: "Montserrat" }}>
+        Admin
+      </ListSubheader>
+      <List
+        sx={{
+          [`& .active, & .${listItemClasses.root}:hover`]: {
+            "& .MuiListItemIcon-root": {
+              color: colors.blue[500],
+            },
+          },
+        }}
+      >
+        {listAdminItems.map((item, index) => (
+          <React.Fragment key={index}>
+            {item.name === "Market" || item.name === "Users" ? (
+              <ListItemButton
+                onClick={() => {
+                  if (item.name === "Market") {
+                    setShowMarketSubcategories(!showMarketSubcategories);
+                  } else if (item.name === "Users") {
+                    setShowUsersSubcategories(!showUsersSubcategories);
+                  }
+                }}
+              >
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.name.toUpperCase()} />
+                {item.name === "Market" ? (
+                  showMarketSubcategories ? (
+                    <ExpandLessIcon />
+                  ) : (
+                    <ExpandMoreIcon />
+                  )
+                ) : item.name === "Users" ? (
+                  showUsersSubcategories ? (
+                    <ExpandLessIcon />
+                  ) : (
+                    <ExpandMoreIcon />
+                  )
+                ) : null}
+              </ListItemButton>
+            ) : (
+              <ListItemButton component={NavLink} to={item.path}>
+                <ListItemIcon>{item?.icon}</ListItemIcon>
+                <ListItemText primary={item.name.toUpperCase()} />
+              </ListItemButton>
+            )}
+            {item?.name === "Market" &&
+              showMarketSubcategories &&
+              item?.subcategories && (
+                // Render Market subcategories as before
+                <List>
+                  {item?.subcategories.map((subcategory, subIndex) => (
+                    <ListItemButton
+                      key={subIndex}
+                      component={NavLink}
+                      to={subcategory?.path}
+                      sx={{ paddingLeft: "30px" }} // Indent subcategories
+                    >
+                      <ListItemIcon>{subcategory?.icon}</ListItemIcon>
+                      <ListItemText primary={subcategory?.name} />
+                    </ListItemButton>
+                  ))}
+                </List>
+              )}
+            {item?.name === "Users" &&
+              showUsersSubcategories &&
+              item?.subcategories && (
+                <List>
+                  {item?.subcategories.map((subcategory, subIndex) => (
+                    <ListItemButton
+                      key={subIndex}
+                      component={NavLink}
+                      to={subcategory?.path}
+                      sx={{ paddingLeft: "30px" }} // Indent subcategories
+                    >
+                      <ListItemIcon>{subcategory?.icon}</ListItemIcon>
+                      <ListItemText primary={subcategory?.name} />
+                    </ListItemButton>
+                  ))}
+                </List>
+              )}
+          </React.Fragment>
+        ))}
+      </List>
+    </React.Fragment>
+  );
+};
+;
 
 
 //Secondary Nav Items
@@ -126,7 +226,4 @@ export const secondaryListItems = (
         </List> */}
     </React.Fragment>
 );
-
-
-
 
