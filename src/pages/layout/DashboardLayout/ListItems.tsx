@@ -32,6 +32,8 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import  {useState } from 'react';
 import PendingIcon from "@mui/icons-material/Pending";
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+// import AssessmentIcon from "@mui/icons-material/Assessment";
+
 const listAdminItems = [
   {
     name: "Dashboard",
@@ -87,12 +89,12 @@ const listAdminItems = [
     subcategories: [
       {
         name: "Pending",
-        icon: <PendingIcon/>,
+        icon: <PendingIcon />,
         path: "/app/users/2",
       },
       {
         name: "Approved",
-        icon: <CheckBoxIcon/>,
+        icon: <CheckBoxIcon />,
         path: "/app/users/1",
       },
     ],
@@ -102,18 +104,39 @@ const listAdminItems = [
     icon: <AgricultureIcon />,
     path: "/app/farmers",
   },
+  {
+    name: "Reports",
+    icon: <AssessmentIcon />,
+    path: "/app/reports",
+    subcategories: [
+      {
+        name: "Complex",
+        icon: <PendingIcon />,
+        path: "/app/reports/complex",
+      },
+      {
+        name: "All",
+        icon: <CheckBoxIcon />,
+        path: "/app/reports/all",
+      },
+    ],
+  },
 ];
 
 type ShowMarketSubcategories = boolean;
 type SetShowMarketSubcategories = React.Dispatch<React.SetStateAction<boolean>>;
 type ShowUsersSubcategories = boolean;
 type SetShowUsersSubcategories = React.Dispatch<React.SetStateAction<boolean>>;
+type ShowReportsSubcategories = boolean;
+type SetShowReportsSubcategories = React.Dispatch<React.SetStateAction<boolean>>;
 
 export const mainListItems = (
   showMarketSubcategories: ShowMarketSubcategories,
   setShowMarketSubcategories: SetShowMarketSubcategories,
   showUsersSubcategories: ShowUsersSubcategories,
-  setShowUsersSubcategories: SetShowUsersSubcategories
+  setShowUsersSubcategories: SetShowUsersSubcategories,
+  showReportsSubcategories: ShowReportsSubcategories,
+  setShowReportsSubcategories: SetShowReportsSubcategories,
 ) => {
   return (
     <React.Fragment>
@@ -131,13 +154,19 @@ export const mainListItems = (
       >
         {listAdminItems.map((item, index) => (
           <React.Fragment key={index}>
-            {item.name === "Market" || item.name === "Users" ? (
+            {item.name === "Market" ||
+            item.name === "Users" ||
+            item.name === "Reports" ? (
               <ListItemButton
                 onClick={() => {
                   if (item.name === "Market") {
                     setShowMarketSubcategories(!showMarketSubcategories);
                   } else if (item.name === "Users") {
+                    console.log("Users Clicked ", showUsersSubcategories);
                     setShowUsersSubcategories(!showUsersSubcategories);
+                  } else if (item.name === "Reports") {
+                    console.log("Reports Clicked ", showReportsSubcategories);
+                    setShowReportsSubcategories(!showReportsSubcategories);
                   }
                 }}
               >
@@ -149,8 +178,23 @@ export const mainListItems = (
                   ) : (
                     <ExpandMoreIcon />
                   )
-                ) : item.name === "Users" ? (
+                ) : null}
+                {item.name === "Users" ? (
                   showUsersSubcategories ? (
+                    <ExpandLessIcon />
+                  ) : (
+                    <ExpandMoreIcon />
+                  )
+                ) : null}
+                {/* {item.name === "Users" ? (
+                  showUsersSubcategories ? (
+                    <ExpandLessIcon />
+                  ) : (
+                    <ExpandMoreIcon />
+                  )
+                ) : null} */}
+                {item.name === "Reports" ? (
+                  showReportsSubcategories ? (
                     <ExpandLessIcon />
                   ) : (
                     <ExpandMoreIcon />
@@ -167,6 +211,23 @@ export const mainListItems = (
               showMarketSubcategories &&
               item?.subcategories && (
                 // Render Market subcategories as before
+                <List>
+                  {item?.subcategories.map((subcategory, subIndex) => (
+                    <ListItemButton
+                      key={subIndex}
+                      component={NavLink}
+                      to={subcategory?.path}
+                      sx={{ paddingLeft: "30px" }} // Indent subcategories
+                    >
+                      <ListItemIcon>{subcategory?.icon}</ListItemIcon>
+                      <ListItemText primary={subcategory?.name} />
+                    </ListItemButton>
+                  ))}
+                </List>
+              )}
+            {item?.name === "Reports" &&
+              showReportsSubcategories &&
+              item?.subcategories && (
                 <List>
                   {item?.subcategories.map((subcategory, subIndex) => (
                     <ListItemButton

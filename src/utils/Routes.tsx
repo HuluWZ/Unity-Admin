@@ -46,6 +46,8 @@ import StokeAlert from '../pages/report/StokeAlert';
 
 import Settings from '../pages/settings';
 import Profile from '../pages/profile';
+import ReportsList from "../pages/reports";
+import ReportsDetail from "../pages/reports/CategoryDetail";
 
 
 const RoutesComponent = () => {
@@ -94,12 +96,11 @@ const RoutesComponent = () => {
               <Route index element={<FarmerList />} />
               <Route path=":id" element={<FarmerDetail />} />
             </Route>
-
             <Route path="reports" element={<Outlet />}>
-              <Route index element={<ReportList />} />
-              <Route path="order" element={<OrderReport />} />
-              <Route path="sales" element={<SalesReport />} />
-              <Route path="stoke" element={<StokeAlert />} />
+              <Route path="complex"  element={<ReportsList />} />
+              <Route path="all"  element={<ReportsList />} />
+              <Route path="complex/:selectType/:id"  exact element={<ReportsDetail />} />
+              <Route path="all/:selectType/:id" exact element={<ReportsDetail />} />
             </Route>
             <Route path="settings" element={<Settings />} />
             <Route path="profile" element={<Profile />} />

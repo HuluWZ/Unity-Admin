@@ -49,13 +49,9 @@ const CategoryDetail = () => {
     const { data, isLoading, isError } = useQuery(['category', id], () => getCategoryById(id));
     const [value, setValue] = React.useState(0);
 
-    console.log(" Get Forum Detail Page ",data)
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        console.log(" New Value ", newValue," Data - ",data)
         setValue(newValue);
     };
-
-    // console.log(" Value ",value," Data ",data)
 
     if (isLoading) return (
         <PageView title="Loading . . .">

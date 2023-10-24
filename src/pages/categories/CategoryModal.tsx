@@ -69,7 +69,7 @@ const FormDialog = ({
     setSelectedCategory,
 }: FormDialogProps) => {
     const initialValues = {
-        // id: selectedCategory ? selectedCategory.id : "",
+        id: selectedCategory ? selectedCategory.id : "",
         title: selectedCategory ? selectedCategory.title : "",
         description: selectedCategory ? selectedCategory.description : "",
         thumbnail: selectedCategory ? selectedCategory.thumbnail : "",
@@ -113,8 +113,10 @@ const FormDialog = ({
        setContent(value);
     }
     const handleOverviewChange = (value: string) => {
+      console.log(" Value  Description ",value);
       const { description, ...others } = selectedCategory;
       setSelectedCategory({ ...others, description: value });
+      console.log(" Selected Category ",selectedCategory);
     };
 
 
