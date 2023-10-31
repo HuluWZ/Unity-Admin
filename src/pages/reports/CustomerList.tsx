@@ -25,7 +25,7 @@ import { useTheme } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 
 import {
   Dialog,
@@ -53,6 +53,49 @@ interface MyData {
     district: string;
   };
 }
+type ItemZero = {
+  id: string;
+  lab: string;
+  farmer: string;
+  farmerPhone: string;
+  tankName: string;
+  state: string;
+  district: string;
+  area: string;
+  complexity: string;
+  createdAt: string;
+};
+interface Item {
+  id: number;
+  lab: string;
+  tank: {
+    farmer: {
+      name: string;
+      phoneNumber: string;
+      user: {
+        labName: string;
+        state: string;
+        district: string;
+        area: string;
+      };
+    };
+    name: string;
+  };
+  status: string;
+  createdAt: string;
+}
+interface OneRow {
+  id: number;
+  lab: string;
+  farmer: string;
+  farmerPhone: string;
+  tankName: string;
+  state: string;
+  district: string;
+  area: string;
+  complexity: string;
+  createdAt: string;
+}
   var types = [
     "Water",
     "Fish",
@@ -72,21 +115,37 @@ const CustomersView = ({
   // handleUpdate,
 }: any) => {
   const theme = useTheme();
-  const [all, setAll] = useState();
-  const [selectedType, setSelectedType] = useState("water");
+    const [all, setAll] = useState<Item[] | null>(null);
 
-  const handleTypeSelection = (type) => {
+  const [selectedType, setSelectedType] = useState("water");
+  const [selectedRoute, setSelectedRoute] = useState("");
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleTypeSelection = (type:string) => {
+        const lastPart = location.pathname.split("/")[3] == "complex" ? "complex" : "";
       setSelectedType(type.toLowerCase());
+      setSelectedRoute(lastPart);
   };
   useEffect(() => {
       async function fetchTopic() {
          console.log("API CALL ", window.location.href.split("/")[5]);
          const others =  window.location.href.split("/")[5] === "complex" ? "complex" : "";
-         const response = await axios.get(`${api}${selectedType}/${others}`, {
-            headers: {
+        console.log(
+          " IS Equal API   URL ",
+          others,
+          selectedRoute,
+          others == selectedRoute
+        );
+         const response = await axios.get(
+           `${api}${selectedType}/${selectedType}`,
+           {
+             headers: {
                "Content-Type": "application/json",
-           },
-         });
+             },
+           }
+         );
          console.log(" All Values =", response?.data);
          setAll(response?.data?.result);
          console.log(" Done ", all);
@@ -94,10 +153,39 @@ const CustomersView = ({
   fetchTopic();
 }, [selectedType]);
 
+  useEffect(() => {
+    const { pathname } = location;
+    const lastPart = location.pathname.split("/")[3] == "complex" ? "complex" : "";
+    setSelectedRoute(lastPart);
+  }, [location]);
+
+
+ useEffect(() => {
+   async function fetchTopic() {
+     const others =
+     window.location.href.split("/")[5] === "complex" ? "complex" : "";
+     console.log(
+       " IS Equal API Route",
+       others,
+       selectedRoute,
+       others == selectedRoute
+     );
+     const response = await axios.get(
+       `${api}${selectedType}/${selectedRoute}`,
+       {
+         headers: {
+           "Content-Type": "application/json",
+         },
+       }
+     );
+     console.log(" All Values =", response?.data);
+     setAll(response?.data?.result);
+   }
+   fetchTopic();
+ }, [selectedRoute]);
 
   const others = window.location.href.split("/")[5] == "complex" ? "complex" : "";
   console.log("API CALL URL ", `${api}${selectedType}/${others}`);
-    const navigate = useNavigate();
 
   const columns: GridColDef[] = [
     {
@@ -198,25 +286,9 @@ const CustomersView = ({
       },
     },
   ];
-if(all){
-
-  var rows = all && all?.map((item: any) => {
-    return {
-      id: item?.id,
-      lab: item?.tank?.farmer?.user?.labName,
-      farmer: item?.tank?.farmer?.name,
-      farmerPhone: item?.tank?.farmer?.phoneNumber,
-      tankName: item?.tank?.name,
-      state: item?.tank?.farmer?.user?.state,
-      district: item?.tank?.farmer?.user?.district,
-      area: item?.tank?.farmer?.user?.area,
-      complexity: item?.status,
-      createdAt: item?.createdAt,
-    };
-  });
-}else{
-  var rows = [
-     {
+  // let rows: Item[]  = [];
+  let rows: OneRow[] = [
+    {
       id: 1,
       lab: "Alex",
       farmer: "MLO",
@@ -227,7 +299,26 @@ if(all){
       area: "Brakle",
       complexity: "Normal",
       createdAt: "Ale",
-    }]
+    },
+  ];
+
+
+if(all){
+
+   rows = all && all?.map((item: Item) => {
+    return {
+      id: item?.id,
+      lab: item?.tank?.farmer?.user?.labName || "",
+      farmer: item?.tank?.farmer?.name || "",
+      farmerPhone: item?.tank?.farmer?.phoneNumber || "",
+      tankName: item?.tank?.name || "",
+      state: item?.tank?.farmer?.user?.state || "",
+      district: item?.tank?.farmer?.user?.district || "",
+      area: item?.tank?.farmer?.user?.area || "",
+      complexity: item?.status || "",
+      createdAt: item?.createdAt || "",
+    };
+  });
 }
 
   console.log(" All ", types,all,rows);

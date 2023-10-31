@@ -101,7 +101,7 @@ const CategoryInfo = ({ category,selectType }: any) => {
         });
       });
   };
-  const filterObjectKeys = (obj) => {
+  const filterObjectKeys = (obj: Record<string, any>): Record<string, any> => {
     const excludedKeys = [
       "id",
       "createdAt",
@@ -115,7 +115,7 @@ const CategoryInfo = ({ category,selectType }: any) => {
         filteredObj[key] = value;
       }
       return filteredObj;
-    }, {});
+    }, {} as Record<string, any>);
   };
   const filteredObject = filterObjectKeys(category);
   const keysArray = Object.keys(filteredObject);
@@ -448,7 +448,7 @@ const CategoryInfo = ({ category,selectType }: any) => {
                         {key.charAt(0).toUpperCase() + key.slice(1)}
                       </Typography>
                       <Typography
-                        variant="b}ody1"
+                        variant="body1"
                         color="textPrimary"
                         gutterBottom
                       >
@@ -485,7 +485,7 @@ const CategoryInfo = ({ category,selectType }: any) => {
                         Treatment
                       </Typography>
                       <Typography
-                        variant="b}ody1"
+                        variant="body1"
                         color="textPrimary"
                         gutterBottom
                       >

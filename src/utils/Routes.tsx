@@ -99,8 +99,8 @@ const RoutesComponent = () => {
             <Route path="reports" element={<Outlet />}>
               <Route path="complex"  element={<ReportsList />} />
               <Route path="all"  element={<ReportsList />} />
-              <Route path="complex/:selectType/:id"  exact element={<ReportsDetail />} />
-              <Route path="all/:selectType/:id" exact element={<ReportsDetail />} />
+              <Route path="complex/:selectType/:id"   element={<ReportsDetail />} />
+              <Route path="all/:selectType/:id"  element={<ReportsDetail />} />
             </Route>
             <Route path="settings" element={<Settings />} />
             <Route path="profile" element={<Profile />} />
