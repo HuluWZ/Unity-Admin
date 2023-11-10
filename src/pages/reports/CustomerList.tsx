@@ -288,18 +288,7 @@ const CustomersView = ({
   ];
   // let rows: Item[]  = [];
   let rows: OneRow[] = [
-    {
-      id: 1,
-      lab: "Alex",
-      farmer: "MLO",
-      farmerPhone: "Vamos",
-      tankName: "Ealeoa",
-      state: "Hyderbad",
-      district: "Aleae",
-      area: "Brakle",
-      complexity: "Normal",
-      createdAt: "Ale",
-    },
+   
   ];
 
 
